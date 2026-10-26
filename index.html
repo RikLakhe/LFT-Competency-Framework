@@ -2255,7 +2255,8 @@ $('content').addEventListener('click',e=>{
   if(b.dataset.golv){S.lv=b.dataset.golv;S.view='matrix';S.compare=false;}
   else if(b.dataset.godi){S.di=+b.dataset.godi;S.si=+b.dataset.gosi;S.view='matrix';S.compare=false;}
   else{const g=b.dataset.go;S.view=g;if(g==='find')S.flv=S.lv;if(g==='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;if(g==='hire')S.hlv=S.lv;}
-  render();$('content').scrollTop=0;
+  try{render();}catch(e){$('content').innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Render error (view='+S.view+'):</b> '+e.message+'<br><pre style="white-space:pre-wrap;font-size:12px">'+e.stack+'</pre></div>';}
+  $('content').scrollTop=0;
 },true);
 
 $('content').addEventListener('click',e=>{
@@ -2304,8 +2305,19 @@ document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
 });
 
-readHash();
-render();
+window.onerror=function(msg,src,line,col,err){
+  const el=document.getElementById('content');
+  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Error (line '+line+'):</b> '+msg+(err?'<br><pre style="white-space:pre-wrap;font-size:12px">'+err.stack+'</pre>':'')+'</div>';
+  return false;
+};
+window.addEventListener('unhandledrejection',function(e){
+  const el=document.getElementById('content');
+  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Unhandled promise:</b> '+e.reason+'</div>';
+});
+try{readHash();render();}catch(e){
+  const el=document.getElementById('content');
+  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Init error:</b> '+e.message+'<br><pre style="white-space:pre-wrap;font-size:12px">'+e.stack+'</pre></div>';
+}
 </script>
 
 </body>
