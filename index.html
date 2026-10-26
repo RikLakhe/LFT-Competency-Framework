@@ -687,7 +687,7 @@ body:not(.home-view) .home-hero{display:none;}
     </button>
     <button class="mode-btn" id="find-btn" aria-pressed="false">Find tasks</button>
     <button class="mode-btn" id="promo-btn" aria-pressed="false">Promotion kit</button>
-    <button class="mode-btn" id="hire-btn" aria-pressed="false">Hiring kit</button>
+    <button class="mode-btn" id="hire-btn" aria-pressed="false">Interview kit</button>
     <button class="mode-btn" id="guide-btn" aria-pressed="false">Guide</button>
   </div>
 </div>
@@ -1677,13 +1677,13 @@ const GUIDE_HTML=`<div class="guide">
 <span class="aud-tag">Interviewers</span>
 <h4>Interview consistently</h4>
 <ol>
-<li><b>Prepare.</b> Open the Hiring kit for the target level before the interview.</li>
+<li><b>Prepare.</b> Open the Interview kit for the target level before the interview.</li>
 <li><b>Run the same loop.</b> Use the same exercise and questions for every candidate at a level.</li>
 <li><b>Score by anchor.</b> Use the Strong, Acceptable and Weak examples to calibrate scores.</li>
 <li><b>Decide by level.</b> Place the candidate using level signals — not an overall impression.</li>
 </ol>
-<p class="aud-tip">The hiring kit is a guide, not a fixed bar. Discuss edge cases as a panel before deciding.</p>
-<button class="cta" data-go="hire">Hiring kit →</button>
+<p class="aud-tip">The interview kit is a guide, not a fixed bar. Discuss edge cases as a panel before deciding.</p>
+<button class="cta" data-go="hire">Interview kit →</button>
 </div>
 </div>
 </div>
@@ -1786,12 +1786,12 @@ const RELEASE_HTML=`<div class="guide">
 
 <div class="gsec"><h3>What changed in v2.0</h3>
 <ul>
-<li>The Promotion kit and Hiring kit are marked as guidelines and sit in the top bar. Promotion and hiring content moved out of the Guide into the kits.</li>
+<li>The Promotion kit and Interview kit are marked as guidelines and sit in the top bar. Promotion and interview content moved out of the Guide into the kits.</li>
 <li>Added a landing page; the LFT Competency logo returns to it.</li>
 <li>Compare now explains what changes between levels, with notes for engineers, managers and interviewers.</li>
 <li>The Promotion kit has questions for each domain that tell Meets apart from borderline.</li>
 <li>Added 370 growth tasks, for 1,000 in total: every competency now has at least five tasks at every level, with an extra task in ten key competencies, with a mix of on-project, bench-friendly, client-facing and manager-coachable tasks.</li>
-<li>The promotion rule and hire bar are removed. The Guide, Promotion kit and Hiring kit are guidance on the next level, not a guarantee of promotion or a fixed hiring bar.</li>
+<li>The promotion rule and hire bar are removed. The Guide, Promotion kit and Interview kit are guidance on the next level, not a guarantee of promotion or a fixed interview bar.</li>
 <li>First release (v2.0).</li>
 <li>The AI fluency competencies are no longer a pilot: they are rated like any other competency, and AI-Assisted Engineering is core at P3–P5.</li>
 <li>The Engineering Manager ladder and the Solutioning &amp; Estimation proposal are no longer included; they are being worked on separately.</li>
@@ -1800,7 +1800,7 @@ const RELEASE_HTML=`<div class="guide">
 <div class="gsec"><h3>What changed in v1.8</h3>
 <ul>
 <li>Simpler navigation: one sidebar lists every competency grouped by domain, with a filter box. The separate domain tabs row and the “By Level” mode are gone.</li>
-<li>Find tasks, Promotion kit, Hiring kit and Guide open full-width, with a “Home” link to return to the landing page.</li>
+<li>Find tasks, Promotion kit, Interview kit and Guide open full-width, with a “Home” link to return to the landing page.</li>
 <li>Competency pages put the expectation first. Status shows as chips (Core, Supporting, AI fluency, Where applicable), and the level summary sits under the level tabs.</li>
 <li>Growth task cards are shorter and the section can be collapsed.</li>
 <li>Every view has its own link, so a page can be shared or bookmarked (for example, Testing at P4).</li>
@@ -1843,7 +1843,7 @@ const RELEASE_HTML=`<div class="guide">
 
 <div class="gsec"><h3>What changed in v1.3</h3>
 <ul>
-<li>Added the Hiring kit: competencies assessed, interview loop, exercise, scoring examples and level placement for each level.</li>
+<li>Added the Interview kit: competencies assessed, interview loop, exercise, scoring examples and level placement for each level.</li>
 <li>Added the Promotion kit: rules for N/A, uneven profiles and time in level; Meets versus borderline examples; a copyable case template.</li>
 <li>Added the Solutioning &amp; Estimation competency (P2–P7), with growth tasks.</li>
 <li>Writing Code now has its own P5–P7 expectations instead of repeating P4.</li>
@@ -2082,7 +2082,7 @@ const DOMKEY={technical:'technical',delivery:'delivery',fcc:'fcc',leadership:'le
 
 function renderHiring(){
   const el=$('content');const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];
-  let h=`<div class="kit"><div><h2>Hiring kit <span class="draft">Guideline</span></h2><p class="lead">A guideline for interviewing at each level, not a fixed process or bar. A structured interview loop for each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies on their own and writes notes before the debrief.</p></div>`;
+  let h=`<div class="kit"><div><h2>Interview kit <span class="draft">Guideline</span></h2><p class="lead">A guideline for interviewing at each level, not a fixed process or bar. A structured interview loop for each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies on their own and writes notes before the debrief.</p></div>`;
   h+=`<div class="chips">${LEVELS.map(l=>`<button class="chip" data-hlv="${l.id}" aria-pressed="${l.id===S.hlv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div>`;
   h+=`<div class="fres-head"><h3>${lv.code} · ${esc(lv.title)}: ${Object.keys(H.anchors).length} competencies assessed</h3><button class="btn" data-act="copy-hiring">Copy interview pack</button></div>`;
   h+=`<div class="gsec"><h3>Interview loop</h3><div class="tbl-wrap"><table><thead><tr><th>Round</th><th>Minutes</th><th>Interviewers</th><th>Competencies</th><th>Focus</th></tr></thead><tbody>${H.loop.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]}</td><td>${esc(r[2])}</td><td>${r[3].split(',').map(id=>esc(findSub(id).s.label)).join(', ')}</td><td>${esc(r[4])}</td></tr>`).join('')}</tbody></table></div></div>`;
@@ -2360,7 +2360,7 @@ function renderHome(){
     <div class="audience">
       <div class="aud-card"><span class="aud-tag">Engineers</span><h3>See what comes next</h3><ul><li>Read your level and the one above with <b>Compare</b>.</li><li>Pick one to three growth tasks to work on.</li><li>Bring examples of outcomes to your 1:1s.</li></ul><button class="cta" data-go="find">Find growth tasks</button></div>
       <div class="aud-card"><span class="aud-tag">Managers</span><h3>Coach and review</h3><ul><li>Use the rubric and calibration questions in 1:1s.</li><li>Agree growth tasks that fit the project.</li><li>Use the Promotion kit to discuss readiness.</li></ul><button class="cta" data-go="promo">Promotion kit</button></div>
-      <div class="aud-card"><span class="aud-tag">Interviewers</span><h3>Interview consistently</h3><ul><li>Run the same loop and exercise for every candidate at a level.</li><li>Score with the Strong, Acceptable and Weak examples.</li><li>Place candidates using the level signals.</li></ul><button class="cta" data-go="hire">Hiring kit</button></div>
+      <div class="aud-card"><span class="aud-tag">Interviewers</span><h3>Interview consistently</h3><ul><li>Run the same loop and exercise for every candidate at a level.</li><li>Score with the Strong, Acceptable and Weak examples.</li><li>Place candidates using the level signals.</li></ul><button class="cta" data-go="hire">Interview kit</button></div>
     </div>
   </section>
 
