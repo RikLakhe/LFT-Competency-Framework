@@ -605,6 +605,21 @@ body.home-view .back-btn{display:none}
 .path-comps .dom-item{font-size:12px}
 .path-nav{margin-top:2px}
 @media(max-width:768px){.path-hdr{padding:10px 14px}.path-body{padding:12px 14px}.path-meta{gap:6px}}
+.path-shift{font-size:13.5px;color:var(--fg-2);line-height:1.6;padding:14px 18px;background:var(--accent-soft);border-bottom:1px solid var(--line)}
+.path-shift b{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-mid);display:block;margin-bottom:4px}
+.path-section{padding:14px 18px;display:grid;gap:8px;border-bottom:1px solid var(--line)}
+.path-section:last-child{border-bottom:0}
+.path-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-3)}
+.path-howto{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.path-howto li{font-size:13.5px;color:var(--fg-2);line-height:1.55;padding-left:20px;position:relative}
+.path-howto li::before{content:'→';position:absolute;left:0;color:var(--green);font-weight:700}
+.path-ready{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.path-ready li{font-size:13.5px;color:var(--fg-2);line-height:1.55;padding-left:20px;position:relative}
+.path-ready li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.path-timeline{font-size:13px;color:var(--fg-3);font-style:italic}
+.path-trap-sec{padding:14px 18px;border-bottom:1px solid var(--line)}
+.path-trap-sec b{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--amber);display:block;margin-bottom:4px}
+.path-trap-sec p{margin:0;font-size:13.5px;color:var(--fg-2);line-height:1.55}
 </style>
 </head>
 <body>
@@ -690,6 +705,14 @@ const LEVEL_SUMMARY={
   p5:['Makes the team deliver: sets the design and quality bar, owns technical risk and scope with the client, grows people, and still codes the riskiest parts.','Becoming a bottleneck who reviews everything, or a coordinator who stops coding.'],
   p6:['Raises several teams at once through shared patterns, decisions and people.','Advising widely without anything landing.'],
   p7:['Sets organisation technical direction and stays credible in code.','Strategy without hands-on credibility, or everything depending on them.']
+};
+const CAREER_EXPAND={
+  p2:{shift:'Shift from learning to delivering: complete well-defined tasks end-to-end without mid-task replanning.',howTo:['Ask for help the moment you are stuck — not after an hour of solo debugging','Write tests before submitting PRs; do not wait to be asked to add them','Flag risks and blockers to your tech lead the same day you spot them'],timeline:'6–12 months at level',ready:['You finish tasks end-to-end without your lead reshaping the approach mid-way','Your PRs pass review in one round consistently, without rework','You spot and raise a risk before your tech lead brings it up']},
+  p3:{shift:'Shift from feature delivery to team leverage: your presence makes the team\'s work and code measurably better.',howTo:['Own one area of the codebase — be the first person teammates come to for it','Review peers\' PRs proactively; give specific, actionable feedback, not just approvals','Break down the next feature yourself before being asked — come with a plan'],timeline:'1–2 years at level',ready:['You own a feature from brief to production without a senior engineer shaping it','Junior engineers come to you first, before the tech lead','You can name the main risks in your current epic without being prompted']},
+  p4:{shift:'Shift from individual quality to team quality: the whole team delivers better and more safely because of you.',howTo:['Set the technical direction for a feature and bring the team along — not just build it yourself','Mentor one junior consistently; track their growth explicitly and share it with your manager','Own a domain end-to-end including operations, oncall and hand-off — not just shipping'],timeline:'2–3 years at level',ready:['A junior engineer grew measurably under your mentorship — you can describe what changed','You led a design decision that the whole team now follows','The client or stakeholders come to you directly for technical questions, not through a manager']},
+  p5:{shift:'Shift from team quality to client outcome: you own the technical relationship and your team\'s delivery record with the client.',howTo:['Take on the riskiest technical parts of each sprint yourself — do not delegate the hard parts','Represent the team in client technical conversations; build the relationship directly','Set the quality bar and hold it actively in code review, not just in your own work'],timeline:'2–4 years at level',ready:['You can name every technical risk on the engagement and who owns each one','The client trusts your technical judgement independently of an account manager','The team\'s velocity improved directly because of a process or standard you introduced']},
+  p6:{shift:'Shift from one team to many teams: your decisions, patterns and people raise quality across multiple engagements simultaneously.',howTo:['Write one technical standard that multiple teams actually adopt and use — measure uptake','Sponsor one engineer\'s growth to P4 explicitly — name them, set milestones, track progress','Get involved in proposals early and shape the technical approach before the engagement starts'],timeline:'3–5 years at level',ready:['Two or more teams are measurably better because of something you introduced','Account leads seek your technical input on new pursuits before a team is staffed','You can speak to the technical risk across three live engagements, not just the one you are on']},
+  p7:{shift:'Shift from multi-team leverage to organisational direction: you set where LFT engineering goes and stay credible in the code.',howTo:['Define and publish one engineering strategy the organisation follows — get buy-in, not just approval','Stay in the codebase actively: pair, review and build on the most complex problems regularly','Build and maintain relationships with senior business stakeholders across multiple accounts'],timeline:'Ongoing — this is a destination, not a waypoint',ready:['The engineering organisation changed direction based on your recommendation','You are cited by name when engineers explain why something is done a certain way','Business leadership asks for your input before major technical decisions are made']},
 };
 const WHERE_APPLICABLE={
   'ai-judgment':'Applies only to engineers who work on AI features. Not assessed for others.'
@@ -2032,29 +2055,44 @@ function renderCareer(){
   let h=`<div class="career">
   <div class="career-hdr">
     <h2>Your career path</h2>
-    <p class="lead">Select your current level to see the road ahead — what each step looks like and which competencies matter most.</p>
+    <p class="lead">Select your current level — see exactly what changes at each step, how to get there, and when you're ready to move up.</p>
     <div class="chips">${LEVELS.map(l=>`<button class="chip" data-clv="${l.id}" aria-pressed="${l.id===lv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div>
   </div>`;
   path.forEach((l,i)=>{
     const isCurrent=i===0;
     const sum=LEVEL_SUMMARY[l.id]||['',''];
+    const exp=CAREER_EXPAND[l.id]||{};
     const core=(CORE[l.id]||[]).filter(id=>DOMAINS.flatMap(d=>d.subs).some(s=>s.id===id));
     const next=LEVELS[fromIdx+i+1];
     h+=`<div class="path-step${isCurrent?' is-current':''}">
       <div class="path-hdr">
         <div class="path-meta">
-          <span class="path-badge">${isCurrent?'You are here':'Step '+i}</span>
+          <span class="path-badge">${isCurrent?'You are here':'Step '+(i+1)}</span>
           <span class="path-code">${l.code}</span>
           <span class="path-title">${esc(l.title)}</span>
           <span class="path-scope">${esc(l.scope)}</span>
         </div>
+        ${exp.timeline?`<span class="path-timeline">${esc(exp.timeline)}</span>`:''}
       </div>
-      <div class="path-body">
-        <div class="path-sum"><b>At a glance</b><span>${esc(sum[0])}</span></div>
-        ${sum[1]?`<div class="path-trap"><b>Common trap</b><span>${esc(sum[1])}</span></div>`:''}
-        ${core.length?`<div class="path-core"><p class="sh2">Core competencies (${core.length})</p><div class="path-comps">${core.map(id=>{const sub=DOMAINS.flatMap(d=>d.subs).find(s=>s.id===id);return sub?`<button class="dom-item" data-open="${id}" data-lv="${l.id}">${esc(sub.label)}</button>`:''}).join('')}</div></div>`:''}
-        ${next&&l.id!=='p7'?`<div class="path-nav"><button class="cta" data-gocompare="${l.id}">Compare ${l.code} → ${next.code} ↔</button></div>`:''}
+      ${exp.shift&&next?`<div class="path-shift"><b>The shift to ${esc(next.code)}</b>${esc(exp.shift)}</div>`:''}
+      <div class="path-section">
+        <div class="path-section-lbl">At a glance — ${esc(l.code)}</div>
+        <p style="margin:0;font-size:13.5px;color:var(--fg-2);line-height:1.6">${esc(sum[0])}</p>
       </div>
+      ${exp.howTo&&exp.howTo.length?`<div class="path-section">
+        <div class="path-section-lbl">How to get to ${next?esc(next.code):'this level'}</div>
+        <ul class="path-howto">${exp.howTo.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+      </div>`:''}
+      ${exp.ready&&exp.ready.length?`<div class="path-section">
+        <div class="path-section-lbl">You're ready for ${next?esc(next.code)+' when':'promotion when'}</div>
+        <ul class="path-ready">${exp.ready.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+      </div>`:''}
+      ${sum[1]?`<div class="path-trap-sec"><b>Common trap</b><p>${esc(sum[1])}</p></div>`:''}
+      ${core.length?`<div class="path-section">
+        <div class="path-section-lbl">Core competencies at ${esc(l.code)} (${core.length})</div>
+        <div class="path-comps">${core.map(id=>{const sub=DOMAINS.flatMap(d=>d.subs).find(s=>s.id===id);return sub?`<button class="dom-item" data-open="${id}" data-lv="${l.id}">${esc(sub.label)}</button>`:''}).join('')}</div>
+      </div>`:''}
+      ${next&&l.id!=='p7'?`<div class="path-section"><button class="cta" data-gocompare="${l.id}">Compare ${l.code} vs ${next.code} side by side →</button></div>`:''}
     </div>`;
   });
   h+=`</div>`;el.innerHTML=h;el.scrollTop=0;
@@ -2159,13 +2197,13 @@ function doSearch(){
 }
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
-$('sub-list').addEventListener('click',e=>{
+$('sub-list')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-si]');if(!b)return;
-  S.di=+b.dataset.di;S.si=+b.dataset.si;S.view='matrix';render();$('content').scrollTop=0;
+  S.di=+b.dataset.di;S.si=+b.dataset.si;S.view='matrix';render();const _c=$('content');if(_c)_c.scrollTop=0;
 });
-$('side-select').addEventListener('change',e=>{const [di,si]=e.target.value.split('.').map(Number);S.di=di;S.si=si;S.view='matrix';render();});
-$('side-filter').addEventListener('input',e=>{S.sfilter=e.target.value;renderSidebar();});
-$('level-strip').addEventListener('click',e=>{
+$('side-select')?.addEventListener('change',e=>{const [di,si]=e.target.value.split('.').map(Number);S.di=di;S.si=si;S.view='matrix';render();});
+$('side-filter')?.addEventListener('input',e=>{S.sfilter=e.target.value;renderSidebar();});
+$('level-strip')?.addEventListener('click',e=>{
   const act=e.target.closest('[data-act="compare"]');
   if(act){S.compare=!S.compare;render();return;}
   const ln=e.target.closest('.lvl-note');if(ln){ln.classList.toggle('open');return;}
@@ -2174,12 +2212,12 @@ $('level-strip').addEventListener('click',e=>{
   const b=e.target.closest('[data-lv]');if(!b)return;
   S.lv=b.dataset.lv;if(S.lv==='p7')S.compare=false;render();
 });
-document.querySelector('.secbar .brand').addEventListener('click',()=>{S.view='home';render();});
-document.querySelector('.secbar .brand').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();S.view='home';render();}});
-$('guide-btn').addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
-if($('promo-btn'))$('promo-btn').addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
-if($('hire-btn'))$('hire-btn').addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
-$('find-btn').addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
+document.querySelector('.secbar .brand')?.addEventListener('click',()=>{S.view='home';render();});
+document.querySelector('.secbar .brand')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();S.view='home';render();}});
+$('guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
+$('promo-btn')?.addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
+$('hire-btn')?.addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
+$('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
 // ─── LANDING PAGE ────────────────────────────────────────────────────────────
 function renderHome(){
   const el=$('content');
@@ -2238,7 +2276,7 @@ function renderHome(){
   </div>`;
   el.innerHTML=h;el.scrollTop=0;
 }
-$('content').addEventListener('click',e=>{
+$('content')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-go],[data-golv],[data-godi]');if(!b)return;
   e.stopPropagation();
   if(b.dataset.golv){S.lv=b.dataset.golv;S.view='matrix';S.compare=false;}
@@ -2248,7 +2286,7 @@ $('content').addEventListener('click',e=>{
   $('content').scrollTop=0;
 },true);
 
-$('content').addEventListener('click',e=>{
+$('content')?.addEventListener('click',e=>{
   const toc=e.target.closest('[data-toc]');if(toc){e.preventDefault();const t=document.getElementById(toc.dataset.toc);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});return;}
   const t=e.target.closest('button');if(!t||t.disabled)return;
   if(t.dataset.clv){S.clv=t.dataset.clv;renderCareer();return;}
@@ -2275,10 +2313,10 @@ $('content').addEventListener('click',e=>{
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast('Tasks copied'),fallback);else fallback();
   }
 });
-$('search-btn').addEventListener('click',openSearch);
-$('modal-overlay').addEventListener('click',e=>{if(e.target===$('modal-overlay'))closeSearchModal();});
-$('modal-input').addEventListener('input',doSearch);
-$('modal-results').addEventListener('click',e=>{
+$('search-btn')?.addEventListener('click',openSearch);
+$('modal-overlay')?.addEventListener('click',e=>{if(e.target===$('modal-overlay'))closeSearchModal();});
+$('modal-input')?.addEventListener('input',doSearch);
+$('modal-results')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-di]');if(!b)return;
   S.di=+b.dataset.di;S.si=+b.dataset.si;S.lv=b.dataset.lv;S.view='matrix';S.compare=false;S.section='ic';
   closeSearchModal();render();$('content').scrollTop=0;
@@ -2294,19 +2332,7 @@ document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
 });
 
-window.onerror=function(msg,src,line,col,err){
-  const el=document.getElementById('content');
-  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Error (line '+line+'):</b> '+msg+(err?'<br><pre style="white-space:pre-wrap;font-size:12px">'+err.stack+'</pre>':'')+'</div>';
-  return false;
-};
-window.addEventListener('unhandledrejection',function(e){
-  const el=document.getElementById('content');
-  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Unhandled promise:</b> '+e.reason+'</div>';
-});
-try{readHash();render();}catch(e){
-  const el=document.getElementById('content');
-  if(el)el.innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Init error:</b> '+e.message+'<br><pre style="white-space:pre-wrap;font-size:12px">'+e.stack+'</pre></div>';
-}
+readHash();render();
 </script>
 
 </body>
