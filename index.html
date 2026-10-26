@@ -1,4 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LFT Competency Framework</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -392,7 +396,7 @@ details.lvl[open] summary{margin-bottom:10px}
 .crumb{font-size:12px;font-weight:700;color:var(--fg-3);text-transform:uppercase;letter-spacing:.08em}
 .card-header h2{font-size:26px;line-height:1.2}
 .hdr-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.st-chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;border:1px solid var(--line);cursor:help}
+.st-chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;border:1px solid var(--line)}
 .st-chip.core{background:var(--green-soft);color:var(--green);border-color:var(--green)}
 .st-chip.sup{background:var(--surface-2);color:var(--fg-2)}
 .st-chip.warn{background:var(--amber-soft);color:var(--amber);border-color:var(--amber)}
@@ -464,6 +468,9 @@ body.tool-view .app-body{grid-template-columns:1fr}
   .section,.gt,.exp-band{box-shadow:none;break-inside:avoid}
 }
 </style>
+</head>
+<body>
+
 
 <!-- TOP NAV -->
 <div class="secbar">
@@ -473,8 +480,6 @@ body.tool-view .app-body{grid-template-columns:1fr}
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span><kbd>⌘K</kbd>
     </button>
     <button class="mode-btn" id="find-btn" aria-pressed="false">Find tasks</button>
-    <button class="mode-btn" id="promo-btn" aria-pressed="false">Promotion kit</button>
-    <button class="mode-btn" id="hire-btn" aria-pressed="false">Hiring kit</button>
     <button class="mode-btn" id="guide-btn" aria-pressed="false">Guide</button>
   </div>
 </div>
@@ -533,11 +538,11 @@ const P2_GUIDANCE=new Set(['ai-judgment','economic-thinking','delivering-feedbac
 // Competencies that depend on project assignment (v1.1).
 // Core competencies (required for promotion) at P3–P5 (v1.4). Others are supporting.
 const CORE={
-  p3:['writing-code','testing','debugging','understanding-code','software-arch','security','work-breakdown','prioritisation','ambiguity','reliability','seeking-feedback','communication','knowledge-sharing','teamwork','decision-making'],
-  p4:['writing-code','testing','debugging','observability','understanding-code','software-arch','security','work-breakdown','prioritisation','ambiguity','reliability','economic-thinking','communication','delivering-feedback','mentoring','decision-making','business-acumen'],
-  p5:['writing-code','testing','debugging','software-arch','security','work-breakdown','reliability','ambiguity','economic-thinking','communication','delivering-feedback','disagreement','decision-making','facilitation','mentoring','product-thinking']
+  p3:['writing-code','testing','debugging','understanding-code','software-arch','security','ai-assisted','work-breakdown','prioritisation','ambiguity','reliability','seeking-feedback','communication','knowledge-sharing','teamwork','decision-making'],
+  p4:['writing-code','testing','debugging','observability','understanding-code','software-arch','security','ai-assisted','work-breakdown','prioritisation','ambiguity','reliability','economic-thinking','communication','delivering-feedback','mentoring','decision-making','business-acumen'],
+  p5:['writing-code','testing','debugging','software-arch','security','ai-assisted','work-breakdown','reliability','ambiguity','economic-thinking','communication','delivering-feedback','disagreement','decision-making','facilitation','mentoring','product-thinking']
 };
-function isSupporting(subId,lv){return !!CORE[lv]&&!CORE[lv].includes(subId)&&!isPilot(subId);}
+function isSupporting(subId,lv){return !!CORE[lv]&&!CORE[lv].includes(subId);}
 const LEVEL_SUMMARY={
   p2:['Learns fast and delivers well-defined tasks with guidance.','Not asking for help early enough.'],
   p3:['Works independently on features within an epic: reliable, tested, and raises risks early.','Strong code, but waits to be told and stays quiet about risks.'],
@@ -1369,34 +1374,27 @@ function taskCard(t,i,lvId){
 
 // ─── GUIDE (v1.1) ────────────────────────────────────────────────────────────
 const GUIDE_HTML=`<div class="guide">
-<div><h2>How to use this framework</h2><p>A reference for promotion reviews, calibration, and hiring at LFT. Sections marked <span class="draft">Proposed</span> need sign-off from the VP of Engineering before they are used in reviews.</p></div>
+<div><h2>How to use this framework</h2><p>A reference for what each level looks like at LFT, for growth conversations between engineers and their managers.</p></div>
 
 <div class="gsec"><h3>Document control</h3>
 <div class="tbl-wrap"><table style="min-width:0"><tbody>
-<tr><td>Status</td><td>Released as v2.0 on 26 Oct 2026. Sections marked Proposed must not be used in reviews or hiring decisions until approved.</td></tr>
-<tr><td>Owner</td><td>VP of Engineering (proposed)</td></tr>
+<tr><td>Status</td><td>Released as v2.0 on 26 Oct 2026.</td></tr>
+<tr><td>Owner</td><td>VP of Engineering</td></tr>
 <tr><td>Content steward</td><td>One P6 or P7 nominated by the owner, maintaining rubrics, growth tasks and kits</td></tr>
 <tr><td>AI competencies</td><td>Reviewed every quarter by the AI practice lead</td></tr>
-<tr><td>Framework review</td><td>Every 6 months, and before each promotion cycle</td></tr>
-<tr><td>Effective date</td><td>Set on sign-off; promotion cases cite the version in effect at the start of the review period</td></tr>
+<tr><td>Framework review</td><td>Every 6 months</td></tr>
+<tr><td>Effective date</td><td>26 Oct 2026</td></tr>
 </tbody></table></div>
-<p style="margin-top:10px"><strong>Sign-off checklist</strong></p>
-<ol>
-<li>Rating scale: approved 25 Oct 2026. VP of Engineering still to approve the promotion rule, core competency lists and hiring bar.</li>
-<li>People Ops reviews for fairness, consistency and legal risk.</li>
-<li>CTO approves P6–P7 expectations and Writing Code P5–P7.</li>
-<li>Three managers run a calibration dry run on past cases and report gaps.</li>
-</ol>
 <p style="margin-top:10px"><strong>Rollout</strong></p>
 <ol>
-<li>Manager training (90 minutes): ratings, evidence, kits.</li>
+<li>Manager training (90 minutes): ratings, evidence and growth tasks.</li>
 <li>Engineer FAQ and an all-hands walkthrough.</li>
-<li>Calibration session before the first promotion cycle.</li>
+<li>Calibration session with managers.</li>
 <li>Retrospective after the first cycle; changes go into the next version.</li>
 </ol>
-<p style="margin-top:10px"><strong>How we will know it works:</strong> promotion outcomes consistent across managers, time in level within the guideline, fewer appeals, hiring-panel score agreement, and regretted attrition at P4–P6.</p></div>
+<p style="margin-top:10px"><strong>How we will know it works:</strong> ratings consistent across managers, engineers who can explain what their next level looks like, and regretted attrition at P4–P6.</p></div>
 
-<div class="gsec"><h3>AI fluency <span class="draft">Pilot</span></h3>
+<div class="gsec"><h3>AI fluency</h3>
 <p>The three AI competencies follow the overview of the <strong>AI Fluency Matrix</strong>. Expectations at each level use its wording.</p>
 <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Theme</th><th>Competency here</th><th>Applies to</th></tr></thead><tbody>
 <tr><td>PF8</td><td>AI-Assisted Engineering: how engineers use AI tools safely and well in everyday delivery work</td><td>Every engineer</td></tr>
@@ -1407,40 +1405,27 @@ const GUIDE_HTML=`<div class="guide">
 <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Level</th><th>Keyword</th><th>Focus</th></tr></thead><tbody><tr><td>P2</td><td>Verifies / Learns</td><td>Executes and validates under senior guidance; reviews outputs line by line.</td></tr><tr><td>P3</td><td>Systematises</td><td>Applies repeatable prompting patterns, writes specs before prompting, and builds basic components.</td></tr><tr><td>P4</td><td>Integrates</td><td>Full-lifecycle integration, disciplined context and session management, and infrastructure evaluation.</td></tr><tr><td>P5</td><td>Standardises</td><td>Establishes team-level AI standards, prompt conventions, and evaluation suites.</td></tr><tr><td>P6</td><td>Spreads</td><td>Drives adoption, closes AI practice gaps, and sets benchmarks across multiple teams.</td></tr><tr><td>P7</td><td>Governs</td><td>Sets organisational AI governance, policy, business-outcome metrics, and security posture.</td></tr></tbody></table></div>
 <p style="margin-top:8px"><strong>Keyword by theme</strong></p>
 <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Level</th><th>PF8</th><th>PF9</th><th>PF10</th></tr></thead><tbody><tr><td>P2</td><td>Verifies</td><td>Contributes</td><td>Recognises</td></tr><tr><td>P3</td><td>Systematises</td><td>Catches</td><td>Identifies</td></tr><tr><td>P4</td><td>Integrates</td><td>Ships</td><td>Applies</td></tr><tr><td>P5</td><td>Standardises</td><td>Reviews</td><td>Standardises</td></tr><tr><td>P6</td><td>Spreads</td><td>Standardises</td><td>Harmonises</td></tr><tr><td>P7</td><td>Governs</td><td>Governs</td><td>Governs</td></tr></tbody></table></div>
-<p style="margin-top:8px"><strong>Pilot and assessment principles</strong></p>
+<p style="margin-top:8px"><strong>Assessment principles</strong></p>
 <ul>
-<li><strong>Pilot first:</strong> run one cycle with two or three teams, for development conversations only. Calibrate before the AI competencies are used for ratings or promotions.</li>
-<li><strong>A bar, not a checklist:</strong> an engineer meets the bar by showing most of the bullets. Equivalent evidence counts, and the numbers are pilot defaults to calibrate.</li>
+<li><strong>A bar, not a checklist:</strong> an engineer meets the bar by showing most of the bullets. Equivalent evidence counts, and numbers are defaults that calibration can adjust.</li>
 <li><strong>Project context:</strong> mark items N/A when the project rules them out, and accept evidence from internal work, a sandbox exercise or a previous engagement.</li>
 <li><strong>Same themes, different depth:</strong> AI awareness, AI-assisted development and security basics are expected at every level. Depth and reach change with seniority, not the subject.</li>
 </ul></div>
 
-<div class="gsec"><h3>Rating scale <span class="draft" style="color:var(--green);background:var(--green-soft);border-color:var(--green)">Approved 25 Oct 2026</span></h3>
+<div class="gsec"><h3>Rating scale</h3>
 <table><thead><tr><th>Rating</th><th>Meaning</th></tr></thead><tbody>
 <tr><td>Meets</td><td>Meets the expectation for the level, consistently and independently, across the review period. This is the standard everyone is measured against.</td></tr>
 <tr><td>Below</td><td>Does not meet the expectation for the level.</td></tr>
 <tr><td>Exceeds</td><td>Goes beyond the expectation for the level.</td></tr>
 <tr><td>N/A</td><td>Not applicable for this person, for example a competency their role or project gives no chance to show. Never counted against the engineer.</td></tr>
 </tbody></table></div>
-
-<div class="gsec"><h3>Promotion rule <span class="draft">Proposed</span></h3>
-<ol>
-<li><strong>Meets</strong> or <strong>Exceeds</strong> at the target level on every assessed Technical Skills and Delivery competency. For P3, P4 and P5, only the <strong>core</strong> competencies count; supporting ones are marked in the sidebar.</li>
-<li><strong>Meets</strong> or <strong>Exceeds</strong> on at least 70% of the remaining assessed (or core) competencies.</li>
-<li>Sustained for <strong>two consecutive review cycles</strong>.</li>
-<li>Calibrated by the manager and one peer manager. P6 promotions are also reviewed by the VP of Engineering.</li>
-<li>Promotion runs from P2 up to P6. <strong>P7 (Solution Architect) is not reached through promotion.</strong></li>
-</ol>
-<p style="margin-top:8px">Performing at level means <strong>Meets</strong> on most competencies at the current level. A single cycle at the next level is a growth signal, not a promotion.</p></div>
-
 <div class="gsec"><h3>Definitions</h3>
 <ul>
 <li><strong>Team</strong> — one delivery squad (typically 4–8 engineers) on a single client account or internal product, with one tech lead.</li>
 <li><strong>Several teams</strong> — at least two teams other than your own. For P6, ideally spanning at least two client accounts.</li>
 <li><strong>Organization</strong> — LFT Engineering as a whole.</li>
 <li><strong>Cycle</strong> — one performance review period, as set by People Ops.</li>
-<li><strong>Review period</strong> — the two consecutive cycles behind a promotion case. “Examples from the review period” means one or two clear examples, not a count.</li>
-<li><strong>Core and supporting</strong> — at P3–P5, 15–17 core competencies decide promotion. The three AI fluency competencies are in pilot and not counted yet. Supporting competencies guide development and can show where someone Exceeds.</li>
+<li><strong>Core and supporting</strong> — at P3–P5, 15–17 core competencies are the main focus when discussing readiness for the next level. AI-Assisted Engineering is core at P3–P5; AI Engineering and AI Security Engineering are supporting. Supporting competencies guide development and can show where someone Exceeds.</li>
 </ul></div>
 
 <div class="gsec"><h3>Evidence principles</h3>
@@ -1458,7 +1443,7 @@ const GUIDE_HTML=`<div class="guide">
 <li><strong>P7 teaching</strong> is consolidated into one annual leadership curriculum, planned with the VP of Engineering, instead of separate sessions for each competency.</li>
 </ul></div>
 
-<div class="gsec"><h3>Growth tasks (v1.2)</h3>
+<div class="gsec"><h3>Growth tasks</h3>
 <p>Every competency has three small tasks at each level that build toward the next level:</p>
 <ul>
 <li><strong>Quick win</strong> (1–2 days): builds confidence and gives a first piece of evidence.</li>
@@ -1473,7 +1458,19 @@ const GUIDE_HTML=`<div class="guide">
 <li><strong>On the bench</strong>: a fourth task at P4–P6 for engineers between projects, using internal tools, practice projects or pre-sales work.</li>
 <li><strong>Client-facing</strong>: confirm with the account lead before assigning.</li>
 </ul>
-<p style="margin-top:8px"><strong>Find tasks</strong> suggests tasks for an engineer's level and their one to three weakest competencies. Copy the list into your own 1:1 notes. The framework does not store plans. A completed task counts as evidence for the rubric; it is not a promotion checklist on its own.</p></div>
+<p style="margin-top:8px"><strong>Find tasks</strong> suggests tasks for an engineer's level and their one to three weakest competencies. Copy the list into your own 1:1 notes. The framework does not store plans. A completed task counts as evidence for the rubric; it is not a checklist on its own.</p></div>
+</div>`;
+
+const RELEASE_HTML=`<div class="guide">
+<div><h2>Release notes</h2><p>Decisions and changes for each version of the LFT Competency Framework.</p></div>
+
+<div class="gsec"><h3>Sign-off checklist</h3>
+<ol>
+<li>Rating scale: approved 25 Oct 2026. VP of Engineering still to approve the core competency lists.</li>
+<li>People Ops reviews for fairness, consistency and legal risk.</li>
+<li>CTO approves P6–P7 expectations and Writing Code P5–P7.</li>
+<li>Three managers run a calibration dry run on past cases and report gaps.</li>
+</ol></div>
 
 <div class="gsec"><h3>Decisions</h3>
 <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Date</th><th>Decision</th></tr></thead><tbody>
@@ -1484,12 +1481,14 @@ const GUIDE_HTML=`<div class="guide">
 <tr><td>25 Oct 2026</td><td>The Engineering Manager ladder is kept separate from the engineering competency framework.</td></tr>
 <tr><td>25 Oct 2026</td><td>Solutioning &amp; Estimation is not part of this framework; it remains under discussion separately.</td></tr>
 <tr><td>26 Oct 2026</td><td>Released as v2.0.</td></tr>
-</tbody></table></div>
-<p style="margin-top:10px"><strong>Still open:</strong> sign-off of the promotion rule, core competency lists and hiring bar.</p></div>
+</tbody></table></div></div>
 
 <div class="gsec"><h3>What changed in v2.0</h3>
 <ul>
+<li>The Promotion kit and Hiring kit are reachable only by direct link (#promotion/p4, #hiring/p4); their top-bar buttons and the Reviews/Interviews switch are removed. Promotion and hiring content moved out of the Guide.</li>
+<li>The promotion rule and hire bar are removed. The Guide, Promotion kit and Hiring kit are guidance on the next level, not a guarantee of promotion or a fixed hiring bar.</li>
 <li>First release (v2.0).</li>
+<li>The AI fluency competencies are no longer a pilot: they are rated like any other competency, and AI-Assisted Engineering is core at P3–P5.</li>
 <li>The Engineering Manager ladder and the Solutioning &amp; Estimation proposal are no longer included; they are being worked on separately.</li>
 </ul></div>
 
@@ -1497,7 +1496,7 @@ const GUIDE_HTML=`<div class="guide">
 <ul>
 <li>Simpler navigation: one sidebar lists every competency grouped by domain, with a filter box. The separate domain tabs row and the “By Level” mode are gone.</li>
 <li>Find tasks, Promotion kit, Hiring kit and Guide open full-width, with a “Back to competencies” link.</li>
-<li>Competency pages put the expectation first. Status shows as chips (Core, Supporting, AI pilot, Where applicable), and the level summary sits under the level tabs.</li>
+<li>Competency pages put the expectation first. Status shows as chips (Core, Supporting, AI fluency, Where applicable), and the level summary sits under the level tabs.</li>
 <li>Growth task cards are shorter and the section can be collapsed.</li>
 <li>Every view has its own link, so a page can be shared or bookmarked (for example, Testing at P4).</li>
 <li>Search supports arrow keys and Enter; the Guide has an in-page contents bar; pages print cleanly.</li>
@@ -1582,7 +1581,7 @@ function renderTopNav(){}
 
 function renderSidebar(){
   const q=(S.sfilter||'').toLowerCase().trim();
-  const tag=s=>isPilot(s.id)?'<span class="ai-tag">✦ AI · Pilot</span>':isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'';
+  const tag=s=>(isPilot(s.id)?'<span class="ai-tag">✦ AI fluency</span>':'')+(isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'');
   let any=false;
   $('sub-list').innerHTML=DOMAINS.map((d,di)=>{
     const items=d.subs.map((s,si)=>{
@@ -1594,7 +1593,7 @@ function renderSidebar(){
         </button>`;}).join('');
     return items?`<div class="sdomain-group${di===S.di?' is-cur':''}"><span class="sdomain-hdr">${esc(d.label)}</span>${items}</div>`:'';
   }).join('')+(any?'':'<p class="side-empty">No competency matches.</p>');
-  $('side-select').innerHTML=DOMAINS.map((d,di)=>`<optgroup label="${esc(d.label)}">${d.subs.map((s,si)=>`<option value="${di}.${si}" ${di===S.di&&si===S.si?'selected':''}>${esc(s.label)}${isPilot(s.id)?' (AI pilot)':isSupporting(s.id,S.lv)?' (supporting)':''}</option>`).join('')}</optgroup>`).join('');
+  $('side-select').innerHTML=DOMAINS.map((d,di)=>`<optgroup label="${esc(d.label)}">${d.subs.map((s,si)=>`<option value="${di}.${si}" ${di===S.di&&si===S.si?'selected':''}>${esc(s.label)}${isPilot(s.id)?' (AI fluency)':''}${isSupporting(s.id,S.lv)?' (supporting)':''}</option>`).join('')}</optgroup>`).join('');
 }
 
 function renderLevelStrip(){
@@ -1612,7 +1611,7 @@ function renderLevelStrip(){
   }).join('');
   const tools=`<div class="strip-tools">
     ${S.lv!=='p7'?`<button class="chip-btn" data-act="compare" aria-pressed="${S.compare}" title="Show this level next to the one above it">Compare with ${nextCode(S.lv)} ↔</button>`:''}
-    <span class="seg-label" id="use-label">View for</span><div class="seg" role="group" aria-labelledby="use-label"><button data-use="promotion" aria-pressed="${S.use==='promotion'}">Reviews</button><button data-use="hiring" aria-pressed="${S.use==='hiring'}">Interviews</button></div>
+    ${S.use==='hiring'?`<span class="seg-label" id="use-label">View for</span><div class="seg" role="group" aria-labelledby="use-label"><button data-use="promotion" aria-pressed="${S.use==='promotion'}">Reviews</button><button data-use="hiring" aria-pressed="${S.use==='hiring'}">Interviews</button></div>`:''}
   </div>`;
   const ls=LEVEL_SUMMARY[S.lv];
   const note=ls?`<div class="lvl-note" data-act="lvlnote" title="Click to expand"><b>${esc(LEVELS.find(l=>l.id===S.lv).code)} at a glance:</b> ${esc(ls[0])} <span class="trap"><b>Common trap:</b> ${esc(ls[1])}</span></div>`:'';
@@ -1629,6 +1628,7 @@ function resolveCell(sub,lvId){
 function renderContent(){
   const el=$('content');
   if(S.view==='guide'){el.innerHTML=GUIDE_HTML;el.scrollTop=0;return;}
+  if(S.view==='release'){el.innerHTML=RELEASE_HTML;el.scrollTop=0;return;}
   if(S.view==='find'){renderFinder();return;}
   if(S.view==='hire'){renderHiring();return;}
   if(S.view==='promo'){renderPromo();return;}
@@ -1643,19 +1643,19 @@ function renderContent(){
   let h=`<div class="card">`;
   const chips=[];
   if(!cell.na){
-    if(isPilot(sub.id))chips.push(`<span class="st-chip ai" title="Development conversations only until calibrated">✦ AI fluency · ${AI_THEME[sub.id]} · Pilot</span>`);
-    else if(CORE[S.lv]&&CORE[S.lv].includes(sub.id))chips.push('<span class="st-chip core" title="Required for promotion at this level">Core</span>');
-    else if(isSupporting(sub.id,S.lv))chips.push('<span class="st-chip sup" title="Not required for promotion at this level">Supporting</span>');
-    if(S.lv==='p2'&&P2_GUIDANCE.has(sub.id))chips.push('<span class="st-chip sup" title="Not rated at P2">Guidance only at P2</span>');
-    if(WHERE_APPLICABLE[sub.id])chips.push('<span class="st-chip warn" title="'+esc(WHERE_APPLICABLE[sub.id])+'">Where applicable</span>');
+    if(isPilot(sub.id))chips.push(`<span class="st-chip ai">✦ AI fluency · ${AI_THEME[sub.id]}</span>`);
+    if(CORE[S.lv]&&CORE[S.lv].includes(sub.id))chips.push('<span class="st-chip core">Core</span>');
+    else if(isSupporting(sub.id,S.lv))chips.push('<span class="st-chip sup">Supporting</span>');
+    if(S.lv==='p2'&&P2_GUIDANCE.has(sub.id))chips.push('<span class="st-chip sup">Guidance only at P2</span>');
+    if(WHERE_APPLICABLE[sub.id])chips.push('<span class="st-chip warn">Where applicable</span>');
   }
   h+=`<div class="card-header"><div class="crumb">${esc(domain.label)}</div><h2>${esc(sub.label)}</h2><div class="hdr-chips"><span class="scope-chip">${lv.code} · ${esc(lv.title)} · ${esc(lv.scope)}</span>${chips.join('')}</div></div>`;
   const notes=[];
   if(S.lv==='p2'&&P2_GUIDANCE.has(sub.id)&&!cell.na)notes.push('<b>Guidance only at P2.</b> P2 reviews use the core set listed in the Guide; use this to show an associate what comes next.');
-  if(isSupporting(sub.id,S.lv)&&!cell.na)notes.push(`<b>Supporting at ${lv.code}.</b> Not required for promotion. Rate it when there is clear evidence, and use it for development.`);
+  if(isSupporting(sub.id,S.lv)&&!cell.na)notes.push(`<b>Supporting at ${lv.code}.</b> Not a main focus at this level. Rate it when there is clear evidence, and use it for development.`);
   if(WHERE_APPLICABLE[sub.id]&&!cell.na)notes.push(`<b>Where applicable.</b> ${esc(WHERE_APPLICABLE[sub.id])}`);
   if(isPilot(sub.id)&&!cell.na)
-    h+=`<div class="ai-note"><div class="ai-note-head"><span class="ai-badge">✦ AI fluency · ${AI_THEME[sub.id]}</span><span class="ai-pill">Pilot</span><span class="ai-kw">${esc(AI_KEYWORD[sub.id][S.lv])}</span></div><p>A priority area for LFT. During the pilot, use it for development conversations; it does not count towards promotion until calibrated. Judge the overall pattern, not each bullet, and accept evidence from internal work, a sandbox exercise or a previous engagement.</p></div>`;
+    h+=`<div class="ai-note"><div class="ai-note-head"><span class="ai-badge">✦ AI fluency · ${AI_THEME[sub.id]}</span><span class="ai-kw">${esc(AI_KEYWORD[sub.id][S.lv])}</span></div><p>A priority area for LFT. Judge the overall pattern, not each bullet, and accept evidence from internal work, a sandbox exercise or a previous engagement.</p></div>`;
 
   if(S.compare){
     const i=LEVELS.findIndex(l=>l.id===S.lv);
@@ -1762,13 +1762,13 @@ const DOMKEY={technical:'technical',delivery:'delivery',fcc:'fcc',leadership:'le
 
 function renderHiring(){
   const el=$('content');const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];
-  let h=`<div class="kit"><div><h2>Hiring kit <span class="draft">Proposed</span></h2><p class="lead">A structured interview loop for each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies on their own and writes notes before the debrief.</p></div>`;
+  let h=`<div class="kit"><div><h2>Hiring kit</h2><p class="lead">A guideline for interviewing at each level, not a fixed process or bar. A structured interview loop for each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies on their own and writes notes before the debrief.</p></div>`;
   h+=`<div class="chips">${LEVELS.map(l=>`<button class="chip" data-hlv="${l.id}" aria-pressed="${l.id===S.hlv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div>`;
   h+=`<div class="fres-head"><h3>${lv.code} · ${esc(lv.title)}: ${Object.keys(H.anchors).length} competencies assessed</h3><button class="btn" data-act="copy-hiring">Copy interview pack</button></div>`;
   h+=`<div class="gsec"><h3>Interview loop</h3><div class="tbl-wrap"><table><thead><tr><th>Round</th><th>Minutes</th><th>Interviewers</th><th>Competencies</th><th>Focus</th></tr></thead><tbody>${H.loop.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]}</td><td>${esc(r[2])}</td><td>${r[3].split(',').map(id=>esc(findSub(id).s.label)).join(', ')}</td><td>${esc(r[4])}</td></tr>`).join('')}</tbody></table></div></div>`;
   const X=H.exercise;
   h+=`<div class="gsec"><h3>Exercise: ${esc(X.title)} (${X.mins} min)</h3><p>${esc(X.brief)}</p><p><b>Look for:</b></p><ul>${X.lookFor.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
-  h+=`<div class="gsec"><h3>Scoring guide</h3><p>Score each competency Strong, Acceptable or Weak. <b>Proposed hire bar:</b> no Weak, and Strong on at least half of the competencies assessed. Use the questions as written; ask for a comparable past project when a question assumes LFT context.</p>`;
+  h+=`<div class="gsec"><h3>Scoring guide</h3><p>Score each competency Strong, Acceptable or Weak. <b>Guideline:</b> a strong candidate usually has no Weak and is Strong on about half of the competencies assessed. This is a guide for the panel, not a fixed bar; the hiring decision rests with the panel and hiring manager. Use the questions as written; ask for a comparable past project when a question assumes LFT context.</p>`;
   Object.keys(H.anchors).forEach(id=>{
     const f=findSub(id);const a=H.anchors[id];const cell=f.s.levels[S.hlv];
     const qs=(cell&&cell.questions)?cell.questions:[];
@@ -1784,7 +1784,7 @@ function hiringText(){
   const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];const L=[`Interview pack: ${lv.code} ${lv.title}`,'','Loop:'];
   H.loop.forEach(r=>L.push(`- ${r[0]} (${r[1]} min, ${r[2]}): ${r[3].split(',').map(id=>findSub(id).s.label).join(', ')}. ${r[4]}`));
   L.push('',`Exercise: ${H.exercise.title} (${H.exercise.mins} min)`,H.exercise.brief,'Look for:');H.exercise.lookFor.forEach(x=>L.push('- '+x));
-  L.push('','Scoring (Strong / Acceptable / Weak). Proposed bar: no Weak; Strong on at least half.');
+  L.push('','Scoring (Strong / Acceptable / Weak). Guideline (not a fixed bar): usually no Weak; Strong on about half.');
   Object.keys(H.anchors).forEach(id=>{const f=findSub(id);const a=H.anchors[id];const c=f.s.levels[S.hlv];L.push('',f.s.label);
     if(c&&c.questions)c.questions.forEach(q=>L.push('  Q: '+q));
     L.push('  Strong: '+a[0],'  Acceptable: '+a[1],'  Weak: '+a[2]);});
@@ -1793,16 +1793,14 @@ function hiringText(){
 
 function promoTemplate(){
   const cur=LEVELS.find(l=>l.id===S.plv);const tgtId=LEVELS[LEVELS.findIndex(l=>l.id===S.plv)+1].id;const tgt=LEVELS.find(l=>l.id===tgtId);
-  const L=[`PROMOTION CASE: [Engineer name], ${cur.code} → ${tgt.code}`,`Review period: [start] to [end] (two consecutive cycles)`,`Time in ${cur.code}: [months]`,`Manager: [name]   Peer calibrator: [name]`,'',`Summary (3 sentences): what they now do consistently at ${tgt.code}, and the impact.`,'',`Ratings at ${tgt.code} (Meets / Below / Exceeds / N/A).`,`For each: one or two outcomes with dates and links. Completed growth tasks are not evidence on their own.`];
+  const L=[`PROMOTION CASE: [Engineer name], ${cur.code} → ${tgt.code}`,`Review period: [start] to [end] (one or more cycles)`,`Time in ${cur.code}: [months]`,`Manager: [name]   Peer calibrator: [name]`,'',`Summary (3 sentences): what they now do consistently at ${tgt.code}, and the impact.`,'',`Ratings at ${tgt.code} (Meets / Below / Exceeds / N/A).`,`For each: one or two outcomes with dates and links. Completed growth tasks are not evidence on their own.`];
   const assessed=s=>{const c=s.levels[tgtId];return c!==NA&&c&&!c.na;};
   const core=CORE[tgtId];
   if(core)L.push('',`CORE COMPETENCIES (${core.length}, required)`);
-  DOMAINS.forEach(d=>{const subs=d.subs.filter(s=>assessed(s)&&!isPilot(s.id)&&(!core||core.includes(s.id)));if(!subs.length)return;
+  DOMAINS.forEach(d=>{const subs=d.subs.filter(s=>assessed(s)&&(!core||core.includes(s.id)));if(!subs.length)return;
     L.push('',d.label.toUpperCase());subs.forEach(s=>L.push(`- ${s.label}: [rating] | Evidence: [outcome, date, link]`));});
   if(core){L.push('','SUPPORTING COMPETENCIES (optional: list only those with clear evidence)');
-    DOMAINS.forEach(d=>d.subs.filter(s=>assessed(s)&&!core.includes(s.id)&&!isPilot(s.id)).forEach(s=>L.push(`- ${s.label}: [rating or leave blank]`)));}
-  L.push('','AI FLUENCY (pilot: development notes only, not counted)');
-  DOMAINS.forEach(d=>d.subs.filter(s=>assessed(s)&&isPilot(s.id)).forEach(s=>L.push(`- ${s.label} (${AI_THEME[s.id]}): [notes]`)));
+    DOMAINS.forEach(d=>d.subs.filter(s=>assessed(s)&&!core.includes(s.id)).forEach(s=>L.push(`- ${s.label}: [rating or leave blank]`)));}
   L.push('','N/A competencies and why: [list]','Peer and client input: [quotes or summaries]','Development areas at the new level: [1–2]','Calibration outcome: [approved / not yet, with reasons]');
   return L.join('\n');
 }
@@ -1810,19 +1808,20 @@ function renderPromo(){
   const el=$('content');
   const pairs=LEVELS.slice(0,-2).map((l,i)=>({from:l,to:LEVELS[i+1]}));
   const tgt=LEVELS[LEVELS.findIndex(l=>l.id===S.plv)+1];const ex=PROMO.examples[tgt.id];
-  let h=`<div class="kit"><div><h2>Promotion kit <span class="draft">Proposed</span></h2><p class="lead">How to judge readiness for the next level, what “Meets” looks like next to a borderline case, and a template for writing the case.</p></div>`;
+  let h=`<div class="kit"><div><h2>Promotion kit</h2><p class="lead">A guide to what the next level looks like, what “Meets” looks like next to a borderline case, and a template for writing the case.</p></div>`;
   h+=`<div class="chips">${pairs.map(p=>`<button class="chip" data-plv="${p.from.id}" aria-pressed="${p.from.id===S.plv}">${p.from.code} → ${p.to.code}</button>`).join('')}</div>`;
   if(LEVEL_SUMMARY[tgt.id])h+=`<div class="lvl-sum"><span><b>${tgt.code} at a glance:</b> ${esc(LEVEL_SUMMARY[tgt.id][0])}</span><span><b>Common trap:</b> ${esc(LEVEL_SUMMARY[tgt.id][1])}</span></div>`;
-  h+=`<div class="gsec"><h3>Rules</h3><ol>
-    <li><b>Meets</b> or <b>Exceeds</b> at ${tgt.code} on every ${CORE[tgt.id]?'core':'assessed'} Technical Skills and Delivery competency.</li>
-    <li><b>Meets</b> or <b>Exceeds</b> on at least 70% of the remaining ${CORE[tgt.id]?'core':'assessed'} competencies.${CORE[tgt.id]?` ${tgt.code} has ${CORE[tgt.id].length} core competencies; supporting ones are optional.`:''}</li>
-    <li>The three AI fluency competencies (AI-Assisted Engineering, AI Engineering, AI Security Engineering) are in pilot. Discuss them, but do not count them towards promotion until they are calibrated.</li>
-    <li>Sustained for two consecutive review cycles; calibrated by the manager and one peer manager.${tgt.id==='p6'?' Also reviewed by the VP of Engineering.':''}</li></ol>
+  h+=`<div class="gsec"><h3>How to use this kit</h3>
+    <p>This kit is a guide to what ${tgt.code} looks like. It is <b>not a promotion rule</b>: showing these signals does not guarantee a promotion, which also depends on business need, role availability and calibration.</p>
+    <ul>
+    <li>Focus on the ${CORE[tgt.id]?'core':'Technical Skills and Delivery'} competencies at ${tgt.code}${CORE[tgt.id]?` (${CORE[tgt.id].length} at this level); supporting ones add colour`:''}.</li>
+    <li>Look for a consistent pattern of <b>Meets</b> or <b>Exceeds</b> over time, not a single strong cycle.</li>
+    <li>Talk it through with a peer manager so expectations stay consistent across teams.${tgt.id==='p6'?' P6 cases are also discussed with the VP of Engineering.':''}</li></ul>
     <p><b>P7 (Solution Architect)</b> is not reached through promotion, so there is no P6 → P7 case.</p>
-    <p><b>N/A:</b> excluded from the 70% count. No more than three N/A ratings, and never Writing Code, Testing, Debugging or Software Architecture. If it is N/A because the engineer had no opportunity, the manager should arrange one, using the growth tasks marked “Works without a project”.</p>
-    <p><b>Uneven profiles:</b> one <b>Below</b> outside Technical Skills and Delivery is acceptable when the engineer <b>Exceeds</b> in at least two other competencies. At P5 and above, the people-focused competencies (Feedback &amp; Collaboration, Leadership) cannot be the gap.</p>
-    <p><b>Evidence:</b> cite outcomes, such as an incident prevented, a decision that held or a teammate who grew. Completed growth tasks show effort, not readiness.</p></div>`;
-  h+=`<div class="gsec"><h3>Typical time in level</h3><p>A guideline, not a gate. Exceptions need VP of Engineering approval.</p><div class="tbl-wrap"><table><thead><tr><th>Move</th><th>Typical time</th></tr></thead><tbody>${PROMO.time_in_level.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</tbody></table></div></div>`;
+    <p><b>N/A:</b> if a competency is N/A because the engineer had no opportunity, the manager should help arrange one, using the growth tasks marked “Works without a project”.</p>
+    <p><b>Uneven profiles:</b> strengths in some competencies can balance a gap in others. Discuss the overall picture rather than counting ratings.</p>
+    <p><b>Evidence:</b> cite outcomes, such as an incident prevented, a decision that held or a teammate who grew. Completed growth tasks show effort, not readiness. The review period is the cycles behind the case; “examples from the review period” means one or two clear examples, not a count.</p></div>`;
+  h+=`<div class="gsec"><h3>Typical time in level</h3><p>A guideline, not a gate. People grow at different speeds.</p><div class="tbl-wrap"><table><thead><tr><th>Move</th><th>Typical time</th></tr></thead><tbody>${PROMO.time_in_level.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</tbody></table></div></div>`;
   h+=`<div class="gsec"><h3>What “Meets” looks like at ${tgt.code}</h3>`;
   DOMAINS.forEach(d=>{const e=ex[d.id];if(!e)return;h+=`<div class="comp-block"><h4>${esc(d.label)}</h4><div class="pair"><div class="anchor a-strong"><b>Meets</b>${esc(e[0])}</div><div class="anchor a-weak"><b>Borderline: not yet</b>${esc(e[1])}</div></div></div>`;});
   h+=`</div>`;
@@ -1833,23 +1832,21 @@ function renderPromo(){
 function render(){
   document.body.classList.toggle('sec-other',S.section!=='ic');
   document.querySelectorAll('.sec-tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.sec===S.section));
-  const tool=['guide','find','hire','promo'].includes(S.view);
+  const tool=['guide','find','hire','promo','release'].includes(S.view);
   document.body.classList.toggle('tool-view',tool);
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
     (el.firstElementChild||el).insertAdjacentHTML('afterbegin','<button class="back-btn" data-act="back">← Back to competencies</button>');
-    if(S.view==='guide'){
+    if(S.view==='guide'||S.view==='release'){
       const hs=[...el.querySelectorAll('.guide .gsec>h3')];
       hs.forEach((h3,i)=>{h3.parentElement.id='g'+i;});
-      let seenLog=false;
       const links=hs.map((h3,i)=>{const t=h3.childNodes[0].textContent.trim();
-        if(/^What changed/.test(t)){if(seenLog)return '';seenLog=true;return `<a href="#guide" data-toc="g${i}">Version history</a>`;}
-        return `<a href="#guide" data-toc="g${i}">${esc(t)}</a>`;}).join('');
+        return `<a href="#${S.view}" data-toc="g${i}">${esc(t)}</a>`;}).join('');
       el.querySelector('.guide>div:not(.gsec)').insertAdjacentHTML('afterend',`<nav class="toc" aria-label="On this page">${links}</nav>`);
     }
   }
-  writeHash();const g=$('guide-btn');g.classList.toggle('active',S.view==='guide');g.setAttribute('aria-pressed',S.view==='guide');[['find-btn','find'],['promo-btn','promo'],['hire-btn','hire']].forEach(([b,v])=>{const x=$(b);x.classList.toggle('active',S.view===v);x.setAttribute('aria-pressed',S.view===v);});}
+  writeHash();const g=$('guide-btn');g.classList.toggle('active',S.view==='guide');g.setAttribute('aria-pressed',S.view==='guide');[['find-btn','find']].forEach(([b,v])=>{const x=$(b);x.classList.toggle('active',S.view===v);x.setAttribute('aria-pressed',S.view===v);});}
 
 // ─── DEEP LINKS ──────────────────────────────────────────────────────────────
 function curSub(){return DOMAINS[S.di].subs[S.si]}
@@ -1859,6 +1856,7 @@ function writeHash(){
   else if(S.view==='promo')h='promotion/'+S.plv;
   else if(S.view==='hire')h='hiring/'+S.hlv;
   else if(S.view==='guide')h='guide';
+  else if(S.view==='release')h='release';
   else h='c/'+curSub().id+'/'+S.lv+(S.compare?'/compare':'')+(S.use==='hiring'?'/interview':'');
   try{if(location.hash.slice(1)!==h)history.replaceState(null,'','#'+h);}catch(e){}
 }
@@ -1870,6 +1868,7 @@ function readHash(){
   else if(p[0]==='promotion'){S.view='promo';if(['p2','p3','p4','p5'].includes(p[1]))S.plv=p[1];}
   else if(p[0]==='hiring'){S.view='hire';if(isLv(p[1]))S.hlv=p[1];}
   else if(p[0]==='guide')S.view='guide';
+  else if(p[0]==='release')S.view='release';
   else if(p[0]==='c'){
     DOMAINS.forEach((d,di)=>d.subs.forEach((s,si)=>{if(s.id===p[1]){S.di=di;S.si=si;}}));
     if(isLv(p[2]))S.lv=p[2];
@@ -1953,8 +1952,8 @@ $('level-strip').addEventListener('click',e=>{
   S.lv=b.dataset.lv;if(S.lv==='p7')S.compare=false;render();
 });
 $('guide-btn').addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
-$('promo-btn').addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
-$('hire-btn').addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
+if($('promo-btn'))$('promo-btn').addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
+if($('hire-btn'))$('hire-btn').addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
 $('find-btn').addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
 $('content').addEventListener('click',e=>{
   const toc=e.target.closest('[data-toc]');if(toc){e.preventDefault();const t=document.getElementById(toc.dataset.toc);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});return;}
@@ -2003,4 +2002,5 @@ readHash();
 render();
 </script>
 
-</body></html>
+</body>
+</html>
