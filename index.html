@@ -482,6 +482,7 @@ body.home-view .back-btn{display:none}
 .hero h1{margin:0;font-size:40px;line-height:1.1;letter-spacing:-.02em;color:var(--fg);text-wrap:balance}
 .hero-lead{margin:14px 0 0;font-size:17px;line-height:1.6;color:var(--fg-2);max-width:56ch}
 .hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.home-nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--line);}
 .cta{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:10px 16px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .cta:hover{border-color:var(--accent);color:var(--accent)}
 .cta.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -637,6 +638,14 @@ body.home-view .back-btn{display:none}
     <button class="mode-btn" id="hire-btn" aria-pressed="false">Hiring kit</button>
     <button class="mode-btn" id="guide-btn" aria-pressed="false">Guide</button>
   </div>
+</div>
+
+<!-- HOME NAV: static buttons outside #content so Harbor click handling works -->
+<div id="home-nav" class="home-nav" hidden>
+  <button id="cta-matrix" class="cta primary">Browse competencies →</button>
+  <button id="cta-career" class="cta">View my career path</button>
+  <button id="cta-find" class="cta">Find growth tasks</button>
+  <button id="cta-guide" class="cta">Read the guide</button>
 </div>
 
 <!-- BODY -->
@@ -2103,6 +2112,7 @@ function render(){
   document.querySelectorAll('.sec-tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.sec===S.section));
   const tool=['guide','find','hire','promo','release','home','career'].includes(S.view);
   document.body.classList.toggle('tool-view',tool);document.body.classList.toggle('home-view',S.view==='home');
+  const hn=$('home-nav');if(hn)hn.hidden=S.view!=='home';
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
@@ -2231,12 +2241,6 @@ function renderHome(){
       <p class="eyebrow">Leapfrog Technology · Engineering</p>
       <h1>LFT Competency Framework</h1>
       <p class="hero-lead">What good engineering looks like at each level, from Associate Engineer to Solution Architect. A shared reference for engineers, managers and interviewers.</p>
-      <div class="hero-cta">
-        <button class="cta primary" data-go="matrix">Browse competencies →</button>
-        <button class="cta" data-go="career">View my career path</button>
-        <button class="cta" data-go="find">Find growth tasks</button>
-        <button class="cta" data-go="guide">Read the guide</button>
-      </div>
     </div>
     <dl class="hero-stats">
       <div><dt>${LEVELS.length}</dt><dd>levels</dd></div>
@@ -2276,6 +2280,11 @@ function renderHome(){
   </div>`;
   el.innerHTML=h;el.scrollTop=0;
 }
+$('cta-matrix')?.addEventListener('click',()=>{S.view='matrix';render();});
+$('cta-career')?.addEventListener('click',()=>{S.view='career';render();});
+$('cta-find')?.addEventListener('click',()=>{S.flv=S.lv;S.view='find';render();});
+$('cta-guide')?.addEventListener('click',()=>{S.view='guide';render();});
+
 $('content')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-go],[data-golv],[data-godi]');if(!b)return;
   if(b.dataset.golv){S.lv=b.dataset.golv;S.view='matrix';S.compare=false;}
