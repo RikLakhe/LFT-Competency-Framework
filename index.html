@@ -258,6 +258,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 .kit h2{margin:0;font-size:22px}
 .kit .lead{margin:4px 0 0;color:var(--fg-2);font-size:14px}
 .kit .gsec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow);display:grid;gap:10px}
+.kit .gsec.interview-tech{border-top:3px solid var(--lc-p4)}
+.kit .gsec.interview-nontec{border-top:3px solid var(--lc-p6)}
+.kit .gsec-sub{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px}
+.kit .gsec-sub h4{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}
+.kit p.gsec-note{font-size:12.5px;color:var(--fg-3);border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
 .kit h3{margin:0;font-size:15px}
 .kit p{margin:0;color:var(--fg-2);font-size:14px}
 .kit ul,.kit ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px;color:var(--fg-2)}
@@ -2082,28 +2087,41 @@ const DOMKEY={technical:'technical',delivery:'delivery',fcc:'fcc',leadership:'le
 
 function renderHiring(){
   const el=$('content');const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];
-  let h=`<div class="kit"><div><h2>Interview kit <span class="draft">Guideline</span></h2><p class="lead">A guideline for interviewing at each level, not a fixed process or bar. A structured interview loop for each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies on their own and writes notes before the debrief.</p></div>`;
+  const TECH_IDS=new Set(['writing-code','testing','debugging','understanding-code','software-arch','security','work-breakdown']);
+  const compBlock=(id)=>{const f=findSub(id);const a=H.anchors[id];const cell=f.s.levels[S.hlv];const qs=(cell&&cell.questions)?cell.questions:[];
+    return `<div class="comp-block"><h4>${esc(f.s.label)} <button class="link-btn" data-open="${id}" data-lv="${S.hlv}">Open rubric</button></h4>${qs.length?`<ol class="qlist">${qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>`:''}<div class="anchor-grid"><div class="anchor a-strong"><b>Strong</b>${esc(a[0])}</div><div class="anchor a-ok"><b>Acceptable</b>${esc(a[1])}</div><div class="anchor a-weak"><b>Weak</b>${esc(a[2])}</div></div></div>`;};
+  const anchKeys=Object.keys(H.anchors);
+  const techKeys=anchKeys.filter(id=>TECH_IDS.has(id));
+  const nonTechKeys=anchKeys.filter(id=>!TECH_IDS.has(id));
+  const scoringNote=`<p class="gsec-note">Score each competency Strong, Acceptable or Weak. <b>Guideline:</b> a strong candidate usually has no Weak and is Strong on about half. This is a guide for the panel, not a fixed bar; the decision rests with the panel.</p>`;
+  let h=`<div class="kit"><div><h2>Interview kit <span class="draft">Guideline</span></h2><p class="lead">A guideline for interviewing at each level. Every candidate for a level gets the same exercise and questions. Each interviewer scores their competencies independently and writes notes before the debrief.</p></div>`;
   h+=`<div class="chips">${LEVELS.map(l=>`<button class="chip" data-hlv="${l.id}" aria-pressed="${l.id===S.hlv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div>`;
-  h+=`<div class="fres-head"><h3>${lv.code} · ${esc(lv.title)}: ${Object.keys(H.anchors).length} competencies assessed</h3><button class="btn" data-act="copy-hiring">Copy interview pack</button></div>`;
+  h+=`<div class="fres-head"><h3>${lv.code} · ${esc(lv.title)}: ${anchKeys.length} competencies assessed</h3><button class="btn" data-act="copy-hiring">Copy interview pack</button></div>`;
   const X=H.exercise;
-  h+=`<div class="gsec"><h3>Exercise: ${esc(X.title)} (${X.mins} min)</h3><p>${esc(X.brief)}</p><p><b>Look for:</b></p><ul>${X.lookFor.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
-  h+=`<div class="gsec"><h3>Scoring guide</h3><p>Score each competency Strong, Acceptable or Weak. <b>Guideline:</b> a strong candidate usually has no Weak and is Strong on about half of the competencies assessed. This is a guide for the panel, not a fixed bar; the decision rests with the panel. Use the questions as written; ask for a comparable past project when a question assumes LFT context.</p>`;
-  Object.keys(H.anchors).forEach(id=>{
-    const f=findSub(id);const a=H.anchors[id];const cell=f.s.levels[S.hlv];
-    const qs=(cell&&cell.questions)?cell.questions:[];
-    h+=`<div class="comp-block"><h4>${esc(f.s.label)} <button class="link-btn" data-open="${id}" data-lv="${S.hlv}">Open rubric</button></h4>
-      ${qs.length?`<ol class="qlist">${qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>`:''}
-      <div class="anchor-grid"><div class="anchor a-strong"><b>Strong</b>${esc(a[0])}</div><div class="anchor a-ok"><b>Acceptable</b>${esc(a[1])}</div><div class="anchor a-weak"><b>Weak</b>${esc(a[2])}</div></div></div>`;
-  });
+  h+=`<div class="gsec interview-tech"><h3>Technical interview</h3>`;
+  h+=`<div class="gsec-sub"><h4>Exercise: ${esc(X.title)} <span class="path-timeline">${X.mins} min</span></h4><p>${esc(X.brief)}</p><p><b>Look for:</b></p><ul>${X.lookFor.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  if(techKeys.length){h+=scoringNote;techKeys.forEach(id=>{h+=compBlock(id);});}
+  h+=`</div>`;
+  h+=`<div class="gsec interview-nontec"><h3>Non-technical interview</h3>`;
+  if(nonTechKeys.length){h+=scoringNote;nonTechKeys.forEach(id=>{h+=compBlock(id);});}
   h+=`</div>`;
   h+=`<div class="gsec"><h3>Level placement</h3><div class="pair"><div class="anchor a-weak"><b>Signals of the level below</b>${esc(H.below)}</div><div class="anchor a-strong"><b>Signals of the level above</b>${esc(H.above)}</div></div><p>When signals are mixed, place the candidate at the lower level and note what would justify a promotion review within a year.</p></div>`;
   h+=`</div>`;el.innerHTML=h;
 }
 function hiringText(){
-  const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];const L=[`Interview pack: ${lv.code} ${lv.title}`,'','Loop:'];
-  L.push(`Exercise: ${H.exercise.title} (${H.exercise.mins} min)`,H.exercise.brief,'Look for:');H.exercise.lookFor.forEach(x=>L.push('- '+x));
-  L.push('','Scoring (Strong / Acceptable / Weak). Guideline (not a fixed bar): usually no Weak; Strong on about half. Decision rests with the panel.');
-  Object.keys(H.anchors).forEach(id=>{const f=findSub(id);const a=H.anchors[id];const c=f.s.levels[S.hlv];L.push('',f.s.label);
+  const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];
+  const TECH_IDS=new Set(['writing-code','testing','debugging','understanding-code','software-arch','security','work-breakdown']);
+  const anchKeys=Object.keys(H.anchors);
+  const techKeys=anchKeys.filter(id=>TECH_IDS.has(id));
+  const nonTechKeys=anchKeys.filter(id=>!TECH_IDS.has(id));
+  const L=[`Interview pack: ${lv.code} ${lv.title}`,''];
+  L.push('--- TECHNICAL INTERVIEW ---','',`Exercise: ${H.exercise.title} (${H.exercise.mins} min)`,H.exercise.brief,'Look for:');H.exercise.lookFor.forEach(x=>L.push('- '+x));
+  L.push('','Scoring (Strong / Acceptable / Weak). Decision rests with the panel.');
+  techKeys.forEach(id=>{const f=findSub(id);const a=H.anchors[id];const c=f.s.levels[S.hlv];L.push('',f.s.label);
+    if(c&&c.questions)c.questions.forEach(q=>L.push('  Q: '+q));
+    L.push('  Strong: '+a[0],'  Acceptable: '+a[1],'  Weak: '+a[2]);});
+  L.push('','--- NON-TECHNICAL INTERVIEW ---','','Scoring (Strong / Acceptable / Weak). Decision rests with the panel.');
+  nonTechKeys.forEach(id=>{const f=findSub(id);const a=H.anchors[id];const c=f.s.levels[S.hlv];L.push('',f.s.label);
     if(c&&c.questions)c.questions.forEach(q=>L.push('  Q: '+q));
     L.push('  Strong: '+a[0],'  Acceptable: '+a[1],'  Weak: '+a[2]);});
   L.push('','Level below: '+H.below,'Level above: '+H.above);return L.join('\n');
