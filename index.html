@@ -513,6 +513,9 @@ body:not(.home-view) .home-hero{display:none;}
 .stat-icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;color:var(--fg-3);margin-bottom:8px;flex-shrink:0}
 .hero-stats dt{font-family:var(--font-mono);font-size:28px;font-weight:600;color:var(--accent);line-height:1}
 .hero-stats dd{margin:3px 0 0;font-size:12.5px;font-weight:600;color:var(--fg-2)}
+.hero-browse-row{margin-top:16px}
+.hero-browse-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.hero-browse-btn:hover{opacity:.88}
 .stat-ctx{font-size:11px;color:var(--fg-3);margin-top:2px}
 .home-head h2{margin:0;font-size:22px;letter-spacing:-.01em}
 .home-head p{margin:4px 0 14px;color:var(--fg-2);font-size:14.5px}
@@ -749,6 +752,9 @@ body:not(.home-view) .home-hero{display:none;}
         <span class="stat-ctx">concrete actions</span>
       </div>
     </dl>
+    <div class="hero-browse-row">
+      <button id="cta-browse" class="hero-browse-btn">Browse competencies →</button>
+    </div>
   </div>
 </section>
 
@@ -2395,6 +2401,7 @@ function renderHome(){
 $('cta-matrix')?.addEventListener('click',()=>{S.view='matrix';render();});
 $('cta-career')?.addEventListener('click',()=>{S.careerMode='self';S.view='career';render();});
 $('cta-manager')?.addEventListener('click',()=>{S.careerMode='manager';S.view='career';render();});
+$('cta-browse')?.addEventListener('click',()=>{S.view='matrix';S.compare=false;render();$('content').scrollTop=0;});
 $('cta-find')?.addEventListener('click',()=>{S.flv=S.lv;S.view='find';render();});
 $('cta-guide')?.addEventListener('click',()=>{S.view='guide';render();});
 $('home-promo-btn')?.addEventListener('click',()=>{S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view='promo';render();$('content').scrollTop=0;});
