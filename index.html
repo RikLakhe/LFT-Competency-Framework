@@ -331,7 +331,7 @@ details.lvl[open] summary{margin-bottom:10px}
 @media(max-width:768px){.em-cols{grid-template-columns:1fr}}
 
 /* ── v1.7 AI FLUENCY HIGHLIGHT ───────────────────────── */
-:root{--ai:#6D3FD1;--ai-2:#2F6FE4;--ai-soft:#F2ECFF;--ai-line:#D8C9FF}
+:root{--ai:#6D3FD1;--ai-2:#2F6FE4;--ai-soft:#F2ECFF;--ai-line:#D8C9FF;--lc-p2:#038E43;--lc-p3:#0A7B7B;--lc-p4:#1250A8;--lc-p5:#3B3FA8;--lc-p6:#6B3FA8;--lc-p7:#102B7B}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ai:#B79BFF;--ai-2:#7FB0FF;--ai-soft:#271F42;--ai-line:#4A3B7A}}
 .sub-item.is-ai{flex-wrap:wrap;row-gap:2px;color:var(--fg);background:linear-gradient(90deg,var(--ai-soft),transparent);border-left:3px solid var(--ai);border-radius:4px 7px 7px 4px}
 .sub-item.is-ai .sub-num{color:var(--ai);font-weight:700}
@@ -495,10 +495,16 @@ body:not(.home-view) .home-hero{display:none;}
 .cta:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .cta.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .cta.primary:hover{background:var(--accent-mid);color:var(--on-accent)}
-.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0}
-.hero-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.hero-stats dt{font-family:var(--font-mono);font-size:30px;font-weight:500;color:var(--accent);line-height:1}
-.hero-stats dd{margin:6px 0 0;font-size:13px;color:var(--fg-3)}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+.hero-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column}
+.hero-stats div:nth-child(1){border-left:3px solid var(--lc-p2)}
+.hero-stats div:nth-child(2){border-left:3px solid var(--lc-p4)}
+.hero-stats div:nth-child(3){border-left:3px solid var(--lc-p5)}
+.hero-stats div:nth-child(4){border-left:3px solid var(--lc-p6)}
+.stat-icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;color:var(--fg-3);margin-bottom:8px;flex-shrink:0}
+.hero-stats dt{font-family:var(--font-mono);font-size:28px;font-weight:600;color:var(--accent);line-height:1}
+.hero-stats dd{margin:3px 0 0;font-size:12.5px;font-weight:600;color:var(--fg-2)}
+.stat-ctx{font-size:11px;color:var(--fg-3);margin-top:2px}
 .home-head h2{margin:0;font-size:22px;letter-spacing:-.01em}
 .home-head p{margin:4px 0 14px;color:var(--fg-2);font-size:14.5px}
 .ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:stretch}
@@ -637,6 +643,32 @@ body:not(.home-view) .home-hero{display:none;}
 .path-not-mean{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--accent-soft)}
 .path-not-mean b{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);display:block;margin-bottom:4px}
 .path-not-mean p{margin:0;font-size:13.5px;color:var(--fg-2);line-height:1.55}
+.role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.role-card{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:18px 18px 16px;cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s;width:100%}
+.role-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.role-card-icon{font-size:22px;display:block;margin-bottom:10px}
+.role-card-title{font-size:14px;font-weight:700;color:var(--fg);display:block;margin-bottom:4px}
+.role-card-desc{font-size:12.5px;color:var(--fg-2);line-height:1.45;display:block}
+@media(max-width:600px){.role-cards{grid-template-columns:1fr}}
+.path-step[data-lv="p2"] .path-badge{background:var(--lc-p2);color:#fff}
+.path-step[data-lv="p3"] .path-badge{background:var(--lc-p3);color:#fff}
+.path-step[data-lv="p4"] .path-badge{background:var(--lc-p4);color:#fff}
+.path-step[data-lv="p5"] .path-badge{background:var(--lc-p5);color:#fff}
+.path-step[data-lv="p6"] .path-badge{background:var(--lc-p6);color:#fff}
+.path-step[data-lv="p7"] .path-badge{background:var(--lc-p7);color:#fff}
+.chip[data-clv="p2"][aria-pressed="true"]{border-color:var(--lc-p2);color:var(--lc-p2)}
+.chip[data-clv="p3"][aria-pressed="true"]{border-color:var(--lc-p3);color:var(--lc-p3)}
+.chip[data-clv="p4"][aria-pressed="true"]{border-color:var(--lc-p4);color:var(--lc-p4)}
+.chip[data-clv="p5"][aria-pressed="true"]{border-color:var(--lc-p5);color:var(--lc-p5)}
+.chip[data-clv="p6"][aria-pressed="true"]{border-color:var(--lc-p6);color:var(--lc-p6)}
+.chip[data-clv="p7"][aria-pressed="true"]{border-color:var(--lc-p7);color:var(--lc-p7)}
+.chips-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-3);margin:0 0 8px;display:block}
+@media print{
+  .secbar,.home-hero,.back-btn,button.cta,.chips{display:none!important}
+  body{font-size:12px}
+  .path-step{page-break-inside:avoid;border:1px solid #ccc;margin-bottom:12px}
+  .path-section-lbl{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+}
 </style>
 </head>
 <body>
@@ -663,21 +695,46 @@ body:not(.home-view) .home-hero{display:none;}
           <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
       <p class="eyebrow">Leapfrog Technology · Engineering</p>
       <h1>LFT Competency Framework</h1>
-      <p class="hero-lead">What good engineering looks like at each level, from Associate Engineer to Solution Architect. A shared reference for engineers, managers and interviewers.</p>
-      <div class="hero-cta">
-        <button id="cta-matrix" class="cta primary">Browse competencies →</button>
-        <button id="home-promo-btn" class="cta">Promotion kit</button>
-        <button id="home-hire-btn" class="cta">Hiring kit</button>
-        <button id="cta-career" class="cta">View my career path</button>
-        <button id="cta-find" class="cta">Find growth tasks</button>
-        <button id="cta-guide" class="cta">Read the guide</button>
+      <p class="hero-lead">The engineering bar at Leapfrog — what good looks like from P2 to P7, for engineers, managers and interviewers.</p>
+      <div class="role-cards">
+        <button id="cta-career" class="role-card">
+          <span class="role-card-icon">🧭</span>
+          <span class="role-card-title">I'm an engineer</span>
+          <span class="role-card-desc">See what's expected at your level and exactly what changes at the next one.</span>
+        </button>
+        <button id="cta-manager" class="role-card">
+          <span class="role-card-icon">👥</span>
+          <span class="role-card-title">I'm a manager</span>
+          <span class="role-card-desc">View any level's ready signals and core competencies to assess a report.</span>
+        </button>
+        <button id="home-hire-btn" class="role-card">
+          <span class="role-card-icon">🔍</span>
+          <span class="role-card-title">I'm hiring</span>
+          <span class="role-card-desc">Open the hiring kit for level-specific interview questions and calibration.</span>
+        </button>
       </div>
     </div>
     <dl class="hero-stats">
-      <div><dt id="stat-levels">—</dt><dd>levels</dd></div>
-      <div><dt id="stat-domains">—</dt><dd>domains</dd></div>
-      <div><dt id="stat-comps">—</dt><dd>competencies</dd></div>
-      <div><dt id="stat-tasks">—</dt><dd>growth tasks</dd></div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
+        <dt id="stat-levels">—</dt><dd>levels</dd>
+        <span class="stat-ctx">P2 to P7</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        <dt id="stat-domains">—</dt><dd>domains</dd>
+        <span class="stat-ctx">competency areas</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <dt id="stat-comps">—</dt><dd>competencies</dd>
+        <span class="stat-ctx">skills assessed</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <dt id="stat-tasks">—</dt><dd>growth tasks</dd>
+        <span class="stat-ctx">concrete actions</span>
+      </div>
     </dl>
   </div>
 </section>
@@ -2099,6 +2156,7 @@ function renderCareer(){
   <div class="career-hdr">
     <h2>Your career path</h2>
     <p class="lead">Select your current level — see exactly what changes at each step, how to get there, and when you're ready to move up.</p>
+    <span class="chips-label">Select your current level</span>
     <div class="chips">${LEVELS.map(l=>`<button class="chip" data-clv="${l.id}" aria-pressed="${l.id===lv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div>
   </div>`;
   path.forEach((l,i)=>{
@@ -2107,7 +2165,7 @@ function renderCareer(){
     const exp=CAREER_EXPAND[l.id]||{};
     const core=(CORE[l.id]||[]).filter(id=>DOMAINS.flatMap(d=>d.subs).some(s=>s.id===id));
     const next=LEVELS[fromIdx+i+1];
-    h+=`<div class="path-step${isCurrent?' is-current':''}">
+    h+=`<div class="path-step${isCurrent?' is-current':''}" data-lv="${l.id}">
       <div class="path-hdr">
         <div class="path-meta">
           <span class="path-badge">${isCurrent?'You are here':'Step '+(i+1)}</span>
@@ -2301,6 +2359,7 @@ function renderHome(){
 }
 $('cta-matrix')?.addEventListener('click',()=>{S.view='matrix';render();});
 $('cta-career')?.addEventListener('click',()=>{S.view='career';render();});
+$('cta-manager')?.addEventListener('click',()=>{S.view='career';render();$('content').scrollTop=0;});
 $('cta-find')?.addEventListener('click',()=>{S.flv=S.lv;S.view='find';render();});
 $('cta-guide')?.addEventListener('click',()=>{S.view='guide';render();});
 $('home-promo-btn')?.addEventListener('click',()=>{S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view='promo';render();$('content').scrollTop=0;});
