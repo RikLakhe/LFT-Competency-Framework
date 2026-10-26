@@ -476,7 +476,7 @@ body.tool-view .app-body{grid-template-columns:1fr}
 .secbar .brand[data-act="home"]:hover{color:var(--accent-mid)}
 body.home-view .back-btn{display:none}
 body.home-view .secbar{display:none}
-.home-hero-tools{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.home-hero-tools{display:flex;gap:8px;justify-content:flex-start;align-items:center;margin-bottom:16px;flex-wrap:wrap}
 .home{max-width:1080px;margin:0 auto;display:grid;gap:36px;padding-bottom:24px}
 .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:28px;align-items:center;border-radius:16px;padding:36px;background:radial-gradient(120% 140% at 0% 0%,var(--green-soft),transparent 55%),linear-gradient(135deg,var(--surface),var(--accent-soft));border:1px solid var(--line);box-shadow:var(--shadow)}
 .hero-logo{width:56px;height:56px;border-radius:12px;display:block;margin-bottom:16px;box-shadow:0 6px 18px rgba(3,142,67,.25)}
@@ -646,16 +646,16 @@ body:not(.home-view) .home-hero{display:none;}
 
 <!-- HOME HERO: static outside #content so Harbor can click the CTAs -->
 <section id="home-hero" class="home-hero" hidden>
-  <div class="home-hero-tools">
-    <button id="home-search-btn" class="search-btn" aria-label="Search (Ctrl or Cmd + K)">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span><kbd>⌘K</kbd>
-    </button>
-    <button id="home-promo-btn" class="mode-btn" aria-pressed="false">Promotion kit</button>
-    <button id="home-hire-btn" class="mode-btn" aria-pressed="false">Hiring kit</button>
-    <button id="home-guide-btn" class="mode-btn" aria-pressed="false">Guide</button>
-  </div>
   <div class="hero">
     <div class="hero-text">
+      <div class="home-hero-tools">
+        <button id="home-search-btn" class="search-btn" aria-label="Search (Ctrl or Cmd + K)">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span><kbd>⌘K</kbd>
+        </button>
+        <button id="home-promo-btn" class="mode-btn" aria-pressed="false">Promotion kit</button>
+        <button id="home-hire-btn" class="mode-btn" aria-pressed="false">Hiring kit</button>
+        <button id="home-guide-btn" class="mode-btn" aria-pressed="false">Guide</button>
+      </div>
       <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
       <p class="eyebrow">Leapfrog Technology · Engineering</p>
       <h1>LFT Competency Framework</h1>
