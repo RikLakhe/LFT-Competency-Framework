@@ -665,7 +665,7 @@ body.home-view .back-btn{display:none}
 <!-- SEARCH MODAL -->
 <div id="search-modal" hidden>
   <div class="modal-overlay" id="modal-overlay">
-    <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box">
       <div class="modal-search-row">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input class="modal-input" id="modal-input" type="text" placeholder="Search rubric, questions, evidence…" autocomplete="off">
@@ -2278,7 +2278,6 @@ function renderHome(){
 }
 $('content')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-go],[data-golv],[data-godi]');if(!b)return;
-  e.stopPropagation();
   if(b.dataset.golv){S.lv=b.dataset.golv;S.view='matrix';S.compare=false;}
   else if(b.dataset.godi){S.di=+b.dataset.godi;S.si=+b.dataset.gosi;S.view='matrix';S.compare=false;}
   else{const g=b.dataset.go;S.view=g;if(g==='find')S.flv=S.lv;if(g==='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;if(g==='hire')S.hlv=S.lv;}
