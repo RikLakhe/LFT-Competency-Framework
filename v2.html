@@ -495,10 +495,16 @@ body:not(.home-view) .home-hero{display:none;}
 .cta:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .cta.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .cta.primary:hover{background:var(--accent-mid);color:var(--on-accent)}
-.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0}
-.hero-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.hero-stats dt{font-family:var(--font-mono);font-size:30px;font-weight:500;color:var(--accent);line-height:1}
-.hero-stats dd{margin:6px 0 0;font-size:13px;color:var(--fg-3)}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+.hero-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column}
+.hero-stats div:nth-child(1){border-left:3px solid var(--lc-p2)}
+.hero-stats div:nth-child(2){border-left:3px solid var(--lc-p4)}
+.hero-stats div:nth-child(3){border-left:3px solid var(--lc-p5)}
+.hero-stats div:nth-child(4){border-left:3px solid var(--lc-p6)}
+.stat-icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;color:var(--fg-3);margin-bottom:8px;flex-shrink:0}
+.hero-stats dt{font-family:var(--font-mono);font-size:28px;font-weight:600;color:var(--accent);line-height:1}
+.hero-stats dd{margin:3px 0 0;font-size:12.5px;font-weight:600;color:var(--fg-2)}
+.stat-ctx{font-size:11px;color:var(--fg-3);margin-top:2px}
 .home-head h2{margin:0;font-size:22px;letter-spacing:-.01em}
 .home-head p{margin:4px 0 14px;color:var(--fg-2);font-size:14.5px}
 .ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:stretch}
@@ -722,10 +728,26 @@ body:not(.home-view) .home-hero{display:none;}
       </div>
     </div>
     <dl class="hero-stats">
-      <div><dt id="stat-levels">—</dt><dd>levels</dd></div>
-      <div><dt id="stat-domains">—</dt><dd>domains</dd></div>
-      <div><dt id="stat-comps">—</dt><dd>competencies</dd></div>
-      <div><dt id="stat-tasks">—</dt><dd>growth tasks</dd></div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
+        <dt id="stat-levels">—</dt><dd>levels</dd>
+        <span class="stat-ctx">P2 to P7</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        <dt id="stat-domains">—</dt><dd>domains</dd>
+        <span class="stat-ctx">competency areas</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <dt id="stat-comps">—</dt><dd>competencies</dd>
+        <span class="stat-ctx">skills assessed</span>
+      </div>
+      <div>
+        <svg class="stat-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <dt id="stat-tasks">—</dt><dd>growth tasks</dd>
+        <span class="stat-ctx">concrete actions</span>
+      </div>
     </dl>
   </div>
 </section>
