@@ -682,26 +682,35 @@ body:not(.home-view) .home-hero{display:none;}
   .path-step{page-break-inside:avoid;border:1px solid #ccc;margin-bottom:12px}
   .path-section-lbl{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
 }
-.star-map-wrap{padding:20px 24px;max-width:100%}
-.star-map-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:16px;flex-wrap:wrap}
-.star-map-hdr h2{margin:0;font-size:22px}
-.star-map-hdr .lead{margin:4px 0 0;color:var(--fg-2);font-size:14px}
-.sm-picker{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.sm-lv-btn{padding:6px 16px;border-radius:99px;font-size:12.5px;font-weight:700;border:2px solid var(--line);background:transparent;color:var(--fg-2);cursor:pointer;transition:all .15s}
-.sm-lv-btn.active{border-color:var(--btn-color,var(--accent));color:var(--btn-color,var(--accent));background:color-mix(in srgb,var(--btn-color,var(--accent)) 10%,transparent)}
-.sm-svg-wrap{overflow-x:auto;overflow-y:hidden;background:var(--surface-2);border-radius:14px;border:1px solid var(--line);padding:12px}
-.star-map-svg{width:100%;min-width:700px;height:auto;display:block}
-.sm-hex{transition:fill-opacity .3s,stroke .3s,stroke-width .15s}
-.sm-hex-group{cursor:pointer}
-.sm-hex-group:hover .sm-hex{fill-opacity:.35!important;stroke-width:2.5!important}
-.sm-label{font-size:9.5px;font-weight:600;fill:var(--fg);font-family:inherit;pointer-events:none}
-.sm-label.dim{fill:var(--fg-3);font-weight:400}
-.sm-domain-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;fill:var(--fg-3);pointer-events:none}
-.sm-line{transition:stroke .3s,opacity .3s}
-.sm-legend{display:flex;gap:16px;margin-top:12px;font-size:12.5px;color:var(--fg-2);flex-wrap:wrap}
-.sm-leg-item{display:flex;align-items:center;gap:6px}
-.sm-leg-dot{width:12px;height:12px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface);flex-shrink:0}
-.sm-leg-dot.lit{border:none}
+.cm-wrap{padding:20px 24px}
+.cm-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.cm-hdr h2{margin:0;font-size:22px}.cm-hdr .lead{margin:4px 0 0;color:var(--fg-2);font-size:14px}
+.cm-table{border:1px solid var(--line);border-radius:12px;overflow:hidden;overflow-x:auto}
+.cm-row{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:560px}
+.cm-row:last-child{border-bottom:none}
+.cm-row:hover:not(.cm-domain-hdr):not(.cm-top-hdr){background:var(--surface-2)}
+.cm-top-hdr{background:var(--surface-2);border-bottom:2px solid var(--line)}
+.cm-domain-hdr{background:var(--surface-2);border-bottom:1px solid var(--line)}
+.cm-name{width:200px;min-width:200px;font-size:13px;color:var(--fg-2);padding:10px 8px 10px 16px;display:flex;align-items:center;overflow:hidden}
+.cm-name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-domain-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-3)}
+.cm-col-label{font-size:11px;font-weight:700;color:var(--fg-3);font-style:italic}
+.cm-cells{display:flex;flex:1}
+.cm-cell{flex:1;min-width:60px;max-width:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;padding:10px 4px;transition:background .1s}
+.cm-cell:hover{background:var(--accent-soft);border-radius:6px}
+.cm-lv-cell{flex:1;min-width:60px;max-width:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;cursor:pointer;border:none;background:transparent;border-radius:0}
+.cm-lv-cell .cm-lv-code{font-size:12px;font-weight:700;letter-spacing:.04em;line-height:1}
+.cm-lv-cell .cm-lv-title{font-size:9px;color:var(--fg-3);line-height:1.2;margin-top:2px;text-align:center;white-space:nowrap}
+.cm-lv-cell.active{color:#fff;background:color-mix(in srgb,var(--lv-color,var(--accent)) 90%,transparent)}
+.cm-cell.active-col{background:color-mix(in srgb,var(--lv-color,var(--accent)) 6%,transparent)}
+.cm-cell.active-col:hover{background:color-mix(in srgb,var(--lv-color,var(--accent)) 14%,transparent)}
+.dn{display:inline-block;border-radius:50%;flex-shrink:0;transition:all .2s}
+.dn-core{width:18px;height:18px;background:var(--dc,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb,var(--dc,var(--accent)) 28%,transparent)}
+.dn-support{width:10px;height:10px;border:2px solid var(--fg-3);opacity:.55}
+.dn-avail{width:10px;height:10px;border:1.5px solid var(--fg-3);opacity:.35}
+.dn-guide{width:8px;height:8px;background:var(--amber,#B45309);opacity:.55}
+.cm-legend{display:flex;gap:18px;margin-top:12px;font-size:12.5px;color:var(--fg-2);flex-wrap:wrap}
+.cm-leg{display:flex;align-items:center;gap:7px}
 </style>
 </head>
 <body>
@@ -2251,110 +2260,59 @@ function renderCareer(){
   h+=`</div>`;el.innerHTML=h;el.scrollTop=0;
 }
 
-// ── Star Path helpers ──────────────────────────────────────────────────────
-function hexPoints(cx,cy,r){
-  return Array.from({length:6},(_,i)=>{
-    const a=Math.PI/180*(60*i-30);
-    return `${(cx+r*Math.cos(a)).toFixed(1)},${(cy+r*Math.sin(a)).toFixed(1)}`;
-  }).join(' ');
-}
-function smLabel(label){
-  // Return max 2-line short label
-  const words=label.split(' ');
-  if(words.length===1)return [words[0].slice(0,13)];
-  return [words[0].slice(0,13),words.slice(1).join(' ').slice(0,13)];
-}
-function computeHexPositions(){
-  const R=42,cs=R*Math.sqrt(3),rs=R*1.5,ox=cs/2,mL=60,mT=90;
-  // Domain layout: [startCol, [sub indices per column]]
-  // Technical(10): cols 0,1 — 5 subs each
-  // Delivery(5): col 3 — 5 subs
-  // Feedback(7): cols 5,6 — 4+3 subs
-  // Leadership(5): col 8 — 5 subs
-  // Strategic(3): col 10 — 3 subs
-  const layout=[
-    {di:0,cols:[[0,1,2,3,4],[5,6,7,8,9]],startCol:0},
-    {di:1,cols:[[0,1,2,3,4]],startCol:3},
-    {di:2,cols:[[0,1,2,3],[4,5,6]],startCol:5},
-    {di:3,cols:[[0,1,2,3,4]],startCol:8},
-    {di:4,cols:[[0,1,2]],startCol:10},
-  ];
-  const pos={};
-  layout.forEach(({di,cols,startCol})=>{
-    const domain=DOMAINS[di];
-    cols.forEach((subIdxs,ci)=>{
-      subIdxs.forEach((si,ri)=>{
-        const sub=domain.subs[si];if(!sub)return;
-        const col=startCol+ci,row=ri;
-        const cx=col*cs+(row%2===1?ox:0)+mL;
-        const cy=row*rs+mT;
-        pos[sub.id]={cx,cy};
-      });
-    });
-  });
-  return pos;
-}
 function renderStarMap(){
   const el=$('content');
   const lv=S.starLv||'p3';
-  const lvColor=`var(--lc-${lv})`;
-  const lvObj=LEVELS.find(l=>l.id===lv);
-  const coreIds=CORE[lv]?new Set(CORE[lv]):null;
-  const posMap=computeHexPositions();
-  const R=42,pad=24;
-  const allPos=Object.values(posMap);
-  const xs=allPos.map(p=>p.cx),ys=allPos.map(p=>p.cy);
-  const vbX=Math.min(...xs)-R-pad,vbY=Math.min(...ys)-R-30;
-  const vbW=Math.max(...xs)-Math.min(...xs)+R*2+pad*2;
-  const vbH=Math.max(...ys)-Math.min(...ys)+R*2+pad+30;
-  const picker=LEVELS.map(l=>`<button class="sm-lv-btn${l.id===lv?' active':''}" data-starlv="${l.id}" style="${l.id===lv?`--btn-color:var(--lc-${l.id})`:''}">${l.code}</button>`).join('');
-  let svg=`<svg class="star-map-svg" viewBox="${vbX.toFixed(0)} ${vbY.toFixed(0)} ${vbW.toFixed(0)} ${vbH.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">`;
-  // Domain labels
-  DOMAINS.forEach(d=>{
-    const subs=d.subs.filter(s=>posMap[s.id]);if(!subs.length)return;
-    const avgX=subs.reduce((a,s)=>a+posMap[s.id].cx,0)/subs.length;
-    const minY=Math.min(...subs.map(s=>posMap[s.id].cy));
-    svg+=`<text x="${avgX.toFixed(0)}" y="${(minY-R-10).toFixed(0)}" class="sm-domain-label" text-anchor="middle">${esc(d.label)}</text>`;
-  });
-  // Connector lines within domains
-  DOMAINS.forEach(d=>{
-    const subs=d.subs.filter(s=>posMap[s.id]);
-    for(let i=0;i<subs.length-1;i++){
-      const a=posMap[subs[i].id],b=posMap[subs[i+1].id];
-      const bothLit=!coreIds||(coreIds.has(subs[i].id)&&coreIds.has(subs[i+1].id));
-      svg+=`<line x1="${a.cx.toFixed(1)}" y1="${a.cy.toFixed(1)}" x2="${b.cx.toFixed(1)}" y2="${b.cy.toFixed(1)}" stroke="${bothLit?lvColor:'var(--line)'}" stroke-width="${bothLit?2:1}" opacity="${bothLit?0.55:0.3}" stroke-dasharray="${bothLit?'none':'5 4'}"/>`;
+  const lvObj=LEVELS.find(l=>l.id===lv)||LEVELS[1];
+  const coreSet=CORE[lv]?new Set(CORE[lv]):null;
+  // dot type per sub per level
+  function dotFor(subId,lvId){
+    const cs=CORE[lvId]?new Set(CORE[lvId]):null;
+    if(!cs){
+      if(lvId==='p2'&&P2_GUIDANCE.has(subId))return 'guide';
+      return 'avail';
     }
-  });
-  // Hexes
-  DOMAINS.flatMap(d=>d.subs.map(s=>({...s,domainId:d.id}))).forEach(sub=>{
-    const pos=posMap[sub.id];if(!pos)return;
-    const isCore=!coreIds||coreIds.has(sub.id);
-    const pts=hexPoints(pos.cx,pos.cy,R-2);
-    const lines=smLabel(sub.label);
-    const textY=lines.length===1?pos.cy+1:pos.cy-5;
-    const textEl=lines.map((ln,i)=>`<tspan x="${pos.cx.toFixed(1)}" dy="${i===0?'0':'12'}">${esc(ln)}</tspan>`).join('');
-    svg+=`<g class="sm-hex-group" data-smopen="${sub.id}" data-smlv="${lv}" aria-label="${esc(sub.label)}">
-      <polygon points="${pts}" class="sm-hex${isCore?' lit':''}" fill="${isCore?lvColor:'var(--surface)'}" fill-opacity="${isCore?0.18:0.7}" stroke="${isCore?lvColor:'var(--line)'}" stroke-width="${isCore?2:1}"/>
-      ${isCore?`<circle cx="${pos.cx.toFixed(1)}" cy="${pos.cy.toFixed(1)}" r="4" fill="${lvColor}" opacity="0.9"/>`:``}
-      <text x="${pos.cx.toFixed(1)}" y="${textY.toFixed(1)}" class="sm-label${isCore?'':' dim'}" text-anchor="middle">${textEl}</text>
-    </g>`;
-  });
-  svg+=`</svg>`;
-  el.innerHTML=`<div class="star-map-wrap">
-    <div class="star-map-hdr">
-      <div><h2>Competency star map</h2><p class="lead">Select a level — lit hexes are core at that level. Click any hex to open the rubric.</p></div>
+    return cs.has(subId)?'core':'support';
+  }
+  const lvHdrs=LEVELS.map(l=>`<button class="cm-lv-cell${l.id===lv?' active':''}" data-starlv="${l.id}" style="${l.id===lv?`--lv-color:var(--lc-${l.id})`:''}"><span class="cm-lv-code">${l.code}</span><span class="cm-lv-title">${l.title.split(' ')[0]}</span></button>`).join('');
+  const domainHtml=DOMAINS.map(d=>{
+    const coreCount=coreSet?d.subs.filter(s=>coreSet.has(s.id)).length:d.subs.length;
+    const domHdr=`<div class="cm-row cm-domain-hdr"><div class="cm-name"><span class="cm-name-text cm-domain-label">${esc(d.label)}</span></div><div class="cm-cells">${LEVELS.map(l=>`<div class="cm-lv-cell" style="pointer-events:none"></div>`).join('')}</div></div>`;
+    const rows=d.subs.map(sub=>{
+      const cells=LEVELS.map(l=>{
+        const dt=dotFor(sub.id,l.id);
+        const isAct=l.id===lv;
+        const dc=dt==='core'?`style="--dc:var(--lc-${l.id})"`:''
+        return `<button class="cm-cell${isAct?' active-col':''}" data-smopen="${sub.id}" data-smlv="${l.id}" title="${esc(sub.label)} · ${l.code}" ${isAct?`style="--lv-color:var(--lc-${l.id})"`:''}>
+          <span class="dn dn-${dt}" ${dc}></span>
+        </button>`;
+      }).join('');
+      return `<div class="cm-row"><div class="cm-name"><span class="cm-name-text" title="${esc(sub.label)}">${esc(sub.label)}</span></div><div class="cm-cells">${cells}</div></div>`;
+    }).join('');
+    return domHdr+rows;
+  }).join('');
+  const coreCount=coreSet?coreSet.size:'all';
+  el.innerHTML=`<div class="cm-wrap">
+    <div class="cm-hdr">
+      <div><h2>Competency map</h2><p class="lead">Select a level — filled dots are core. Click any dot to open the rubric.</p></div>
       <button class="cta" data-go="matrix">← Table view</button>
     </div>
-    <div class="sm-picker">${picker}</div>
-    <div class="sm-svg-wrap">${svg}</div>
-    <div class="sm-legend">
-      <span class="sm-leg-item"><span class="sm-leg-dot lit" style="background:${lvColor}"></span>Core at ${esc(lvObj.code)} — ${coreIds?coreIds.size:'all'} competencies</span>
-      <span class="sm-leg-item"><span class="sm-leg-dot"></span>Available / supporting</span>
+    <div class="cm-table">
+      <div class="cm-row cm-top-hdr">
+        <div class="cm-name"><span class="cm-name-text cm-col-label">Competency</span></div>
+        <div class="cm-cells">${lvHdrs}</div>
+      </div>
+      ${domainHtml}
+    </div>
+    <div class="cm-legend">
+      <span class="cm-leg"><span class="dn dn-core" style="--dc:var(--lc-${lv})"></span>Core at ${esc(lvObj.code)} (${coreCount})</span>
+      <span class="cm-leg"><span class="dn dn-support"></span>Supporting</span>
+      <span class="cm-leg"><span class="dn dn-avail"></span>Available</span>
+      <span class="cm-leg"><span class="dn dn-guide"></span>Guidance only (P2)</span>
     </div>
   </div>`;
   el.scrollTop=0;
 }
-// ── End Star Path ───────────────────────────────────────────────────────────
 
 function render(){
   document.body.classList.toggle('sec-other',S.section!=='ic');
