@@ -652,20 +652,14 @@ body:not(.home-view) .home-hero{display:none;}
 <section id="home-hero" class="home-hero" hidden>
   <div class="hero">
     <div class="hero-text">
-      <div class="home-hero-tools">
-        <button id="home-search-btn" class="hero-action-btn" aria-label="Search (⌘K)">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search <kbd style="font-family:var(--font-mono);font-size:10px;opacity:.7">⌘K</kbd>
-        </button>
-        <button id="home-promo-btn" class="hero-action-btn">Promotion kit</button>
-        <button id="home-hire-btn" class="hero-action-btn">Hiring kit</button>
-        <button id="home-guide-btn" class="hero-action-btn">Guide</button>
-      </div>
-      <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
+          <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
       <p class="eyebrow">Leapfrog Technology · Engineering</p>
       <h1>LFT Competency Framework</h1>
       <p class="hero-lead">What good engineering looks like at each level, from Associate Engineer to Solution Architect. A shared reference for engineers, managers and interviewers.</p>
       <div class="hero-cta">
         <button id="cta-matrix" class="cta primary">Browse competencies →</button>
+        <button id="home-promo-btn" class="cta">Promotion kit</button>
+        <button id="home-hire-btn" class="cta">Hiring kit</button>
         <button id="cta-career" class="cta">View my career path</button>
         <button id="cta-find" class="cta">Find growth tasks</button>
         <button id="cta-guide" class="cta">Read the guide</button>
@@ -2291,7 +2285,7 @@ function renderHome(){
     </div>
   </section>
 
-  <footer class="home-foot">v2.0 · Owned by the Engineering Management Team · use the Guide button in the toolbar above</footer>
+  <footer class="home-foot">v2.0 · Owned by the Engineering Management Team</footer>
   </div>`;
   el.innerHTML=h;el.scrollTop=0;
 }
@@ -2299,10 +2293,8 @@ $('cta-matrix')?.addEventListener('click',()=>{S.view='matrix';render();});
 $('cta-career')?.addEventListener('click',()=>{S.view='career';render();});
 $('cta-find')?.addEventListener('click',()=>{S.flv=S.lv;S.view='find';render();});
 $('cta-guide')?.addEventListener('click',()=>{S.view='guide';render();});
-$('home-search-btn')?.addEventListener('click',openSearch);
 $('home-promo-btn')?.addEventListener('click',()=>{S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view='promo';render();$('content').scrollTop=0;});
 $('home-hire-btn')?.addEventListener('click',()=>{S.hlv=S.lv;S.view='hire';render();$('content').scrollTop=0;});
-$('home-guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
 
 $('content')?.addEventListener('click',e=>{
   const b=e.target.closest('[data-go],[data-golv],[data-godi]');if(!b)return;
