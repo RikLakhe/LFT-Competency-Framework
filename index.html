@@ -2091,9 +2091,10 @@ function writeHash(){
   else if(S.view==='home')h='home';
   else if(S.view==='career')h='career/'+S.clv;
   else h='c/'+curSub().id+'/'+S.lv+(S.compare?'/compare':'')+(S.use==='hiring'?'/interview':'');
-  try{if(location.hash.slice(1)!==h)history.replaceState(null,'','#'+h);}catch(e){}
+  if(window.self===window.top)try{if(location.hash.slice(1)!==h)history.replaceState(null,'','#'+h);}catch(e){}
 }
 function readHash(){
+  if(window.self!==window.top)return;
   const p=(location.hash||'').slice(1).split('/');const isLv=x=>LEVELS.some(l=>l.id===x);
   if(!p[0]||p[0]==='home'){S.view='home';return;}
   S.section='ic';S.view='matrix';
@@ -2109,7 +2110,7 @@ function readHash(){
     S.compare=p.includes('compare');S.use=p.includes('interview')?'hiring':'promotion';
   }
 }
-window.addEventListener('hashchange',()=>{readHash();render();});
+if(window.self===window.top)window.addEventListener('hashchange',()=>{readHash();render();});
 
 // ─── MODE TOGGLE ─────────────────────────────────────────────────────────────
 function toggleMode(){
