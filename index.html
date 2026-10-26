@@ -1731,7 +1731,7 @@ const RELEASE_HTML=`<div class="guide">
 <div class="gsec"><h3>What changed in v1.8</h3>
 <ul>
 <li>Simpler navigation: one sidebar lists every competency grouped by domain, with a filter box. The separate domain tabs row and the “By Level” mode are gone.</li>
-<li>Find tasks, Promotion kit, Hiring kit and Guide open full-width, with a “Back to competencies” link.</li>
+<li>Find tasks, Promotion kit, Hiring kit and Guide open full-width, with a “Home” link to return to the landing page.</li>
 <li>Competency pages put the expectation first. Status shows as chips (Core, Supporting, AI fluency, Where applicable), and the level summary sits under the level tabs.</li>
 <li>Growth task cards are shorter and the section can be collapsed.</li>
 <li>Every view has its own link, so a page can be shared or bookmarked (for example, Testing at P4).</li>
@@ -2142,7 +2142,7 @@ function render(){
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
-    (el.firstElementChild||el).insertAdjacentHTML('afterbegin','<button class="back-btn" data-act="back">← Back to competencies</button>');
+    (el.firstElementChild||el).insertAdjacentHTML('afterbegin','<button class="back-btn" data-act="back">← Home</button>');
     if(S.view==='guide'||S.view==='release'){
       const hs=[...el.querySelectorAll('.guide .gsec>h3')];
       hs.forEach((h3,i)=>{h3.parentElement.id='g'+i;});
@@ -2320,7 +2320,7 @@ $('content')?.addEventListener('click',e=>{
     const fromHire=S.view==='hire';S.lv=t.dataset.lv||S.flv;S.view='matrix';S.compare=false;S.use=fromHire?'hiring':'promotion';render();$('content').scrollTop=0;return;
   }
   const act=t.dataset.act;
-  if(act==='back'){S.view='matrix';render();$('content').scrollTop=0;return;}
+  if(act==='back'){S.view='home';render();$('content').scrollTop=0;return;}
   if(act==='copy-hiring'){copyText(hiringText(),'Interview pack copied');return;}
   if(act==='copy-promo'){copyText(promoTemplate(),'Template copied');return;}
   if(act==='copy-promo-q'){const tg=LEVELS[LEVELS.findIndex(l=>l.id===S.plv)+1];const L=[`Questions for ${tg.code} ${tg.title}`,''];DOMAINS.forEach(d=>{const Q=(PROMO_Q[tg.id]||{})[d.id];if(!Q)return;L.push(d.label);Q.q.forEach((q,i)=>L.push(`${i+1}. ${q}`));L.push('Meets sounds like: '+Q.listen,'');});copyText(L.join('\n'),'Questions copied');return;}
