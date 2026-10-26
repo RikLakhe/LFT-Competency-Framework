@@ -482,7 +482,9 @@ body.home-view .back-btn{display:none}
 .hero h1{margin:0;font-size:40px;line-height:1.1;letter-spacing:-.02em;color:var(--fg);text-wrap:balance}
 .hero-lead{margin:14px 0 0;font-size:17px;line-height:1.6;color:var(--fg-2);max-width:56ch}
 .hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.home-nav{display:flex;flex-wrap:wrap;gap:10px;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--line);}
+.home-hero{padding:20px 24px 0;background:var(--bg);}
+body.home-view .home-hero{display:block;}
+body:not(.home-view) .home-hero{display:none;}
 .cta{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:10px 16px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 .cta:hover{border-color:var(--accent);color:var(--accent)}
 .cta.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -640,13 +642,29 @@ body.home-view .back-btn{display:none}
   </div>
 </div>
 
-<!-- HOME NAV: static buttons outside #content so Harbor click handling works -->
-<div id="home-nav" class="home-nav" hidden>
-  <button id="cta-matrix" class="cta primary">Browse competencies →</button>
-  <button id="cta-career" class="cta">View my career path</button>
-  <button id="cta-find" class="cta">Find growth tasks</button>
-  <button id="cta-guide" class="cta">Read the guide</button>
-</div>
+<!-- HOME HERO: static outside #content so Harbor can click the CTAs -->
+<section id="home-hero" class="home-hero" hidden>
+  <div class="hero">
+    <div class="hero-text">
+      <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
+      <p class="eyebrow">Leapfrog Technology · Engineering</p>
+      <h1>LFT Competency Framework</h1>
+      <p class="hero-lead">What good engineering looks like at each level, from Associate Engineer to Solution Architect. A shared reference for engineers, managers and interviewers.</p>
+      <div class="hero-cta">
+        <button id="cta-matrix" class="cta primary">Browse competencies →</button>
+        <button id="cta-career" class="cta">View my career path</button>
+        <button id="cta-find" class="cta">Find growth tasks</button>
+        <button id="cta-guide" class="cta">Read the guide</button>
+      </div>
+    </div>
+    <dl class="hero-stats">
+      <div><dt id="stat-levels">—</dt><dd>levels</dd></div>
+      <div><dt id="stat-domains">—</dt><dd>domains</dd></div>
+      <div><dt id="stat-comps">—</dt><dd>competencies</dd></div>
+      <div><dt id="stat-tasks">—</dt><dd>growth tasks</dd></div>
+    </dl>
+  </div>
+</section>
 
 <!-- BODY -->
 <div class="app-body">
@@ -2112,7 +2130,7 @@ function render(){
   document.querySelectorAll('.sec-tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.sec===S.section));
   const tool=['guide','find','hire','promo','release','home','career'].includes(S.view);
   document.body.classList.toggle('tool-view',tool);document.body.classList.toggle('home-view',S.view==='home');
-  const hn=$('home-nav');if(hn)hn.hidden=S.view!=='home';
+  const hn=$('home-hero');if(hn)hn.hidden=S.view!=='home';
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
@@ -2232,24 +2250,7 @@ $('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.vie
 function renderHome(){
   const el=$('content');
   const nComp=DOMAINS.reduce((n,d)=>n+d.subs.length,0);
-  const nTasks=Object.values(GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
-  const logo=(document.querySelector('.brand-logo')||{}).src||'';
   let h=`<div class="home">
-  <section class="hero">
-    <div class="hero-text">
-      ${logo?`<img class="hero-logo" src="${logo}" alt="Leapfrog" width="56" height="56">`:''}
-      <p class="eyebrow">Leapfrog Technology · Engineering</p>
-      <h1>LFT Competency Framework</h1>
-      <p class="hero-lead">What good engineering looks like at each level, from Associate Engineer to Solution Architect. A shared reference for engineers, managers and interviewers.</p>
-    </div>
-    <dl class="hero-stats">
-      <div><dt>${LEVELS.length}</dt><dd>levels</dd></div>
-      <div><dt>${DOMAINS.length}</dt><dd>domains</dd></div>
-      <div><dt>${nComp}</dt><dd>competencies</dd></div>
-      <div><dt>${nTasks.toLocaleString('en-GB')}</dt><dd>growth tasks</dd></div>
-    </dl>
-  </section>
-
   <section class="home-sec">
     <div class="home-head"><h2>The levels</h2><p>Each level widens the scope of impact. Pick one to see what is expected.</p></div>
     <div class="ladder">${LEVELS.map((l,i)=>`<button class="rung" data-golv="${l.id}" style="--i:${i}">
@@ -2276,7 +2277,7 @@ function renderHome(){
     </div>
   </section>
 
-  <footer class="home-foot">v2.0 · Owned by the Engineering Management Team · <button class="link-btn" data-go="guide">Guide</button></footer>
+  <footer class="home-foot">v2.0 · Owned by the Engineering Management Team · use the Guide button in the toolbar above</footer>
   </div>`;
   el.innerHTML=h;el.scrollTop=0;
 }
@@ -2340,6 +2341,16 @@ document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
 });
 
+// Populate static hero with computed counts and brand logo
+(()=>{
+  const bl=document.querySelector('.brand-logo');const hl=$('hero-logo-img');if(hl&&bl)hl.src=bl.src;
+  const nC=DOMAINS.reduce((n,d)=>n+d.subs.length,0);
+  const nT=Object.values(GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+  const sl=$('stat-levels');if(sl)sl.textContent=LEVELS.length;
+  const sd=$('stat-domains');if(sd)sd.textContent=DOMAINS.length;
+  const sc=$('stat-comps');if(sc)sc.textContent=nC;
+  const sk=$('stat-tasks');if(sk)sk.textContent=nT.toLocaleString('en-GB');
+})();
 readHash();render();
 </script>
 
