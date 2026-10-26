@@ -682,6 +682,26 @@ body:not(.home-view) .home-hero{display:none;}
   .path-step{page-break-inside:avoid;border:1px solid #ccc;margin-bottom:12px}
   .path-section-lbl{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
 }
+.star-map-wrap{padding:20px 24px;max-width:100%}
+.star-map-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:16px;flex-wrap:wrap}
+.star-map-hdr h2{margin:0;font-size:22px}
+.star-map-hdr .lead{margin:4px 0 0;color:var(--fg-2);font-size:14px}
+.sm-picker{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.sm-lv-btn{padding:6px 16px;border-radius:99px;font-size:12.5px;font-weight:700;border:2px solid var(--line);background:transparent;color:var(--fg-2);cursor:pointer;transition:all .15s}
+.sm-lv-btn.active{border-color:var(--btn-color,var(--accent));color:var(--btn-color,var(--accent));background:color-mix(in srgb,var(--btn-color,var(--accent)) 10%,transparent)}
+.sm-svg-wrap{overflow-x:auto;overflow-y:hidden;background:var(--surface-2);border-radius:14px;border:1px solid var(--line);padding:12px}
+.star-map-svg{width:100%;min-width:700px;height:auto;display:block}
+.sm-hex{transition:fill-opacity .3s,stroke .3s,stroke-width .15s}
+.sm-hex-group{cursor:pointer}
+.sm-hex-group:hover .sm-hex{fill-opacity:.35!important;stroke-width:2.5!important}
+.sm-label{font-size:9.5px;font-weight:600;fill:var(--fg);font-family:inherit;pointer-events:none}
+.sm-label.dim{fill:var(--fg-3);font-weight:400}
+.sm-domain-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;fill:var(--fg-3);pointer-events:none}
+.sm-line{transition:stroke .3s,opacity .3s}
+.sm-legend{display:flex;gap:16px;margin-top:12px;font-size:12.5px;color:var(--fg-2);flex-wrap:wrap}
+.sm-leg-item{display:flex;align-items:center;gap:6px}
+.sm-leg-dot{width:12px;height:12px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface);flex-shrink:0}
+.sm-leg-dot.lit{border:none}
 </style>
 </head>
 <body>
@@ -698,6 +718,7 @@ body:not(.home-view) .home-hero{display:none;}
     <button class="mode-btn" id="promo-btn" aria-pressed="false">Promotion kit</button>
     <button class="mode-btn" id="hire-btn" aria-pressed="false">Hiring kit</button>
     <button class="mode-btn" id="guide-btn" aria-pressed="false">Guide</button>
+    <button class="mode-btn" id="starmap-btn" aria-pressed="false">⬡ Star map</button>
   </div>
 </div>
 
@@ -1887,7 +1908,7 @@ const CMP_SHIFT={"work-breakdown":{"p2":{"summary":"From knowing why tasks shoul
 const PROMO_Q={"p3":{"technical":{"q":["Walk me through the tests you wrote for a recent feature. Which error paths did you cover, and how did you choose them?","Tell me about a recent review where someone found a gap in your tests. What have you changed in how you test since?","Pick a feature you shipped recently. What could go wrong with it, and how do you know your tests would catch it?"],"listen":"They name specific error and edge cases they tested before review, without being prompted."},"delivery":{"q":["Tell me about the last time a task slipped. When did you first notice, and when did you tell the team?","Walk me through your commitments over the last two sprints. How closely did what you delivered match what you promised?","What do you do on the day you realise a task will take longer than planned? Give a recent example."],"listen":"Delays are raised the same day they appear, and commitments matched delivery across both cycles."},"fcc":{"q":["Tell me about a recent handoff note you wrote. Did the reader need a meeting with you to act on it?","Walk me through something you wrote recently for a client. How did you adapt it for that reader?","Tell me about specific feedback you gave a peer recently. What exactly did you say, and what changed?"],"listen":"Their writing works without them in the room, for teammates and clients, and their feedback is specific."},"leadership":{"q":["Tell me about a recent technical choice you made. Where did you record your reasoning and the alternatives?","If someone joined the project tomorrow, how would they learn why you chose your current approach?","Walk me through an option you rejected recently. Why did you reject it, and where is that written down?"],"listen":"They point to a written decision record listing alternatives and why each was rejected."},"strategic":{"q":["What business goal is your client trying to reach, and how does your current work help them reach it?","What type of contract is your project on, and how does that affect the way the team works?","Tell me about a recent task where knowing the client's business changed how you approached it."],"listen":"They name a specific client goal and the contract type, and link both to the team's work."}},"p4":{"technical":{"q":["Tell me about a recent design you owned outside your strongest area. Where did you need help, and from whom?","Walk me through a review comment you made recently about design or security, not style. What happened next?","Which parts of the team's domain would you struggle to design alone today? What are you doing about it?"],"listen":"They design across the whole domain on their own, and their reviews catch design and security problems."},"delivery":{"q":["Tell me about a risk you spotted before it became a blocker. When did you see it, and what did you do?","Walk me through a time you changed the size or scope of work before a sprint started. Why?","How did you shape the plan for your last sprint, beyond your own tasks?"],"listen":"They shape the sprint for the team, resizing work early and acting on risks before they block."},"fcc":{"q":["Tell me about a time you reset a client's expectations in writing before they had to ask. What did you write?","When did you last deal with the client directly without the lead? What was the outcome?","Tell me about a junior you have mentored. What can they now do on their own that they could not before?"],"listen":"They handle client communication themselves, early and in writing, and a junior is now independent in a skill."},"leadership":{"q":["Tell me about a team decision you co-owned with your manager. What was your part in reaching and owning it?","Walk me through a team discussion you facilitated recently. How did it end, and what was decided?","Tell me about a time your idea became a team decision. Who drove it through to an agreed outcome?"],"listen":"They drove team decisions to a clear outcome and shared ownership, rather than only offering ideas."},"strategic":{"q":["Tell me about a technical decision you changed because of how the client makes money. What would you have done otherwise?","How does your client's business model affect the technical choices on your project? Give a specific example.","Walk me through a trade-off where business context outweighed the technically preferred option."],"listen":"They name a decision that actually changed because of the business model and explain why clearly."}},"p5":{"technical":{"q":["Tell me about a recent architecture decision the team made without you. How did they know what good looks like?","Walk me through how you set the team's quality bar. How do you know it holds when you are away?","Which part of the system did you code yourself recently, and why did you choose that part?"],"listen":"The team decides on its own within standards they set, while they still code the riskiest parts."},"delivery":{"q":["Tell me about a recent stakeholder risk. Who raised it with the stakeholder, and what did you do?","Walk me through how you broke down your last epic. How close did delivery come to the plan?","When did a stakeholder's expectations last need resetting? Who led that conversation?"],"listen":"They own epic planning and stakeholder risk directly, not the EM, and delivery is predictable."},"fcc":{"q":["Tell me about a team habit you started. What happens to it when you are away or busy?","How does knowledge sharing happen in your team now, and what was your part in setting it up?","Walk me through how feedback flows in your team. Who gives it without you prompting them?"],"listen":"They describe habits the team keeps running without them, with evidence from times they were absent."},"leadership":{"q":["Tell me about a time you coached a teammate through a decision instead of making it yourself. How did it go?","Walk me through a team decision that turned out wrong. How did you talk about it with others?","Whose judgement have you grown in the last six months? What can they now decide that they could not before?"],"listen":"They grow others' judgement through coaching and publicly own team decisions, including the misses."},"strategic":{"q":["Tell me about a new engagement or major change where you led the technical solution. What did you own?","Walk me through an estimate you led. How did you build it, and how accurate did it prove?","On your last proposal or major change, who led the solution, and what exactly was your role?"],"listen":"They led the solution and the estimate themselves, not just gave technical input to someone else."}},"p6":{"technical":{"q":["Tell me about a pattern or library you built that other teams use. How many teams adopted it, and why?","Walk me through a hard cross-team problem you solved hands-on recently. What did you build yourself?","When you last helped another team, what changed in their code because of you?"],"listen":"At least two teams use their shared work, and they solve cross-team problems hands-on, not just advise."},"delivery":{"q":["Walk me through how cross-team dependencies are tracked today. Which part of that did you set up?","Tell me about a recent cross-team delay. When did it surface, and how?","Which cross-team commitments do you own, rather than help with when asked? Give a recent example."],"listen":"They own a shared roadmap for cross-team commitments, and delays surface early because of it."},"fcc":{"q":["Tell me about a norm you introduced that another team now uses. How did it spread?","Walk me through how you coached another team's lead to adopt a practice. What do they do differently now?","Which of your practices would still exist in other teams if you left tomorrow? How do you know?"],"listen":"They name norms other teams use, run by leads they coached, which would outlast them."},"leadership":{"q":["Tell me about a cross-team decision you owned. How did you reach it and communicate it?","Which decisions do other teams' leads now make that used to come to you? How did that change?","Walk me through the last decision escalated to you. Why did it reach you, and what did you do?"],"listen":"They own cross-team decisions, and fewer decisions reach them because other leads now own theirs."},"strategic":{"q":["Tell me about a pursuit or account expansion where you led the technical side. What did you own?","Walk me through a reusable asset you created. Who else has used it, and for what?","How has your account knowledge turned into new or expanded work? Give a specific example."],"listen":"They led the technical side of a pursuit or expansion, and others reuse assets they created."}},"p7":{"technical":{"q":["Tell me about a technical direction you set for the organisation. What prototype or reference architecture backed it?","When did you last write or review code yourself? What was it, and what did you learn?","Walk me through how engineers came to trust a direction you set. What did you show them in code?"],"listen":"Their direction is backed by working prototypes and reference architectures, and they remain credible in code."},"delivery":{"q":["Tell me about an organisation-wide delivery risk you saw a quarter ahead. What did you put in place?","Walk me through a process you introduced that prevents a delivery problem. How do you know it works?","Think of the last delivery crisis you handled. What have you changed so it does not happen again?"],"listen":"They spot risks well ahead and install processes that prevent problems, not just fix crises."},"fcc":{"q":["Tell me about a communication or documentation standard you set across the organisation. How is adoption measured?","Walk me through the evidence that one of your standards is working. What do the measures show?","After you promote a practice, what happens next to make sure teams actually adopt it?"],"listen":"They cite organisation-wide standards with measures showing adoption, not just talks or influence."},"leadership":{"q":["Tell me about a process you built that a P6 now runs. What happens when you are not involved?","Who could take over your main responsibilities tomorrow? How have you prepared them?","Walk me through the last time a process you built needed you personally. Why, and what did you change?"],"listen":"Named P6 successors already run the processes they built, without needing them."},"strategic":{"q":["Tell me about a strategic deal where you were the senior technical voice. What did you influence?","Walk me through how you track estimate accuracy across engagements. What have you changed as a result?","How has a technology direction you own affected the business, such as deals won or margins?"],"listen":"They shaped strategic deals as the senior technical voice and own technology direction and estimate accuracy."}}};
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let S={section:'ic',emlv:'m1',di:0,si:0,lv:'p4',mode:'competency',view:'matrix',compare:false,use:'promotion',flv:'p3',fsubs:[],ff:[],hlv:'p4',plv:'p3',clv:'p3',careerMode:'self',matrixCoreOnly:false};
+let S={section:'ic',emlv:'m1',di:0,si:0,lv:'p4',mode:'competency',view:'matrix',compare:false,use:'promotion',flv:'p3',fsubs:[],ff:[],hlv:'p4',plv:'p3',clv:'p3',careerMode:'self',matrixCoreOnly:false,starLv:'p3'};
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 const $=id=>document.getElementById(id);
@@ -1901,9 +1922,10 @@ function renderSidebar(){
   const tag=s=>(isPilot(s.id)?'<span class="ai-tag">✦ AI fluency</span>':'')+(isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'');
   const allCoreIds=new Set(Object.values(CORE).flat());
   let any=false;
-  const filterBar=`<div class="matrix-filter-bar" style="padding:8px 8px 4px;border-bottom:1px solid var(--line);margin-bottom:4px;display:flex;gap:4px;flex-shrink:0">
-    <button class="filter-chip${!S.matrixCoreOnly?' active':''}" data-coreonly="0">All 18</button>
+  const filterBar=`<div class="matrix-filter-bar" style="padding:8px 8px 4px;border-bottom:1px solid var(--line);margin-bottom:4px;display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap">
+    <button class="filter-chip${!S.matrixCoreOnly?' active':''}" data-coreonly="0">All</button>
     <button class="filter-chip${S.matrixCoreOnly?' active':''}" data-coreonly="1">Core only</button>
+    <button class="filter-chip" data-go="starmap" style="margin-left:auto">⬡ Star map</button>
   </div>`;
   const domainItems=DOMAINS.map((d,di)=>{
     const items=d.subs.map((s,si)=>{
@@ -1958,6 +1980,7 @@ function renderContent(){
   if(S.view==='find'){renderFinder();return;}
   if(S.view==='hire'){renderHiring();return;}
   if(S.view==='promo'){renderPromo();return;}
+  if(S.view==='starmap'){renderStarMap();return;}
   const domain=DOMAINS[S.di];
   const lv=LEVELS.find(l=>l.id===S.lv);
   if(!domain.subs.length){
@@ -2228,6 +2251,111 @@ function renderCareer(){
   h+=`</div>`;el.innerHTML=h;el.scrollTop=0;
 }
 
+// ── Star Path helpers ──────────────────────────────────────────────────────
+function hexPoints(cx,cy,r){
+  return Array.from({length:6},(_,i)=>{
+    const a=Math.PI/180*(60*i-30);
+    return `${(cx+r*Math.cos(a)).toFixed(1)},${(cy+r*Math.sin(a)).toFixed(1)}`;
+  }).join(' ');
+}
+function smLabel(label){
+  // Return max 2-line short label
+  const words=label.split(' ');
+  if(words.length===1)return [words[0].slice(0,13)];
+  return [words[0].slice(0,13),words.slice(1).join(' ').slice(0,13)];
+}
+function computeHexPositions(){
+  const R=42,cs=R*Math.sqrt(3),rs=R*1.5,ox=cs/2,mL=60,mT=90;
+  // Domain layout: [startCol, [sub indices per column]]
+  // Technical(10): cols 0,1 — 5 subs each
+  // Delivery(5): col 3 — 5 subs
+  // Feedback(7): cols 5,6 — 4+3 subs
+  // Leadership(5): col 8 — 5 subs
+  // Strategic(3): col 10 — 3 subs
+  const layout=[
+    {di:0,cols:[[0,1,2,3,4],[5,6,7,8,9]],startCol:0},
+    {di:1,cols:[[0,1,2,3,4]],startCol:3},
+    {di:2,cols:[[0,1,2,3],[4,5,6]],startCol:5},
+    {di:3,cols:[[0,1,2,3,4]],startCol:8},
+    {di:4,cols:[[0,1,2]],startCol:10},
+  ];
+  const pos={};
+  layout.forEach(({di,cols,startCol})=>{
+    const domain=DOMAINS[di];
+    cols.forEach((subIdxs,ci)=>{
+      subIdxs.forEach((si,ri)=>{
+        const sub=domain.subs[si];if(!sub)return;
+        const col=startCol+ci,row=ri;
+        const cx=col*cs+(row%2===1?ox:0)+mL;
+        const cy=row*rs+mT;
+        pos[sub.id]={cx,cy};
+      });
+    });
+  });
+  return pos;
+}
+function renderStarMap(){
+  const el=$('content');
+  const lv=S.starLv||'p3';
+  const lvColor=`var(--lc-${lv})`;
+  const lvObj=LEVELS.find(l=>l.id===lv);
+  const coreIds=CORE[lv]?new Set(CORE[lv]):null;
+  const posMap=computeHexPositions();
+  const R=42,pad=24;
+  const allPos=Object.values(posMap);
+  const xs=allPos.map(p=>p.cx),ys=allPos.map(p=>p.cy);
+  const vbX=Math.min(...xs)-R-pad,vbY=Math.min(...ys)-R-30;
+  const vbW=Math.max(...xs)-Math.min(...xs)+R*2+pad*2;
+  const vbH=Math.max(...ys)-Math.min(...ys)+R*2+pad+30;
+  const picker=LEVELS.map(l=>`<button class="sm-lv-btn${l.id===lv?' active':''}" data-starlv="${l.id}" style="${l.id===lv?`--btn-color:var(--lc-${l.id})`:''}">${l.code}</button>`).join('');
+  let svg=`<svg class="star-map-svg" viewBox="${vbX.toFixed(0)} ${vbY.toFixed(0)} ${vbW.toFixed(0)} ${vbH.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">`;
+  // Domain labels
+  DOMAINS.forEach(d=>{
+    const subs=d.subs.filter(s=>posMap[s.id]);if(!subs.length)return;
+    const avgX=subs.reduce((a,s)=>a+posMap[s.id].cx,0)/subs.length;
+    const minY=Math.min(...subs.map(s=>posMap[s.id].cy));
+    svg+=`<text x="${avgX.toFixed(0)}" y="${(minY-R-10).toFixed(0)}" class="sm-domain-label" text-anchor="middle">${esc(d.label)}</text>`;
+  });
+  // Connector lines within domains
+  DOMAINS.forEach(d=>{
+    const subs=d.subs.filter(s=>posMap[s.id]);
+    for(let i=0;i<subs.length-1;i++){
+      const a=posMap[subs[i].id],b=posMap[subs[i+1].id];
+      const bothLit=!coreIds||(coreIds.has(subs[i].id)&&coreIds.has(subs[i+1].id));
+      svg+=`<line x1="${a.cx.toFixed(1)}" y1="${a.cy.toFixed(1)}" x2="${b.cx.toFixed(1)}" y2="${b.cy.toFixed(1)}" stroke="${bothLit?lvColor:'var(--line)'}" stroke-width="${bothLit?2:1}" opacity="${bothLit?0.55:0.3}" stroke-dasharray="${bothLit?'none':'5 4'}"/>`;
+    }
+  });
+  // Hexes
+  DOMAINS.flatMap(d=>d.subs.map(s=>({...s,domainId:d.id}))).forEach(sub=>{
+    const pos=posMap[sub.id];if(!pos)return;
+    const isCore=!coreIds||coreIds.has(sub.id);
+    const pts=hexPoints(pos.cx,pos.cy,R-2);
+    const lines=smLabel(sub.label);
+    const textY=lines.length===1?pos.cy+1:pos.cy-5;
+    const textEl=lines.map((ln,i)=>`<tspan x="${pos.cx.toFixed(1)}" dy="${i===0?'0':'12'}">${esc(ln)}</tspan>`).join('');
+    svg+=`<g class="sm-hex-group" data-smopen="${sub.id}" data-smlv="${lv}" aria-label="${esc(sub.label)}">
+      <polygon points="${pts}" class="sm-hex${isCore?' lit':''}" fill="${isCore?lvColor:'var(--surface)'}" fill-opacity="${isCore?0.18:0.7}" stroke="${isCore?lvColor:'var(--line)'}" stroke-width="${isCore?2:1}"/>
+      ${isCore?`<circle cx="${pos.cx.toFixed(1)}" cy="${pos.cy.toFixed(1)}" r="4" fill="${lvColor}" opacity="0.9"/>`:``}
+      <text x="${pos.cx.toFixed(1)}" y="${textY.toFixed(1)}" class="sm-label${isCore?'':' dim'}" text-anchor="middle">${textEl}</text>
+    </g>`;
+  });
+  svg+=`</svg>`;
+  el.innerHTML=`<div class="star-map-wrap">
+    <div class="star-map-hdr">
+      <div><h2>Competency star map</h2><p class="lead">Select a level — lit hexes are core at that level. Click any hex to open the rubric.</p></div>
+      <button class="cta" data-go="matrix">← Table view</button>
+    </div>
+    <div class="sm-picker">${picker}</div>
+    <div class="sm-svg-wrap">${svg}</div>
+    <div class="sm-legend">
+      <span class="sm-leg-item"><span class="sm-leg-dot lit" style="background:${lvColor}"></span>Core at ${esc(lvObj.code)} — ${coreIds?coreIds.size:'all'} competencies</span>
+      <span class="sm-leg-item"><span class="sm-leg-dot"></span>Available / supporting</span>
+    </div>
+  </div>`;
+  el.scrollTop=0;
+}
+// ── End Star Path ───────────────────────────────────────────────────────────
+
 function render(){
   document.body.classList.toggle('sec-other',S.section!=='ic');
   document.querySelectorAll('.sec-tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.sec===S.section));
@@ -2330,6 +2458,7 @@ function doSearch(){
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
 $('sub-list')?.addEventListener('click',e=>{
   const fc=e.target.closest('[data-coreonly]');if(fc){S.matrixCoreOnly=fc.dataset.coreonly==='1';renderSidebar();return;}
+  const gob=e.target.closest('[data-go]');if(gob){S.view=gob.dataset.go;render();$('content').scrollTop=0;return;}
   const b=e.target.closest('[data-si]');if(!b)return;
   S.di=+b.dataset.di;S.si=+b.dataset.si;S.view='matrix';render();const _c=$('content');if(_c)_c.scrollTop=0;
 });
@@ -2347,6 +2476,7 @@ $('level-strip')?.addEventListener('click',e=>{
 document.querySelector('.secbar .brand')?.addEventListener('click',()=>{S.view='home';render();});
 document.querySelector('.secbar .brand')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();S.view='home';render();}});
 $('guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
+$('starmap-btn')?.addEventListener('click',()=>{S.view='starmap';render();$('content').scrollTop=0;});
 $('promo-btn')?.addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
 $('hire-btn')?.addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
 $('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
@@ -2407,6 +2537,8 @@ $('content')?.addEventListener('click',e=>{
   const t=e.target.closest('button');if(!t||t.disabled)return;
   if(t.dataset.clv){S.clv=t.dataset.clv;renderCareer();return;}
   if(t.dataset.careermode){S.careerMode=t.dataset.careermode;renderCareer();return;}
+  if(t.dataset.starlv){S.starLv=t.dataset.starlv;renderStarMap();return;}
+  if(t.dataset.smopen){const sid=t.dataset.smopen;DOMAINS.forEach((d,di)=>d.subs.forEach((s,si)=>{if(s.id===sid){S.di=di;S.si=si;}}));S.lv=t.dataset.smlv||S.lv;S.view='matrix';S.compare=false;render();$('content').scrollTop=0;return;}
   if(t.dataset.coreonly!==undefined){S.matrixCoreOnly=t.dataset.coreonly==='1';renderSidebar();return;}
   if(t.dataset.gocompare){S.lv=t.dataset.gocompare;S.compare=true;S.view='matrix';render();$('content').scrollTop=0;return;}
   if(t.dataset.flv){S.flv=t.dataset.flv;renderFinder();return;}
