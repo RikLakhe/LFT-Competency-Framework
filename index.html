@@ -262,6 +262,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .kit .comp-group-hdr{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);padding:4px 0 2px;border-bottom:1px solid var(--line);margin-top:4px}
 .kit .comp-tag{font-size:10px;font-weight:600;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--fg-3);margin-left:6px;vertical-align:middle}
 .kit .comp-observed{opacity:.9}
+.kit .comp-block.is-ai{background:linear-gradient(90deg,var(--ai-soft),transparent);border:1px solid var(--ai-line);border-left:3px solid var(--ai)}
+.kit .comp-block.is-ai h4{color:var(--ai)}
 .kit .gsec-sub{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px}
 .kit .gsec-sub h4{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}
 .kit p.gsec-note{font-size:12.5px;color:var(--fg-3);border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
@@ -2090,8 +2092,9 @@ const DOMKEY={technical:'technical',delivery:'delivery',fcc:'fcc',leadership:'le
 function renderHiring(){
   const el=$('content');const lv=LEVELS.find(l=>l.id===S.hlv);const H=HIRING[S.hlv];
   const TECH_IDS=new Set(['writing-code','testing','debugging','understanding-code','software-arch','security','work-breakdown','ai-assisted','ai-judgment','ai-security']);
-  const compBlock=(id,tag)=>{const f=findSub(id);const a=H.anchors[id];const cell=f.s.levels[S.hlv];const qs=(cell&&cell.questions)?cell.questions:[];
-    return `<div class="comp-block${tag?' comp-observed':''}"><h4>${esc(f.s.label)}${tag?`<span class="comp-tag">${esc(tag)}</span>`:''} <button class="link-btn" data-open="${id}" data-lv="${S.hlv}">Open rubric</button></h4>${qs.length?`<ol class="qlist">${qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>`:''}<div class="anchor-grid"><div class="anchor a-strong"><b>Strong</b>${esc(a[0])}</div><div class="anchor a-ok"><b>Acceptable</b>${esc(a[1])}</div><div class="anchor a-weak"><b>Weak</b>${esc(a[2])}</div></div></div>`;};
+  const AI_IDS=new Set(['ai-assisted','ai-judgment','ai-security']);
+  const compBlock=(id,tag)=>{const f=findSub(id);const a=H.anchors[id];const cell=f.s.levels[S.hlv];const qs=(cell&&cell.questions)?cell.questions:[];const isAi=AI_IDS.has(id);
+    return `<div class="comp-block${tag?' comp-observed':''}${isAi?' is-ai':''}"><h4>${esc(f.s.label)}${isAi?`<span class="ai-tag">AI Fluency</span>`:''} ${tag?`<span class="comp-tag">${esc(tag)}</span>`:''}<button class="link-btn" data-open="${id}" data-lv="${S.hlv}">Open rubric</button></h4>${qs.length?`<ol class="qlist">${qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>`:''}<div class="anchor-grid"><div class="anchor a-strong"><b>Strong</b>${esc(a[0])}</div><div class="anchor a-ok"><b>Acceptable</b>${esc(a[1])}</div><div class="anchor a-weak"><b>Weak</b>${esc(a[2])}</div></div></div>`;};
   const anchKeys=Object.keys(H.anchors);
   const techKeys=anchKeys.filter(id=>TECH_IDS.has(id));
   const nonTechKeys=anchKeys.filter(id=>!TECH_IDS.has(id));
