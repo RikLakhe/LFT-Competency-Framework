@@ -516,8 +516,9 @@ body:not(.home-view) .home-hero{display:none;}
 .stat-icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;color:var(--fg-3);margin-bottom:8px;flex-shrink:0}
 .hero-stats dt{font-family:var(--font-mono);font-size:22px;font-weight:600;color:var(--accent);line-height:1}
 .hero-stats dd{margin:2px 0 0;font-size:11.5px;font-weight:600;color:var(--fg-2)}
-.hero-browse-row{margin-top:16px}
-.hero-browse-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.hero-right{display:flex;flex-direction:column;gap:12px;align-self:stretch;justify-content:center}
+.hero-browse-row{display:flex;justify-content:flex-end}
+.hero-browse-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;white-space:nowrap}
 .hero-browse-btn:hover{opacity:.88}
 .stat-ctx{font-size:11px;color:var(--fg-3);margin-top:2px}
 .home-head h2{margin:0;font-size:22px;letter-spacing:-.01em}
@@ -740,30 +741,32 @@ body:not(.home-view) .home-hero{display:none;}
         </button>
       </div>
     </div>
-    <dl class="hero-stats">
-      <div>
-        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
-        <dt id="stat-levels">—</dt><dd>levels</dd>
-        <span class="stat-ctx">P2 to P7</span>
+    <div class="hero-right">
+      <div class="hero-browse-row">
+        <button id="cta-browse" class="hero-browse-btn">Browse competencies →</button>
       </div>
-      <div>
-        <svg class="stat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-        <dt id="stat-domains">—</dt><dd>domains</dd>
-        <span class="stat-ctx">competency areas</span>
-      </div>
-      <div>
-        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <dt id="stat-comps">—</dt><dd>competencies</dd>
-        <span class="stat-ctx">skills assessed</span>
-      </div>
-      <div>
-        <svg class="stat-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <dt id="stat-tasks">—</dt><dd>growth tasks</dd>
-        <span class="stat-ctx">concrete actions</span>
-      </div>
-    </dl>
-    <div class="hero-browse-row">
-      <button id="cta-browse" class="hero-browse-btn">Browse competencies →</button>
+      <dl class="hero-stats">
+        <div>
+          <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
+          <dt id="stat-levels">—</dt><dd>levels</dd>
+          <span class="stat-ctx">P2 to P7</span>
+        </div>
+        <div>
+          <svg class="stat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+          <dt id="stat-domains">—</dt><dd>domains</dd>
+          <span class="stat-ctx">competency areas</span>
+        </div>
+        <div>
+          <svg class="stat-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <dt id="stat-comps">—</dt><dd>competencies</dd>
+          <span class="stat-ctx">skills assessed</span>
+        </div>
+        <div>
+          <svg class="stat-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <dt id="stat-tasks">—</dt><dd>growth tasks</dd>
+          <span class="stat-ctx">concrete actions</span>
+        </div>
+      </dl>
     </div>
   </div>
 </section>
