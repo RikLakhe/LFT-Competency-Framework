@@ -492,7 +492,10 @@ body.home-view .secbar{display:none}
 @media(prefers-color-scheme:dark){.hero-action-btn{background:rgba(255,255,255,.06)}}
 .home{max-width:1080px;margin:0 auto;display:grid;gap:36px;padding-bottom:24px}
 .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:center;border-radius:16px;padding:24px 28px;background:radial-gradient(120% 140% at 0% 0%,var(--green-soft),transparent 55%),linear-gradient(135deg,var(--surface),var(--accent-soft));border:1px solid var(--line);box-shadow:var(--shadow)}
-.hero-logo{width:44px;height:44px;border-radius:10px;display:block;margin-bottom:12px;box-shadow:0 6px 18px rgba(3,142,67,.25)}
+.hero-identity{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.hero-identity-text{display:flex;flex-direction:column;gap:2px}
+.hero-identity-text h1{margin:0}
+.hero-logo{width:44px;height:44px;border-radius:10px;display:block;flex-shrink:0;box-shadow:0 6px 18px rgba(3,142,67,.25)}
 .eyebrow{margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
 .hero h1{margin:0;font-size:32px;line-height:1.1;letter-spacing:-.02em;color:var(--fg);text-wrap:balance}
 .hero-lead{margin:10px 0 0;font-size:15px;line-height:1.6;color:var(--fg-2);max-width:56ch}
@@ -711,9 +714,13 @@ body:not(.home-view) .home-hero{display:none;}
 <section id="home-hero" class="home-hero" hidden>
   <div class="hero">
     <div class="hero-text">
-          <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
-      <p class="eyebrow">Leapfrog Technology · Engineering</p>
-      <h1>LFT Competency Framework</h1>
+      <div class="hero-identity">
+        <img class="hero-logo" id="hero-logo-img" src="" alt="Leapfrog" width="56" height="56">
+        <div class="hero-identity-text">
+          <p class="eyebrow">Leapfrog Technology · Engineering</p>
+          <h1>LFT Competency Framework</h1>
+        </div>
+      </div>
       <p class="hero-lead">The engineering bar at Leapfrog — what good looks like from P2 to P7, for engineers, managers and interviewers.</p>
       <div class="role-cards">
         <button id="cta-career" class="role-card">
