@@ -379,6 +379,7 @@ details.lvl[open] summary{margin-bottom:10px}
 .sdomain-group{display:grid;gap:1px;margin-bottom:6px}
 .sdomain-hdr{position:sticky;top:0;z-index:1;background:var(--surface);font-size:10.5px;padding:10px 10px 4px;color:var(--fg-3)}
 .sdomain-group.is-cur .sdomain-hdr{color:var(--accent)}
+.sgroup-hdr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-3);padding:6px 10px 2px;display:block;opacity:.65}
 .sub-item{padding:6px 10px;font-size:13.5px;align-items:flex-start}
 .sub-item .sub-num{font-size:10.5px;min-width:24px;padding-top:2px}
 .sub-item[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:700}
@@ -1239,7 +1240,7 @@ const DOMAINS=[
       ["Org-wide decision records include cost-value reasoning — tracked and reported.","Leads apply it independently — visible in their own teams' decisions and reviews.","Adoption measured in major decision records — before and after teaching sessions."]),
   }},
 ]},
-{id:'fcc',label:'Feedback & Collaboration',subs:[
+{id:'fcc',label:'Feedback, Communication & Collaboration',subs:[
   {id:'delivering-feedback',label:'Delivering Feedback',levels:{
     p2:L("Understands how to deliver praise and constructive feedback in a useful manner.",
       ["Name two qualities that make feedback useful before delivering it.","Separate praise from critique — deliver each clearly.","Address the specific behaviour, not the person, when giving constructive feedback.","Ask before delivering unsolicited feedback to a teammate."],
@@ -1917,19 +1918,47 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 // ─── RENDER ──────────────────────────────────────────────────────────────────
 function renderTopNav(){}
 
+const GROUPS={
+  'writing-code':'Quality & testing','testing':'Quality & testing',
+  'debugging':'Debugging & observability','observability':'Debugging & observability',
+  'understanding-code':'Software design & architecture','software-arch':'Software design & architecture',
+  'security':'Security',
+  'ai-assisted':'AI Fluency','ai-judgment':'AI Fluency','ai-security':'AI Fluency',
+  'work-breakdown':'Incremental value delivery','prioritisation':'Incremental value delivery','ambiguity':'Incremental value delivery',
+  'reliability':'Self-organization','economic-thinking':'Self-organization',
+  'delivering-feedback':'Feedback','seeking-feedback':'Feedback',
+  'communication':'Communication','knowledge-sharing':'Communication',
+  'teamwork':'Collaboration','relationships':'Collaboration','disagreement':'Collaboration',
+  'decision-making':'Decision making','driving-alignment':'Driving alignment',
+  'process-thinking':'Process thinking','facilitation':'Facilitation','mentoring':'Mentoring',
+  'business-acumen':'Business acumen & strategy','strategic-work':'Business acumen & strategy','product-thinking':'Business acumen & strategy',
+};
+
 function renderSidebar(){
   const q=(S.sfilter||'').toLowerCase().trim();
   const tag=s=>(isPilot(s.id)?'<span class="ai-tag">✦ AI fluency</span>':'')+(isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'');
   let any=false;
   $('sub-list').innerHTML=DOMAINS.map((d,di)=>{
-    const items=d.subs.map((s,si)=>{
-      if(q&&!s.label.toLowerCase().includes(q)&&!d.label.toLowerCase().includes(q))return '';
-      any=true;
-      const cur=di===S.di&&si===S.si&&S.view==='matrix';
-      return `<button class="sub-item${isSupporting(s.id,S.lv)?' is-sup':''}${isPilot(s.id)?' is-ai':''}" data-di="${di}" data-si="${si}" ${cur?'aria-current="page"':''}>
+    const groupOrder=[];const groupMap={};
+    d.subs.forEach((s,si)=>{
+      if(q&&!s.label.toLowerCase().includes(q)&&!d.label.toLowerCase().includes(q))return;
+      const g=GROUPS[s.id]||'';
+      if(!groupMap[g]){groupMap[g]=[];groupOrder.push(g);}
+      groupMap[g].push({s,si});
+    });
+    if(!groupOrder.length)return '';
+    any=true;
+    let items='';
+    groupOrder.forEach(g=>{
+      if(g)items+=`<span class="sgroup-hdr">${esc(g)}</span>`;
+      groupMap[g].forEach(({s,si})=>{
+        const cur=di===S.di&&si===S.si&&S.view==='matrix';
+        items+=`<button class="sub-item${isSupporting(s.id,S.lv)?' is-sup':''}${isPilot(s.id)?' is-ai':''}" data-di="${di}" data-si="${si}" ${cur?'aria-current="page"':''}>
           <span class="sub-num">${di+1}.${si+1}</span><span class="sub-lbl">${esc(s.label)}${tag(s)}</span>
-        </button>`;}).join('');
-    return items?`<div class="sdomain-group${di===S.di?' is-cur':''}"><span class="sdomain-hdr">${esc(d.label)}</span>${items}</div>`:'';
+        </button>`;
+      });
+    });
+    return `<div class="sdomain-group${di===S.di?' is-cur':''}"><span class="sdomain-hdr">${esc(d.label)}</span>${items}</div>`;
   }).join('')+(any?'':'<p class="side-empty">No competency matches.</p>');
   $('side-select').innerHTML=DOMAINS.map((d,di)=>`<optgroup label="${esc(d.label)}">${d.subs.map((s,si)=>`<option value="${di}.${si}" ${di===S.di&&si===S.si?'selected':''}>${esc(s.label)}${isPilot(s.id)?' (AI fluency)':''}${isSupporting(s.id,S.lv)?' (supporting)':''}</option>`).join('')}</optgroup>`).join('');
 }
