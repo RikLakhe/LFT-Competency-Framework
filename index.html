@@ -376,10 +376,13 @@ details.lvl[open] summary{margin-bottom:10px}
 .sidebar-head .domain-label{margin:0}
 .side-select{display:none;width:100%;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
 .sub-list{gap:1px;padding:0 8px 24px}
-.sdomain-group{display:grid;gap:1px;margin-bottom:6px}
-.sdomain-hdr{position:sticky;top:0;z-index:1;background:var(--surface);font-size:10.5px;padding:10px 10px 4px;color:var(--fg-3)}
-.sdomain-group.is-cur .sdomain-hdr{color:var(--accent)}
-.sgroup-hdr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-3);padding:6px 10px 2px;display:block;opacity:.65}
+.sdomain-group{display:grid;gap:1px;margin-bottom:2px}
+.sdomain-hdr{position:sticky;top:0;z-index:1;background:var(--surface);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 10px 6px;color:var(--fg-3);border-bottom:1px solid var(--line)}
+.sdomain-group.is-cur .sdomain-hdr{color:var(--accent);border-bottom-color:var(--accent)}
+.sdomain-hdr{display:flex;align-items:center;justify-content:space-between}
+.sdomain-count{font-family:var(--font-mono);font-size:10px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:1px 6px;color:var(--fg-3);letter-spacing:0}
+.sgroup-hdr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-3);padding:8px 10px 3px 14px;display:block;border-left:2px solid var(--line);margin:4px 8px 0;border-radius:0}
+.sub-item.in-group{padding-left:18px}
 .sub-item{padding:6px 10px;font-size:13.5px;align-items:flex-start}
 .sub-item .sub-num{font-size:10.5px;min-width:24px;padding-top:2px}
 .sub-item[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:700}
@@ -1953,12 +1956,13 @@ function renderSidebar(){
       if(g)items+=`<span class="sgroup-hdr">${esc(g)}</span>`;
       groupMap[g].forEach(({s,si})=>{
         const cur=di===S.di&&si===S.si&&S.view==='matrix';
-        items+=`<button class="sub-item${isSupporting(s.id,S.lv)?' is-sup':''}${isPilot(s.id)?' is-ai':''}" data-di="${di}" data-si="${si}" ${cur?'aria-current="page"':''}>
+        items+=`<button class="sub-item${g?' in-group':''}${isSupporting(s.id,S.lv)?' is-sup':''}${isPilot(s.id)?' is-ai':''}" data-di="${di}" data-si="${si}" ${cur?'aria-current="page"':''}>
           <span class="sub-num">${di+1}.${si+1}</span><span class="sub-lbl">${esc(s.label)}${tag(s)}</span>
         </button>`;
       });
     });
-    return `<div class="sdomain-group${di===S.di?' is-cur':''}"><span class="sdomain-hdr">${esc(d.label)}</span>${items}</div>`;
+    const total=groupOrder.reduce((n,g)=>n+groupMap[g].length,0);
+    return `<div class="sdomain-group${di===S.di?' is-cur':''}"><span class="sdomain-hdr">${esc(d.label)}<span class="sdomain-count">${total}</span></span>${items}</div>`;
   }).join('')+(any?'':'<p class="side-empty">No competency matches.</p>');
   $('side-select').innerHTML=DOMAINS.map((d,di)=>`<optgroup label="${esc(d.label)}">${d.subs.map((s,si)=>`<option value="${di}.${si}" ${di===S.di&&si===S.si?'selected':''}>${esc(s.label)}${isPilot(s.id)?' (AI fluency)':''}${isSupporting(s.id,S.lv)?' (supporting)':''}</option>`).join('')}</optgroup>`).join('');
 }
