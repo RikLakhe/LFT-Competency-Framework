@@ -2013,6 +2013,7 @@ const QA_LEVELS=[
   {id:'se', code:'SE',  title:'Software Engineer'},
   {id:'sse',code:'SSE', title:'Senior Software Engineer'},
   {id:'le', code:'LE',  title:'Lead Engineer'},
+  {id:'pqe',code:'PQE', title:'Principal QA Engineer'},
 ];
 const QA_PERSONAS={
   ase:{
@@ -2035,6 +2036,11 @@ const QA_PERSONAS={
     summary:'Shifted from technical ownership to project-level quality leadership. Owns the complete quality outcome for an entire project, defines the testing methodology and toolchain, and is the primary QA voice for project leadership and key stakeholders. Impact measured through quality outcomes at the project level, whether leading a team or operating as the sole QA owner.',
     keyShift:'From technical ownership to team leadership — aligning quality strategy with project and business goals.',
   },
+  pqe:{
+    name:'The Visionary',
+    summary:'The Principal Engineer operates at the intersection of engineering strategy and organisational leadership. They architect foundational frameworks from scratch, pioneer new testing paradigms, and influence executive leadership. Their impact is measured in the elevation of engineering culture and quality capability across the whole organisation.',
+    keyShift:'From project and team leadership to organisational strategy — defining how the engineering teams thinks about and practices quality.',
+  },
 };
 function QL(what,why,how){return {what,why,how};}
 const QA_DOMAINS=[
@@ -2051,6 +2057,9 @@ const QA_DOMAINS=[
     le:QL('Owns the overall quality strategy, execution, and delivery for an entire project or product.',
           'To align the QA team\'s efforts with project goals and ensure the entire team delivers a high-quality product on time.',
           'By delegating work, managing testing timelines, coordinating with stakeholders (PMs, Dev Leads), and being the ultimate point of contact for quality-related decisions on the project.'),
+    pqe:QL('Owns broad, cross-cutting quality initiatives and standards that affect multiple teams or the entire engineering organization (e.g., establishing a performance testing discipline, architecting a universal test data management solution).',
+           'To solve systemic, complex quality problems and elevate the entire organization\'s quality posture and engineering capabilities.',
+           'By identifying systemic gaps, researching industry best practices, evangelizing new processes or tools, and influencing senior leadership to secure buy-in and resources.'),
   }},
   {id:'qa-domain',label:'Domain Knowledge',icon:'🧠',desc:'Understanding of the business, user and product context',levels:{
     ase:QL('Understands the specific feature they are testing at a functional level.',
@@ -2065,6 +2074,9 @@ const QA_DOMAINS=[
     le:QL('Understands the architecture, business logic, and user personas across the entire product line their team supports.',
           'To develop a comprehensive test strategy that balances business priorities, user experience, and technical risks.',
           'By working with product leadership, architects, and support teams to understand the complete picture.'),
+    pqe:QL('Understands the company\'s strategic goals, the competitive landscape, and industry trends.',
+           'To align quality initiatives with long-term business objectives and ensure the company remains competitive.',
+           'By engaging with senior leadership, reading industry reports, and representing the company at technical conferences.'),
   }},
   {id:'qa-testing',label:'Testing Skills',icon:'🧪',desc:'Core craft of software testing from execution to methodology',levels:{
     ase:QL('Able to write effective test cases and execute pre-written test cases accurately. Performs exploratory, sanity, and regression testing.',
@@ -2079,6 +2091,9 @@ const QA_DOMAINS=[
     le:QL('Defines the overall testing methodology for a project (e.g., risk-based testing, session-based test management).',
           'To optimize the testing effort, focusing the team on the most critical areas of the product.',
           'By analyzing project requirements, technical complexity, and business risk to create a tailored test strategy.'),
+    pqe:QL('Pioneers and introduces new testing paradigms and frameworks to the organization (e.g., implementing contract testing, introducing chaos engineering).',
+           'To proactively address future quality challenges and keep the organization on the cutting edge of testing practices.',
+           'By researching, prototyping, and championing innovative approaches that fundamentally improve how the company builds and tests software.'),
   }},
   {id:'qa-tools',label:'Tools & Frameworks',icon:'🛠',desc:'Proficiency with software and infrastructure used for testing',levels:{
     ase:QL('Uses standard tools for test case management (e.g. Jira, TestRail) and bug tracking. Can run existing automated tests.',
@@ -2093,6 +2108,9 @@ const QA_DOMAINS=[
     le:QL('Evaluates and selects the right tools and frameworks for a new project. Sets up the initial testing infrastructure.',
           'To ensure the project starts with a solid foundation for quality and automation.',
           'By conducting proof-of-concept evaluations, considering factors like project needs, team skills, and budget.'),
+    pqe:QL('Defines and governs the organisation\'s test tooling strategy. Architects scalable, reusable quality platforms and makes build-vs-buy decisions to address complex, organisation-wide testing challenges. Drives organisation-wide adoption of established tooling standards and influences engineering leadership to ensure testability is treated as a first-class engineering concern.',
+           'To ensure the engineering organisation has a robust, scalable, and future-proof quality tooling foundation that is consistently adopted across all teams.',
+           'By evaluating build-vs-buy options, applying software architecture principles, establishing tooling standards, creating onboarding guidelines, and defining adoption metrics.'),
   }},
   {id:'qa-planning',label:'Test Planning & Strategy',icon:'🗺',desc:'Foresight and planning required to ensure quality',levels:{
     ase:QL('Follows a provided test plan and gives input on the time required to execute their assigned tasks.',
@@ -2107,6 +2125,9 @@ const QA_DOMAINS=[
     le:QL('Creates the Master Test Plan for an entire project and reviews plans prepared by junior members. Responsible for defining the project\'s overall Test Data Management (TDM) strategy including data creation, masking (for PII), storage, refresh, and cleanup across different test environments.',
           'To provide a single source of truth for all quality-related activities on a project and align all stakeholders.',
           'By working with project management to integrate the test plan into the overall project schedule and budget.'),
+    pqe:QL('Defines the organization\'s overarching Quality Assurance strategy and vision. Sets quality policies and standards for all teams.',
+           'To create a consistent and scalable approach to quality across the entire company.',
+           'By creating documents like a "Definition of Done," establishing quality gates for releases, and defining key quality metrics (KPIs) for the organization.'),
   }},
   {id:'qa-bugs',label:'Bug Reporting & Analysis',icon:'🐛',desc:'Identifying, documenting and analysing defects',levels:{
     ase:QL('Writes clear, concise bug reports with accurate steps to reproduce.',
@@ -2121,6 +2142,9 @@ const QA_DOMAINS=[
     le:QL('Performs bug trend analysis to identify patterns and systemic quality issues in the product or process.',
           'To move from a reactive (finding bugs) to a proactive (preventing bugs) mindset.',
           'By analyzing historical bug data to find hotspots in the code, common root causes, or gaps in testing.'),
+    pqe:QL('Develops and implements a formal root cause analysis (RCA) process for critical production incidents.',
+           'To ensure that the organization learns from its mistakes and puts systemic fixes in place to prevent recurrence.',
+           'By facilitating "5 Whys" or similar post-mortem sessions and tracking the implementation of corrective actions.'),
   }},
   {id:'qa-problem',label:'Problem Solving & Critical Thinking',icon:'🔍',desc:'Ability to analyse information objectively and reason to a judgement',levels:{
     ase:QL('Can follow a troubleshooting guide to solve common problems (e.g. resetting a test environment).',
@@ -2135,6 +2159,9 @@ const QA_DOMAINS=[
     le:QL('Solves logistical and strategic problems, such as how to test a major feature with limited time or resources.',
           'To navigate project constraints without compromising on essential quality.',
           'By making risk-based decisions, prioritizing effectively, and creatively optimizing the test process.'),
+    pqe:QL('Solves abstract, organization-wide problems (e.g., "How do we improve developer productivity by shifting quality left?").',
+           'To drive fundamental improvements in the entire software development lifecycle.',
+           'By analyzing data, influencing multiple teams, and designing systemic solutions that address root causes, not just symptoms.'),
   }},
   {id:'qa-communication',label:'Communication & Collaboration',icon:'💬',desc:'Working effectively with others and conveying information clearly',levels:{
     ase:QL('Communicates status updates clearly and asks for help when needed.',
@@ -2149,6 +2176,9 @@ const QA_DOMAINS=[
     le:QL('Communicates the team\'s progress, challenges, and needs to engineering management and project leadership.',
           'To ensure the QA team is visible, supported, and aligned with broader project goals.',
           'Through status reports, team meetings, and formal presentations.'),
+    pqe:QL('Influences and persuades senior and executive leadership on strategic quality initiatives.',
+           'To secure the necessary resources, authority, and organizational buy-in for large-scale change.',
+           'By preparing data-driven business cases, presenting a compelling vision, and building strong cross-functional relationships.'),
   }},
   {id:'qa-learning',label:'Learning & Innovation',icon:'🌱',desc:'Drive to acquire new skills and improve processes',levels:{
     ase:QL('Eager to learn the team\'s processes and tools. Focuses on mastering the basics.',
@@ -2163,6 +2193,9 @@ const QA_DOMAINS=[
     le:QL('Fosters a culture of continuous improvement within the team. Encourages experimentation and learning.',
           'To build a high-performing team that adapts and evolves.',
           'By allocating time for learning, celebrating new ideas, and leading by example.'),
+    pqe:QL('Stays ahead of industry trends and brings groundbreaking ideas back to the organization.',
+           'To ensure the company\'s quality practices remain modern and effective.',
+           'By attending conferences, participating in open-source projects, and building a network of industry peers.'),
   }},
   {id:'qa-automation',label:'Test Automation',icon:'⚙️',desc:'Using software to perform tests and validate results',levels:{
     ase:QL('Can run existing automated test suites and analyse the results.',
@@ -2177,6 +2210,9 @@ const QA_DOMAINS=[
     le:QL('Defines the automation strategy for a project (e.g., what to automate, at which level of the test pyramid).',
           'To ensure the automation effort provides the maximum return on investment (ROI).',
           'By analyzing the application architecture and identifying the best points for automation.'),
+    pqe:QL('Architects, builds, and maintains scalable, organization-wide test automation frameworks and infrastructure.',
+           'To provide a common, robust platform that accelerates automation efforts across all teams.',
+           'By designing a framework that is easy to use, highly reliable, and extensible.'),
   }},
   {id:'qa-cicd',label:'CI/CD & DevOps',icon:'🔄',desc:'Understanding and leveraging the continuous integration and delivery pipeline',levels:{
     ase:QL('Can trigger builds and find test reports within the CI/CD tool (e.g. GitHub Actions, CircleCI).',
@@ -2191,6 +2227,9 @@ const QA_DOMAINS=[
     le:QL('Designs the quality gates and testing strategy within the CI/CD pipeline for a project.',
           'To ensure that bad code is caught automatically before it reaches production.',
           'By defining which test suites run at each stage and setting the criteria for a build to pass or fail.'),
+    pqe:QL('Architects the overall continuous testing and delivery strategy for the organization. Integrates quality into the entire value stream.',
+           'To create a fast, reliable, and secure path to production for all teams.',
+           'By collaborating with DevOps teams to build a holistic vision for the software delivery lifecycle.'),
   }},
   {id:'qa-leadership',label:'Leadership & Mentorship',icon:'🤝',desc:'Guiding, supporting and developing other team members',levels:{
     ase:QL('Is a receptive and engaged mentee.',
@@ -2205,6 +2244,9 @@ const QA_DOMAINS=[
     le:QL('Leads the QA team on result-oriented OKR activities (planning, managing and execution). Delegates tasks, manages priorities, resolves conflicts, and represents the team to stakeholders.',
           'To ensure the team operates as a cohesive, effective, and motivated unit.',
           'By providing clear direction, fostering a positive team environment, and advocating for the team\'s needs.'),
+    pqe:QL('Acts as a technical leader and "force multiplier" for the entire engineering organization. Mentors senior and lead engineers.',
+           'To elevate the technical bar and strategic thinking across the whole company.',
+           'By influencing without direct authority, leading through expertise, and guiding technical strategy in high-level forums.'),
   }},
 ];
 
