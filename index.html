@@ -2036,6 +2036,7 @@ const AREAS=[
   {id:'all',        label:'All areas',      icon:'⬡',  desc:'See every competency regardless of practice area'},
   {id:'engineering',label:'Engineering',    icon:'💻', desc:'Development, Frontend, Power Platform and Data engineering'},
   {id:'qa',         label:'QA Engineering', icon:'🔬', desc:'Software quality assurance and test engineering'},
+  {id:'ai',         label:'AI Engineering', icon:'🤖', desc:'AI and ML engineering — generative AI, classical ML, evaluation and responsible AI'},
 ];
 const AREA_SUBS={engineering:null};
 
@@ -2282,12 +2283,178 @@ const QA_DOMAINS=[
   }},
 ];
 
+// ─── AI ENGINEERING TRACK ────────────────────────────────────────────────────
+const AI_PERSONAS={
+  p2:{name:'The Curious Builder',summary:'Learning AI fundamentals under guidance. Executes well-defined tasks, contributes tests and experiments, and is building an understanding of the full AI stack.',keyShift:'From software engineering to AI-aware engineering — understanding that AI code includes prompts, models, data, and evaluation.'},
+  p3:{name:'The Feature Contributor',summary:'Delivers complete AI features independently. Can choose appropriate metrics, build evaluation sets, deploy model services, and explain AI trade-offs to teammates.',keyShift:'From guided execution to independent AI feature delivery — owning the full lifecycle of a feature end-to-end.'},
+  p4:{name:'The AI Craftsperson',summary:'The team\'s primary AI practitioner. Formulates the problem, chooses the approach, designs serving and evaluation, ensures responsible use, and turns experiments into production systems.',keyShift:'From feature delivery to system design — translating business problems into measurable AI solutions with production-grade architecture.'},
+  p5:{name:'The AI Lead',summary:'Drives AI quality, architecture, and practice for the team. Makes build vs. buy decisions, owns the evaluation bar, sets deployment standards, and works directly with stakeholders on AI risk and automation levels.',keyShift:'From individual AI delivery to team-wide AI ownership — setting the bar, not just meeting it.'},
+  p6:{name:'The AI Multiplier',summary:'Shapes AI practices across several teams. Guides evaluation, serving, and responsible AI at scale, prevents fragmented tooling, and tracks research trends to connect them to real opportunities.',keyShift:'From team leadership to cross-team AI strategy — ensuring the organisation\'s AI capability grows faster than any one team.'},
+  p7:{name:'The AI Visionary',summary:'Sets the organisation\'s AI direction. Decides when to adopt new methods, governs the AI platform and data strategy, shapes responsible AI policy, and represents the organisation externally.',keyShift:'From influencing teams to setting organisational AI strategy — defining what the organisation believes about AI and how it acts on it.'},
+};
+// AI additions to existing competency IDs at each level (null = n/a)
+const AI_ADDITIONS={
+  'writing-code':{p2:'Writes prompts, model calls, and training code that are as readable and testable as the rest of the code. Keeps prompts in version control, not as inline strings scattered in the codebase.',p3:'Writes prompts, model calls, and training code that are as readable and testable as the rest of the code. Keeps prompts in version control, not as inline strings scattered in the codebase.',p4:'Writes AI code where prompts, model configuration, and business logic are separated, so each can be changed and tested on its own. Turns notebook experiments into production-quality code.',p5:'Sets the team\'s or organization\'s conventions for how AI code, prompts, training code, and model configuration are structured.',p6:'Sets the team\'s or organization\'s conventions for how AI code, prompts, training code, and model configuration are structured.',p7:'Sets the team\'s or organization\'s conventions for how AI code, prompts, training code, and model configuration are structured.'},
+  'testing':{p2:'Writes tests for the deterministic parts around the model, such as preprocessing, parsing, validation, and tool execution.',p3:'Writes tests for the deterministic parts around the model, such as preprocessing, parsing, validation, and tool execution.',p4:'Tests AI systems at the boundaries: schema validation, guardrails, fallbacks, and failure paths. Knows which behaviour belongs in tests and which belongs in evaluation.',p5:'Defines how the team or organization divides responsibility between tests and evaluation.',p6:'Defines how the team or organization divides responsibility between tests and evaluation.',p7:'Defines how the team or organization divides responsibility between tests and evaluation.'},
+  'debugging':{p2:'Uses traces of model inputs, outputs, and tool calls to investigate failures.',p3:'Uses traces of model inputs, outputs, and tool calls to investigate failures.',p4:'Can tell whether a failure comes from the data, the retrieval step, the model, or the system around it.',p5:'Leads investigation of AI incidents, where the cause is often a change in data or model behaviour rather than a code change.',p6:'Leads investigation of AI incidents, where the cause is often a change in data or model behaviour rather than a code change.',p7:'Leads investigation of AI incidents, where the cause is often a change in data or model behaviour rather than a code change.'},
+  'observability':{p2:null,p3:'Adds tracing of model inputs, outputs, tool calls, tokens, latency, and cost. Analyzes production failures and user feedback for a feature, and proposes fixes to prompts, retrieval, data, or models.',p4:'Monitors AI quality, data drift, and cost in production, and sets alerts. Runs the improvement loop: turns production failures into new evaluation cases, decides whether to fix with prompts, data, retrieval, retraining, or fine-tuning, and verifies each fix against the full evaluation set before release.',p5:'Owns the improvement roadmap for the team\'s or organization\'s AI systems, and prioritizes fixes by business impact with stakeholders.',p6:'Owns the improvement roadmap for the team\'s or organization\'s AI systems, and prioritizes fixes by business impact with stakeholders.',p7:'Owns the improvement roadmap for the team\'s or organization\'s AI systems, and prioritizes fixes by business impact with stakeholders.'},
+  'understanding-code':{p2:'Understands the data and model pipeline for the part they work on, not only the application code.',p3:'Understands the data and model pipeline for the part they work on, not only the application code.',p4:'Understands the full path from data source to model output for the team\'s AI systems, including where each prompt and model version comes from.',p5:'Has expertise in how AI systems, data flows, and model dependencies connect across teams or the organization.',p6:'Has expertise in how AI systems, data flows, and model dependencies connect across teams or the organization.',p7:'Has expertise in how AI systems, data flows, and model dependencies connect across teams or the organization.'},
+  'software-arch':{p2:'Follows existing patterns for integrating model calls, retrieval, and tools into services.',p3:'Follows existing patterns for integrating model calls, retrieval, and tools into services.',p4:'Designs how AI components fit into the service architecture: clear interfaces around model calls, fallbacks when the model fails, and tool and MCP contracts that other services can rely on.',p5:'Guides AI system architecture across teams or the organization, and keeps AI components replaceable as models change.',p6:'Guides AI system architecture across teams or the organization, and keeps AI components replaceable as models change.',p7:'Guides AI system architecture across teams or the organization, and keeps AI components replaceable as models change.'},
+  'security':{p2:'Treats user input, retrieved content, and tool output as untrusted. Never puts secrets or client data in prompts.',p3:'Treats user input, retrieved content, and tool output as untrusted. Never puts secrets or client data in prompts.',p4:'Threat-models AI features for direct and indirect prompt injection, data leakage through prompts, logs, and retrieval, data exfiltration through tools, excessive tool permissions, and, for trained models, data poisoning, adversarial inputs, and leakage of training data through the model.',p5:'Works with the security team to set AI security strategy across teams or the organization.',p6:'Works with the security team to set AI security strategy across teams or the organization.',p7:'Works with the security team to set AI security strategy across teams or the organization.'},
+  'work-breakdown':{p2:'Breaks AI tasks into timeboxed experiments, each with a clear success criterion.',p3:'Breaks AI tasks into timeboxed experiments, each with a clear success criterion.',p4:'Turns client requirements into AI milestones with measurable targets, for example a baseline phase, then an agreed quality target, then production hardening. Sets targets only after a baseline result exists.',p5:'Plans AI projects into milestones and targets with clients and stakeholders, and keeps commitments realistic for experimental work.',p6:'Plans AI projects into milestones and targets with clients and stakeholders, and keeps commitments realistic for experimental work.',p7:'Plans AI projects into milestones and targets with clients and stakeholders, and keeps commitments realistic for experimental work.'},
+  'ambiguity':{p2:null,p3:'Understands that AI results are not guaranteed. Reports progress with evidence, not with confidence.',p4:'Decides when to stop an approach that is not working, and changes direction early. Explains the probabilistic behaviour of AI features to non-technical people.',p5:'Explains probabilistic outcomes and risks to clients and stakeholders in plain language.',p6:'Explains probabilistic outcomes and risks to clients and stakeholders in plain language.',p7:'Explains probabilistic outcomes and risks to clients and stakeholders in plain language.'},
+  'economic-thinking':{p2:'Reports token use, compute use, and latency for their work.',p3:'Reports token use, compute use, and latency for their work.',p4:'Designs to cost and latency targets using caching, model routing, distillation, and smaller or classical models. Estimates monthly cost before launch.',p5:'Owns AI cost budgets and makes explicit tradeoffs between quality, cost, and latency with stakeholders.',p6:'Owns AI cost budgets and makes explicit tradeoffs between quality, cost, and latency with stakeholders.',p7:'Owns AI cost budgets and makes explicit tradeoffs between quality, cost, and latency with stakeholders.'},
+  'knowledge-sharing':{p2:'Shares AI learnings with the team, such as failure patterns and evaluation results.',p3:'Shares AI learnings with the team, such as failure patterns and evaluation results.',p4:'Is the team\'s AI reference point. Teammates come to them for help with AI design, evaluation, and debugging.',p5:'Raises the AI skill level of the team or organization through sessions, documentation, and reusable examples, so that AI knowledge does not depend on one person.',p6:'Raises the AI skill level of the team or organization through sessions, documentation, and reusable examples, so that AI knowledge does not depend on one person.',p7:'Raises the AI skill level of the team or organization through sessions, documentation, and reusable examples, so that AI knowledge does not depend on one person.'},
+  'mentoring':{p2:'Seeks mentorship on AI topics, including classical ML foundations.',p3:'Seeks mentorship on AI topics, including classical ML foundations.',p4:'Mentors teammates on AI methods and reviews their AI work.',p5:'Grows other AI Engineers, including guiding them through their first classical ML delivery.',p6:'Grows other AI Engineers, including guiding them through their first classical ML delivery.',p7:'Grows other AI Engineers, including guiding them through their first classical ML delivery.'},
+  'strategic-work':{p2:'Understands which AI capabilities the organization is investing in.',p3:'Recommends build-versus-buy and managed-versus-custom choices for AI components, with cost and maintenance in the argument.',p4:'Shapes the organization\'s AI roadmap and platform choices with business and product leaders.',p5:'Shapes the organization\'s AI roadmap and platform choices with business and product leaders.',p6:'Shapes the organization\'s AI roadmap and platform choices with business and product leaders.',p7:'Shapes the organization\'s AI roadmap and platform choices with business and product leaders.'},
+};
+// New AI-specific competencies (not in the base framework)
+const AI_NEW_DOMAINS=[
+  {id:'ai-evaluation',label:'Evaluation',icon:'📊',category:'Technical',desc:'Building and running evaluations that judge whether AI systems meet the quality bar',levels:{
+    p2:'Runs existing evaluation sets and reports results correctly. Reads outputs and traces and labels failures.',
+    p3:'Chooses metrics that fit the task and builds evaluation sets from real data. Does error analysis to group failures into categories. For classical models, chooses metrics and decision thresholds that fit the class balance and the business cost, for example PR-AUC rather than accuracy on imbalanced data.',
+    p4:'Formulates evaluation functions that match the business objective, for example weighting false negatives higher when missing a case is costly. Designs the evaluation approach for the team\'s features, including golden datasets, LLM judges calibrated against human labels, and online evaluation or A/B tests with correct sample size and significance. Measures hallucination with faithfulness checks, and measures retrieval quality separately from answer quality. Blocks changes that cause regressions.',
+    p5:'Owns the team\'s evaluation practice and the quality bars for launch. Makes launch decisions with business stakeholders based on offline and online results.',
+    p6:'Guides evaluation practices across several teams and helps build shared evaluation tooling.',
+    p7:'Sets organization-wide evaluation standards and defines what "good enough to ship" means for AI systems.',
+  }},
+  {id:'ai-deploy',label:'Deploy & serve',icon:'🚀',category:'Technical',desc:'Deploying, versioning, and operating AI models and LLM services in production',levels:{
+    p2:'Deploys models and AI services using the team\'s existing pipelines.',
+    p3:'Deploys and configures model and LLM services, such as SageMaker endpoints or Bedrock, for a feature. Versions data, models, and prompts.',
+    p4:'Designs serving with latency, throughput, and cost targets. Designs safe rollout with feature flags and rollback paths, including pinned model and prompt versions. Chooses between batch and real-time inference, and prevents training-serving skew.',
+    p5:'Drives AI deployment practices on the team, including release and rollback standards.',
+    p6:'Guides AI serving across several teams, including shared platforms and gateways.',
+    p7:'Sets the organization\'s AI platform, MLOps, and LLMOps standards.',
+  }},
+  {id:'ai-problem-framing',label:'Problem framing',icon:'🎯',category:'Technical',desc:'Translating business problems into AI problems with measurable success criteria and the right level of complexity',levels:{
+    p2:'Understands the client problem behind a given task and the success metric set for it. Knows the main forms of AI (rules, classical ML, deep learning, generative AI) and what each is good at.',
+    p3:'Translates a well-defined requirement into an AI task, such as classification, extraction, ranking, or generation. Proposes an approach and a success metric, and explains why simpler options were not chosen, with help from more senior engineers. Identifies where human review may be needed.',
+    p4:'Works with clients to turn a business problem into an AI problem with a measurable success metric and target. Chooses the simplest approach that meets the target, in this order: rules, classical ML, deep learning, a single LLM call, a pipeline, then an agent. Justifies the choice with evidence. Decides where a human is needed: full automation, human review of low-confidence outputs, or human approval before high-impact actions.',
+    p5:'Drives problem framing and approach decisions for the team\'s projects. Challenges unnecessary AI or agent complexity. Sets realistic targets with business stakeholders before commitments are made.',
+    p6:'Guides problem framing and approach decisions across several teams, including build-versus-buy and managed-versus-custom choices.',
+    p7:'Sets the organization\'s principles for when and how to use AI, and makes the final call on high-impact approach decisions. Sets organization-wide standards for the level of automation allowed at each risk level.',
+  }},
+  {id:'ai-responsible',label:'Responsible AI',icon:'⚖️',category:'Technical',desc:'Ensuring AI systems are fair, transparent, and compliant with regulations and client obligations',levels:{
+    p2:'Understands why fairness, privacy, and transparency matter in AI systems.',
+    p3:'Checks model outputs for bias and harmful content on a feature, with help from more senior engineers. Handles PII according to the rules.',
+    p4:'Evaluates bias and fairness for the team\'s features. Ensures compliance with client and regulatory requirements.',
+    p5:'Drives responsible AI practices on the team and discusses AI risks openly with business stakeholders.',
+    p6:'Guides responsible AI and governance across several teams.',
+    p7:'Sets the organization\'s responsible AI and governance policy, in line with regulations and client obligations.',
+  }},
+  {id:'ai-data',label:'Data',icon:'🗄️',category:'AI/ML',desc:'Preparing, labeling, and managing data for training and evaluating AI systems',levels:{
+    p2:'Performs basic EDA, cleaning, and preprocessing under guidance. Labels data following existing guidelines.',
+    p3:'Performs EDA, cleaning, feature engineering, and preprocessing for a task, including text and document data for generative AI. Builds small labeled datasets and writes clear labeling guidelines. Builds pipelines that turn documents such as PDFs, HTML, and images into LLM-ready inputs.',
+    p4:'Designs data preparation for the team\'s features, including correct train, validation, and test splits, leakage prevention, and handling of class imbalance. Builds golden evaluation datasets that include hard and adversarial cases. Judges whether data is sufficient and representative.',
+    p5:'Owns the team\'s data and dataset strategy, keeps golden datasets current as the product changes, and works with clients to close data gaps.',
+    p6:'Guides data and labeling practices across several teams, including shared tooling and quality standards.',
+    p7:'Sets the organization\'s data strategy for AI, in line with data governance and client obligations.',
+  }},
+  {id:'ai-build',label:'Build (GenAI & ML)',icon:'🔧',category:'AI/ML',desc:'Building production generative AI features, classical ML solutions, and the systems that connect them',levels:{
+    p2:'Builds simple LLM features and trains simple models from existing code, patterns, and configurations. Understands tokens, context windows, sampling parameters such as temperature, and that LLM output is probabilistic. Implements human review, approval, and escalation steps from a given design.',
+    p3:'Builds LLM features with structured outputs, retrieval, and tool use. Implements a rule-based, ML, or deep learning solution with guidance, including choosing a suitable loss function and training with cross-validation and hyperparameter search. Knows the tradeoffs between common ML and deep learning models in accuracy, training speed, and inference speed.',
+    p4:'Builds production generative AI features, including context engineering, grounding the model with data, agents and tools with clear contracts and limits, and fine-tuning where prompting is not enough. For grounding, decides what to put in the prompt and what the model should retrieve through tools. Designs against hallucination with grounding, citations, and allowing the model to say it does not know. Independently selects, adapts, and trains known ML or deep learning architectures.',
+    p5:'Drives build decisions for the team, such as base model, retrieval design, training method, and compute budget. Ensures retrieval respects access permissions. Reviews teammates\' designs and training setups.',
+    p6:'Guides build practices across several teams, including shared components, training infrastructure, and reusable patterns. Designs new architectures when known ones do not fit.',
+    p7:'Sets the organization\'s strategy for custom models versus foundation models, and decides when new methods should be adopted.',
+  }},
+  {id:'ai-research',label:'Research & tech adoption',icon:'🔭',category:'AI/ML',desc:'Staying current with AI research and deciding which new methods and tools the organisation should adopt',levels:{
+    p2:'Reads technical blogs and documentation to learn new techniques. Tries new tools and models in a sandbox with guidance.',
+    p3:'Reads papers relevant to their work and explains the main idea to teammates. Runs small, timeboxed experiments to compare tools or models.',
+    p4:'Reads papers critically, separates real results from hype, and reproduces or adapts methods. Runs proofs of concept with clear success criteria and recommends whether to adopt.',
+    p5:'Keeps the team current, decides which ideas are worth trying, and plans migration when models or tools change.',
+    p6:'Tracks research trends across the field, connects them to opportunities for several teams, and prevents fragmented tooling.',
+    p7:'Sets the organization\'s AI research and technology direction, including vendor relationships, and represents it externally.',
+  }},
+];
+// State for AI view
+let AI={lv:'p4',di:0,si:0,newSi:null};// newSi=index in AI_NEW_DOMAINS when viewing a new competency; si=index in DOMAINS[di].subs for existing
+
+function renderAIMatrix(){
+  const el=$('content');
+  const persona=AI_PERSONAS[AI.lv];
+  const lv=LEVELS.find(l=>l.id===AI.lv)||LEVELS[0];
+  let h=`<div class="qa-view">`;
+  if(persona){
+    h+=`<div class="qa-persona-card">
+      <div class="qa-persona-hdr">
+        <span class="qa-level-badge">${esc(lv.code)}</span>
+        <div><div class="qa-persona-name">${esc(persona.name)}</div><div class="qa-persona-shift">${esc(persona.keyShift)}</div></div>
+      </div>
+      <p class="qa-persona-summary">${esc(persona.summary)}</p>
+    </div>`;
+  }
+  if(AI.newSi!==null){
+    // New AI-specific competency
+    const comp=AI_NEW_DOMAINS[AI.newSi];
+    const cell=comp&&comp.levels[AI.lv];
+    h+=`<div class="qa-comp-card">
+      <div class="qa-comp-hdr">
+        <span class="qa-comp-icon">${comp.icon||''}</span>
+        <div><h2 class="qa-comp-title">${esc(comp.label)}</h2><p class="qa-comp-desc">${esc(comp.desc||'')}</p></div>
+      </div>
+      <div class="qa-wyw">
+        <div class="qa-wyw-item"><span class="qa-wyw-label">What</span><p>${cell?esc(cell):'Not assessed at this level.'}</p></div>
+      </div>
+    </div>`;
+  } else {
+    // Existing competency with AI addition
+    const domain=DOMAINS[AI.di];
+    const sub=domain&&domain.subs[AI.si];
+    const addition=sub&&AI_ADDITIONS[sub.id]&&AI_ADDITIONS[sub.id][AI.lv];
+    const baseCell=sub&&resolveCell(sub,AI.lv);
+    h+=`<div class="qa-comp-card">
+      <div class="qa-comp-hdr">
+        <span class="qa-comp-icon">${sub?'📋':''}</span>
+        <div><h2 class="qa-comp-title">${sub?esc(sub.label):''}</h2><p class="qa-comp-desc">${domain?esc(domain.label):''}</p></div>
+      </div>
+      <div class="qa-wyw">
+        <div class="qa-wyw-item"><span class="qa-wyw-label">Standard</span><p>${baseCell&&!baseCell.na?esc(baseCell.expectation):'Not assessed at this level.'}</p></div>
+        ${addition?`<div class="qa-wyw-item" style="border-left:3px solid var(--ai);"><span class="qa-wyw-label" style="color:var(--ai)">✦ AI addition</span><p>${esc(addition)}</p></div>`:''}
+      </div>
+    </div>`;
+  }
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+
 function renderSidebar(){
   const q=(S.sfilter||'').toLowerCase().trim();
   const tag=s=>(isPilot(s.id)?'<span class="ai-tag">✦ AI fluency</span>':'')+(isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'');
   const areaEl=document.getElementById('sidebar-area-row');
   if(areaEl){
     {const a=S.area?AREAS.find(x=>x.id===S.area):AREAS[0];areaEl.hidden=false;areaEl.innerHTML=`<span class="sidebar-area-label"><span class="sidebar-area-icon">${a?a.icon:''}</span>${a?esc(a.label):'All areas'}</span><button class="sidebar-area-change" id="sidebar-area-change-btn">Change</button>`;}
+  }
+  // AI Engineering overlay
+  if(S.area==='ai'){
+    // Build sidebar: existing competencies with AI additions + new AI-specific competencies
+    const aiModifiedIds=new Set(Object.keys(AI_ADDITIONS));
+    let aiHtml='';
+    DOMAINS.forEach((d,di)=>{
+      const subs=d.subs.filter(s=>aiModifiedIds.has(s.id));
+      if(!subs.length)return;
+      const items=subs.map((s,_)=>{
+        const si=d.subs.indexOf(s);
+        const cur=AI.newSi===null&&AI.di===di&&AI.si===si&&S.view==='matrix';
+        if(q&&!s.label.toLowerCase().includes(q))return '';
+        return `<button class="sub-item in-group${cur?' is-cur':''}" data-aidi="${di}" data-aisi="${si}" ${cur?'aria-current="page"':''}><span class="sub-lbl">${esc(s.label)}</span><span class="ai-tag">+AI</span></button>`;
+      }).join('');
+      if(items)aiHtml+=`<div class="sgroup-hdr">${esc(d.label)}</div>${items}`;
+    });
+    // New AI-specific competencies grouped by category
+    const newByCategory={};
+    AI_NEW_DOMAINS.forEach((d,i)=>{if(!newByCategory[d.category])newByCategory[d.category]=[];newByCategory[d.category].push({d,i});});
+    Object.entries(newByCategory).forEach(([cat,items])=>{
+      aiHtml+=`<div class="sgroup-hdr">${esc(cat)} · New</div>`;
+      aiHtml+=items.map(({d,i})=>{
+        const cur=AI.newSi===i&&S.view==='matrix';
+        if(q&&!d.label.toLowerCase().includes(q))return '';
+        return `<button class="sub-item in-group${cur?' is-cur':''}" data-ainewsi="${i}" ${cur?'aria-current="page"':''}><span class="sub-lbl">${esc(d.label)}</span><span class="ai-tag">New</span></button>`;
+      }).join('');
+    });
+    $('sub-list').innerHTML=`<div class="sdomain-group is-cur"><span class="sdomain-hdr">AI Engineering<span class="sdomain-count">${Object.keys(AI_ADDITIONS).length+AI_NEW_DOMAINS.length}</span></span>${aiHtml}</div>`;
+    $('side-select').innerHTML=`<optgroup label="AI Engineering">${AI_NEW_DOMAINS.map((d,i)=>`<option value="ai.new.${i}">${esc(d.label)} (New)</option>`).join('')}</optgroup>`;
+    return;
   }
   // QA overlay: render QA competencies instead of generic DOMAINS
   if(S.area==='qa'){
@@ -2335,6 +2502,11 @@ function renderLevelStrip(){
   const strip=$('level-strip');
   if(['guide','find','hire','promo','release','home','career'].includes(S.view)){strip.hidden=true;return;}
   strip.hidden=false;
+  if(S.area==='ai'){
+    const lvTabs=LEVELS.map(l=>`<button class="lvl-tab" data-ailv="${l.id}" aria-pressed="${l.id===AI.lv}"><span class="lcode">${l.code}</span><span class="ltitle">${esc(l.title)}</span></button>`).join('');
+    strip.innerHTML=`<div class="lvl-row"><div class="lvl-tabs">${lvTabs}</div></div>`;
+    return;
+  }
   if(S.area==='qa'){
     const lvTabs=QA_LEVELS.map(l=>`<button class="lvl-tab" data-qalv="${l.id}" aria-pressed="${l.id===S.qalv}"><span class="lcode">${l.code}</span><span class="ltitle">${esc(l.title)}</span></button>`).join('');
     strip.innerHTML=`<div class="lvl-row"><div class="lvl-tabs">${lvTabs}</div></div>`;
@@ -2367,6 +2539,7 @@ function resolveCell(sub,lvId){
 
 function renderContent(){
   const el=$('content');
+  if(S.area==='ai'&&S.view==='matrix'){renderAIMatrix();return;}
   if(S.area==='qa'&&S.view==='matrix'){renderQAMatrix();return;}
   if(S.view==='home'){renderHome();return;}
   if(S.view==='career'){renderCareer();return;}
@@ -2822,6 +2995,12 @@ function doSearch(){
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
 $('sub-list')?.addEventListener('click',e=>{
+  // AI Engineering: new competency
+  const aiNew=e.target.closest('[data-ainewsi]');
+  if(aiNew){AI.newSi=+aiNew.dataset.ainewsi;S.view='matrix';render();const _c=$('content');if(_c)_c.scrollTop=0;return;}
+  // AI Engineering: existing competency with AI addition
+  const aiEx=e.target.closest('[data-aidi]');
+  if(aiEx){AI.di=+aiEx.dataset.aidi;AI.si=+aiEx.dataset.aisi;AI.newSi=null;S.view='matrix';render();const _c=$('content');if(_c)_c.scrollTop=0;return;}
   const qa=e.target.closest('[data-qasi]');
   if(qa){S.qasi=+qa.dataset.qasi;S.view='matrix';render();const _c=$('content');if(_c)_c.scrollTop=0;return;}
   const b=e.target.closest('[data-si]');if(!b)return;
@@ -2830,6 +3009,8 @@ $('sub-list')?.addEventListener('click',e=>{
 $('side-select')?.addEventListener('change',e=>{const [di,si]=e.target.value.split('.').map(Number);S.di=di;S.si=si;S.view='matrix';render();});
 $('side-filter')?.addEventListener('input',e=>{S.sfilter=e.target.value;renderSidebar();});
 $('level-strip')?.addEventListener('click',e=>{
+  const ai=e.target.closest('[data-ailv]');
+  if(ai){AI.lv=ai.dataset.ailv;render();return;}
   const qa=e.target.closest('[data-qalv]');
   if(qa){S.qalv=qa.dataset.qalv;render();return;}
   const act=e.target.closest('[data-act="compare"]');
