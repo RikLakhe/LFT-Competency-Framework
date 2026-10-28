@@ -668,13 +668,13 @@ body:not(.home-view) .home-hero{display:none;}
 .path-not-mean p{margin:0;font-size:13.5px;color:var(--fg-2);line-height:1.55}
 .role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
 .role-card.is-selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent)}
-.hero-step-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);margin:0 0 10px;display:flex;align-items:center;gap:8px}
-.step-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:800;flex-shrink:0}
-.hero-change-area-btn{margin-left:auto;font-size:11px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;letter-spacing:0;text-transform:none}
-.hero-change-area-btn:hover{opacity:.7}
-.hero-step-role{overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease,opacity .22s ease}
-.hero-step-role.is-open{max-height:300px;opacity:1}
-.hero-step-role[hidden]{display:none!important}
+.area-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.area-modal-overlay[hidden]{display:none}
+.area-modal{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:32px 28px 28px;max-width:680px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+.area-modal-head{margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--fg)}
+.area-modal-sub{margin:0 0 20px;font-size:14px;color:var(--fg-2);line-height:1.5}
+.area-modal .area-cards-inline{grid-template-columns:repeat(3,1fr)}
+@media(max-width:480px){.area-modal .area-cards-inline{grid-template-columns:repeat(2,1fr)}}
 .area-cards-inline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .area-card{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;transition:border-color .15s,background .15s;display:flex;flex-direction:column;gap:4px;font:inherit}
 .area-card:hover{border-color:var(--accent);background:var(--accent-soft)}
@@ -757,6 +757,15 @@ body:not(.home-view) .home-hero{display:none;}
   </div>
 </div>
 
+<!-- AREA PICKER MODAL -->
+<div id="area-modal" class="area-modal-overlay" hidden>
+  <div class="area-modal">
+    <h2 class="area-modal-head">Choose your practice area</h2>
+    <p class="area-modal-sub">We'll tailor the framework to your engineering discipline. You can change this any time.</p>
+    <div class="area-cards-inline" id="area-modal-cards"></div>
+  </div>
+</div>
+
 <!-- HOME HERO: static outside #content so Harbor can click the CTAs -->
 <section id="home-hero" class="home-hero" hidden>
   <div class="hero">
@@ -769,29 +778,22 @@ body:not(.home-view) .home-hero{display:none;}
         </div>
       </div>
       <p class="hero-lead">The engineering bar at Leapfrog — what good looks like from P2 to P7, for engineers, managers and interviewers.</p>
-      <div id="hero-step-area">
-        <p class="hero-step-label"><span class="step-badge">1</span>Choose your practice area</p>
-        <div class="area-cards-inline" id="area-cards"></div>
-      </div>
-      <div id="hero-step-role" class="hero-step-role" hidden>
-        <p class="hero-step-label"><span class="step-badge">2</span>Your role<button id="hero-change-area-btn" class="hero-change-area-btn">← Change area</button></p>
-        <div class="role-cards">
-          <button id="cta-career" class="role-card">
-            <span class="role-card-icon">🧭</span>
-            <span class="role-card-title">I'm an engineer</span>
-            <span class="role-card-desc">See what's expected at your level and exactly what changes at the next one.</span>
-          </button>
-          <button id="cta-manager" class="role-card">
-            <span class="role-card-icon">👥</span>
-            <span class="role-card-title">I'm a manager</span>
-            <span class="role-card-desc">View any level's ready signals and core competencies to assess a report.</span>
-          </button>
-          <button id="home-hire-btn" class="role-card">
-            <span class="role-card-icon">🎯</span>
-            <span class="role-card-title">I'm an interviewer</span>
-            <span class="role-card-desc">Open the interview kit for level-specific questions, exercises and calibration guides.</span>
-          </button>
-        </div>
+      <div class="role-cards">
+        <button id="cta-career" class="role-card">
+          <span class="role-card-icon">🧭</span>
+          <span class="role-card-title">I'm an engineer</span>
+          <span class="role-card-desc">See what's expected at your level and exactly what changes at the next one.</span>
+        </button>
+        <button id="cta-manager" class="role-card">
+          <span class="role-card-icon">👥</span>
+          <span class="role-card-title">I'm a manager</span>
+          <span class="role-card-desc">View any level's ready signals and core competencies to assess a report.</span>
+        </button>
+        <button id="home-hire-btn" class="role-card">
+          <span class="role-card-icon">🎯</span>
+          <span class="role-card-title">I'm an interviewer</span>
+          <span class="role-card-desc">Open the interview kit for level-specific questions, exercises and calibration guides.</span>
+        </button>
       </div>
     </div>
     <div class="hero-right">
@@ -1971,30 +1973,17 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 // ─── RENDER ──────────────────────────────────────────────────────────────────
 function renderTopNav(){}
 
-function renderAreaCards(){
-  const el=$('area-cards');if(!el)return;
-  el.innerHTML=AREAS.map(a=>`
+function openAreaModal(){
+  const el=$('area-modal');if(!el)return;
+  el.hidden=false;
+  $('area-modal-cards').innerHTML=AREAS.map(a=>`
     <button class="area-card${S.area===a.id||(!S.area&&a.id==='all')?' is-selected':''}" data-area="${a.id}">
       <span class="area-card-icon">${a.icon}</span>
       <span class="area-card-label">${esc(a.label)}</span>
       <span class="area-card-desc">${esc(a.desc)}</span>
     </button>`).join('');
 }
-function showHeroStep(step){
-  const areaEl=$('hero-step-area');
-  const roleEl=$('hero-step-role');
-  if(!areaEl||!roleEl)return;
-  if(step==='area'){
-    roleEl.classList.remove('is-open');
-    setTimeout(()=>{roleEl.hidden=true;},310);
-    areaEl.style.display='';
-    renderAreaCards();
-  }else{
-    areaEl.style.display='none';
-    roleEl.hidden=false;
-    requestAnimationFrame(()=>roleEl.classList.add('is-open'));
-  }
-}
+function closeAreaModal(){const el=$('area-modal');if(el)el.hidden=true;}
 
 const GROUPS={
   'writing-code':'Quality & testing','testing':'Quality & testing',
@@ -2707,7 +2696,7 @@ function render(){
   document.querySelectorAll('.sec-tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.sec===S.section));
   const tool=['guide','find','hire','promo','release','home','career'].includes(S.view);
   document.body.classList.toggle('tool-view',tool);document.body.classList.toggle('home-view',S.view==='home');
-  const hn=$('home-hero');if(hn){hn.hidden=S.view!=='home';if(S.view==='home')renderAreaCards();}
+  const hn=$('home-hero');if(hn)hn.hidden=S.view!=='home';
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
@@ -2827,21 +2816,18 @@ $('guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'
 $('promo-btn')?.addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
 $('hire-btn')?.addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
 $('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
-$('area-cards')?.addEventListener('click',e=>{
+$('area-modal')?.addEventListener('click',e=>{
   const btn=e.target.closest('[data-area]');
   if(!btn)return;
   const id=btn.dataset.area;
   S.area=id==='all'?null:id;
-  showHeroStep('role');
-});
-document.getElementById('hero-change-area-btn')?.addEventListener('click',()=>{
-  showHeroStep('area');
+  closeAreaModal();
+  render();
 });
 document.getElementById('sidebar')?.addEventListener('click',e=>{
   const btn=e.target.closest('#sidebar-area-change-btn');
   if(!btn)return;
-  S.view='home';render();
-  setTimeout(()=>showHeroStep('area'),50);
+  openAreaModal();
 });
 // ─── LANDING PAGE ────────────────────────────────────────────────────────────
 function renderHome(){
@@ -2955,6 +2941,7 @@ document.addEventListener('keydown',e=>{
   const sk=$('stat-tasks');if(sk)sk.textContent=nT.toLocaleString('en-GB');
 })();
 readHash();render();
+if(S.area===null)openAreaModal();
 </script>
 
 </body>
