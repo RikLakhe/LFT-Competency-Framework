@@ -3031,9 +3031,9 @@ function renderAIMatrix(){
       </div>
       <div class="qa-wyw">
         <div class="qa-wyw-item"><span class="qa-wyw-label">Expectation</span><p>${rubric?esc(rubric):'Not assessed at this level.'}</p></div>
-        ${calibration?`<div class="qa-wyw-item"><span class="qa-wyw-label">Calibration</span><ul>${calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`:''}
-        ${evidence?`<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence</span><ul>${evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}
-        ${growth?`<div class="qa-wyw-item"><span class="qa-wyw-label">Growth</span><ul>${growth.map(g=>`<li>${esc(g)}</li>`).join('')}</ul></div>`:''}
+        ${calibration?`<div class="qa-wyw-item"><span class="qa-wyw-label">Calibration prompts</span><ul>${calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>`:''}
+        ${evidence?`<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></span><ul>${evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}
+        ${growth?`<div class="qa-wyw-item"><span class="qa-wyw-label">Growth tasks</span><ul>${growth.map(g=>`<li>${esc(g)}</li>`).join('')}</ul></div>`:''}
       </div>
     </div>`;
   } else {
@@ -3047,16 +3047,16 @@ function renderAIMatrix(){
       if(typeof addition==='object'){
         additionHtml='<div class="qa-wyw-item" style="border-left:3px solid var(--ai);"><span class="qa-wyw-label" style="color:var(--ai)">✦ AI addition</span><p>'+esc(addition.what)+'</p>'+(addition.why?'<p style="font-style:italic;color:var(--fg-3);margin-top:6px;font-size:13px">'+esc(addition.why)+'</p>':'')+'</div>';
         if(addition.how&&addition.how.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">How</span><ul>'+addition.how.map(function(h_){return'<li>'+esc(h_)+'</li>';}).join('')+'</ul></div>';
-        if(addition.calibration&&addition.calibration.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Calibration</span><ul>'+addition.calibration.map(function(q){return'<li>'+esc(q)+'</li>';}).join('')+'</ul></div>';
-        if(addition.evidence&&addition.evidence.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence</span><ul>'+addition.evidence.map(function(e_){return'<li>'+esc(e_)+'</li>';}).join('')+'</ul></div>';
-        if(addition.growth&&addition.growth.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Growth</span><ul>'+addition.growth.map(function(g_){return'<li>'+esc(g_)+'</li>';}).join('')+'</ul></div>';
+        if(addition.calibration&&addition.calibration.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Calibration prompts</span><ul>'+addition.calibration.map(function(q){return'<li>'+esc(q)+'</li>';}).join('')+'</ul></div>';
+        if(addition.evidence&&addition.evidence.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></span><ul>'+addition.evidence.map(function(e_){return'<li>'+esc(e_)+'</li>';}).join('')+'</ul></div>';
+        if(addition.growth&&addition.growth.length) additionHtml+='<div class="qa-wyw-item"><span class="qa-wyw-label">Growth tasks</span><ul>'+addition.growth.map(function(g_){return'<li>'+esc(g_)+'</li>';}).join('')+'</ul></div>';
       } else {
         additionHtml='<div class="qa-wyw-item" style="border-left:3px solid var(--ai);"><span class="qa-wyw-label" style="color:var(--ai)">✦ AI addition</span><p>'+esc(addition)+'</p></div>';
       }
     }
     h+=`<div class="qa-comp-card">
       <div class="qa-comp-hdr">
-        <span class="qa-comp-icon">${sub?'📋':''}</span>
+        <span class="qa-comp-icon">${domain&&domain.icon||''}</span>
         <div><h2 class="qa-comp-title">${sub?esc(sub.label):''}</h2><p class="qa-comp-desc">${domain?esc(domain.label):''}</p></div>
       </div>
       <div class="qa-wyw">
@@ -3088,7 +3088,7 @@ function renderCommonSections(q){
     groupOrder.forEach(g=>{
       if(g)items+=`<span class="sgroup-hdr">${esc(g)}</span>`;
       groupMap[g].forEach(({s,si})=>{
-        const cur=di===S.di&&si===S.si&&S.view==='matrix'&&S.area!=='qa'&&S.area!=='ai';
+        const cur=di===S.di&&si===S.si&&S.view==='matrix';
         items+=`<button class="sub-item${g?' in-group':''}${isSupporting(s.id,S.lv)?' is-sup':''}" data-di="${di}" data-si="${si}" ${cur?'aria-current="page"':''}><span class="sub-lbl">${esc(s.label)}${tag(s)}</span></button>`;
       });
     });
@@ -3376,7 +3376,7 @@ function renderQAMatrix(){
           <p>${esc(cell.how)}</p>
         </div>
         ${cell.calibration&&cell.calibration.length?`<div class="qa-wyw-item"><span class="qa-wyw-label">Calibration prompts</span><ol>${cell.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`:''}
-        ${cell.evidence&&cell.evidence.length?`<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence</span><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}
+        ${cell.evidence&&cell.evidence.length?`<div class="qa-wyw-item"><span class="qa-wyw-label">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></span><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}
         ${cell.growth&&cell.growth.length?`<div class="qa-wyw-item"><span class="qa-wyw-label">Growth tasks</span><ul>${cell.growth.map(g=>`<li>${esc(g)}</li>`).join('')}</ul></div>`:''}
       </div>`;
     } else {
