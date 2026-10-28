@@ -522,6 +522,12 @@ body:not(.home-view) .home-hero{display:none;}
 .hero-stats dd{margin:2px 0 0;font-size:11.5px;font-weight:600;color:var(--fg-2)}
 .hero-right{display:flex;flex-direction:column;gap:12px;align-self:stretch;justify-content:center}
 .hero-browse-row{display:flex;justify-content:flex-end}
+.hero-area-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px}
+.hero-area-chip[hidden]{display:none}
+.hero-area-chip-label{display:flex;align-items:center;gap:5px;font-weight:600;color:var(--fg-2)}
+.hero-area-chip-icon{font-size:15px}
+.hero-area-chip-change{border:0;background:none;font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;padding:0;white-space:nowrap}
+.hero-area-chip-change:hover{text-decoration:underline}
 .hero-browse-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;white-space:nowrap}
 .hero-browse-btn:hover{opacity:.88}
 .stat-ctx{font-size:11px;color:var(--fg-3);margin-top:2px}
@@ -825,6 +831,7 @@ body:not(.home-view) .home-hero{display:none;}
       <div class="hero-browse-row">
         <button id="cta-browse" class="hero-browse-btn">Browse competencies →</button>
       </div>
+      <div id="hero-area-chip" class="hero-area-chip" hidden></div>
       <dl class="hero-stats">
         <div>
           <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
@@ -2283,8 +2290,7 @@ function renderSidebar(){
   const tag=s=>(isPilot(s.id)?'<span class="ai-tag">✦ AI fluency</span>':'')+(isSupporting(s.id,S.lv)?'<span class="sup-tag">Supporting</span>':'');
   const areaEl=document.getElementById('sidebar-area-row');
   if(areaEl){
-    if(S.area){const a=AREAS.find(x=>x.id===S.area);areaEl.hidden=false;areaEl.innerHTML=`<span class="sidebar-area-label"><span class="sidebar-area-icon">${a?a.icon:''}</span>${a?esc(a.label):'Area'}</span><button class="sidebar-area-change" id="sidebar-area-change-btn">Change area</button>`;}
-    else{areaEl.hidden=true;}
+    {const a=S.area?AREAS.find(x=>x.id===S.area):AREAS[0];areaEl.hidden=false;areaEl.innerHTML=`<span class="sidebar-area-label"><span class="sidebar-area-icon">${a?a.icon:''}</span>${a?esc(a.label):'All areas'}</span><button class="sidebar-area-change" id="sidebar-area-change-btn">Change</button>`;}
   }
   // QA overlay: render QA competencies instead of generic DOMAINS
   if(S.area==='qa'){
@@ -2722,6 +2728,8 @@ function render(){
   const tool=['guide','find','hire','promo','release','home','career'].includes(S.view);
   document.body.classList.toggle('tool-view',tool);document.body.classList.toggle('home-view',S.view==='home');
   const hn=$('home-hero');if(hn)hn.hidden=S.view!=='home';
+  // keep hero area chip in sync
+  (()=>{const chip=$('hero-area-chip');if(!chip)return;const a=S.area?AREAS.find(x=>x.id===S.area):AREAS[0];if(!a){chip.hidden=true;return;}chip.hidden=false;chip.innerHTML=`<span class="hero-area-chip-label"><span class="hero-area-chip-icon">${a.icon}</span>${esc(a.label)}</span><button class="hero-area-chip-change" id="hero-chip-change-btn">Change area</button>`;})();
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
@@ -2841,6 +2849,9 @@ $('guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'
 $('promo-btn')?.addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
 $('hire-btn')?.addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
 $('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
+$('home-hero')?.addEventListener('click',e=>{
+  if(e.target.closest('#hero-chip-change-btn'))openAreaModal();
+});
 $('area-modal')?.addEventListener('click',e=>{
   const btn=e.target.closest('[data-area]');
   if(!btn)return;
