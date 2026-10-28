@@ -3017,7 +3017,7 @@ function renderAIMatrix(){
     if(cell){
       h+=`<div class="exp-band"><div class="elabel">AI Engineering · ${esc(lv.code)} · ${esc(comp.label)}</div><p class="etext">${esc(cell.what)}</p></div>`;
       h+=`<div class="sections-grid">`;
-      if(cell.why)h+=`<div class="section"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
+      if(cell.why)h+=`<div class="section full"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
       if(cell.how&&cell.how.length)h+=`<div class="section"><div class="sh">How <span class="sh-hint">What Meets looks like</span></div><ul>${cell.how.map(h_=>`<li>${esc(h_)}</li>`).join('')}</ul></div>`;
       if(cell.calibration&&cell.calibration.length)h+=`<div class="section"><div class="sh">Calibration Prompts</div><ol>${cell.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`;
       if(cell.evidence&&cell.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`;
@@ -3043,7 +3043,7 @@ function renderAIMatrix(){
     if(addition){
       h+=`<div class="sections-grid">`;
       if(typeof addition==='object'){
-        h+=`<div class="section" style="border-left:3px solid var(--ai)"><div class="sh" style="color:var(--ai)">✦ AI addition</div><p class="etext">${esc(addition.what)}</p>${addition.why?`<p class="etext" style="font-style:italic;color:var(--fg-3);margin-top:6px;font-size:13px">${esc(addition.why)}</p>`:''}</div>`;
+        h+=`<div class="section full" style="border-left:3px solid var(--ai)"><div class="sh" style="color:var(--ai)">✦ AI addition</div><p class="etext">${esc(addition.what)}</p>${addition.why?`<p class="etext" style="font-style:italic;color:var(--fg-3);margin-top:6px;font-size:13px">${esc(addition.why)}</p>`:''}</div>`;
         if(addition.how&&addition.how.length)h+=`<div class="section"><div class="sh">How</div><ul>${addition.how.map(h_=>`<li>${esc(h_)}</li>`).join('')}</ul></div>`;
         if(addition.calibration&&addition.calibration.length)h+=`<div class="section"><div class="sh">Calibration Prompts</div><ol>${addition.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`;
         if(addition.evidence&&addition.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${addition.evidence.map(e_=>`<li>${esc(e_)}</li>`).join('')}</ul></div>`;
@@ -3277,7 +3277,7 @@ function renderContent(){
   const hiring=S.use==='hiring';
   if(hiring)h+=`<div class="info-note"><strong>Interview view.</strong> Dimmed prompts rely on LFT-internal context — for external candidates, ask about a comparable past project. Evidence is hidden because it applies to promotion reviews.</div>`;
   h+=`<div class="sections-grid">`;
-  if(cell.why)h+=`<div class="section"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
+  if(cell.why)h+=`<div class="section full"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
   h+=`<div class="section"><div class="sh">How <span class="sh-hint">What Meets looks like</span></div><ul>${cell.rubric.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`;
   const qs=cell.questions.map(q=>{
     const internal=hiring&&INTERNAL_RE.test(q);
@@ -3348,7 +3348,7 @@ function renderQAMatrix(){
     if(cell){
       h+=`<div class="exp-band"><div class="elabel">Matrix Standard · ${esc(lv.code)} · ${esc(comp.label)}</div><p class="etext">${esc(cell.what)}</p></div>`;
       h+=`<div class="sections-grid">`;
-      if(cell.why)h+=`<div class="section"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
+      if(cell.why)h+=`<div class="section full"><div class="sh">Why</div><p class="etext">${esc(cell.why)}</p></div>`;
       if(cell.how)h+=`<div class="section"><div class="sh">How <span class="sh-hint">What Meets looks like</span></div><p class="etext">${esc(cell.how)}</p></div>`;
       if(cell.calibration&&cell.calibration.length)h+=`<div class="section"><div class="sh">Calibration Prompts</div><ol>${cell.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`;
       if(cell.evidence&&cell.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`;
