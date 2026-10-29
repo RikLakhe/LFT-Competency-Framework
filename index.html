@@ -4077,23 +4077,47 @@ document.getElementById('sidebar')?.addEventListener('click',e=>{
 // ─── LANDING PAGE ────────────────────────────────────────────────────────────
 function renderHome(){
   const el=$('content');
-  const nComp=DOMAINS.reduce((n,d)=>n+d.subs.length,0);
-  let h=`<div class="home">
-  <section class="home-sec">
-    <div class="home-head"><h2>The levels</h2><p>Each level widens the scope of impact. Pick one to see what is expected.</p></div>
-    <div class="ladder">${LEVELS.map((l,i)=>`<button class="rung" data-golv="${l.id}" style="--i:${i}">
-      <span class="rung-top"><span class="rung-code">${l.code}</span><span class="rung-scope">${esc(l.scope)}</span></span>
-      <span class="rung-title">${esc(l.title)}</span>
-      <span class="rung-sum">${esc((LEVEL_SUMMARY[l.id]||[''])[0])}</span>
-    </button>`).join('')}</div>
-  </section>
-
-  <section class="home-sec">
-    <div class="home-head"><h2>The competencies</h2><p>${nComp} competencies in ${DOMAINS.length} domains, each with a rubric, calibration questions, evidence and growth tasks at every level.</p></div>
+  // Area-specific competency section
+  let compSectionHtml='';
+  if(S.area==='qa'){
+    const sharedDomains=DOMAINS.filter(d=>d.id!=='technical');
+    const nComp=QA_DOMAINS.length+sharedDomains.reduce((n,d)=>n+d.subs.length,0);
+    const nDom=1+sharedDomains.length;
+    compSectionHtml=`<div class="home-head"><h2>The competencies</h2><p>${nComp} competencies in ${nDom} domains, each with calibration questions, evidence and growth tasks at every level.</p></div>
+    <div class="domains"><div class="dom-card">
+      <h3>QA Engineering <span>${QA_DOMAINS.length}</span></h3>
+      <div class="dom-list">${QA_DOMAINS.map((d,i)=>`<button class="dom-item" data-goqasi="${i}">${esc(d.label)}</button>`).join('')}</div>
+    </div>${sharedDomains.map((d,di)=>{const realDi=DOMAINS.indexOf(d);return`<div class="dom-card"><h3>${esc(d.label)} <span>${d.subs.length}</span></h3><div class="dom-list">${d.subs.map((s,si)=>`<button class="dom-item" data-godi="${realDi}" data-gosi="${si}">${esc(s.label)}</button>`).join('')}</div></div>`;}).join('')}</div>`;
+  } else if(S.area==='ai'){
+    const aiModified=DOMAINS.flatMap((d,di)=>d.subs.filter(s=>AI_ADDITIONS[s.id]).map(s=>({s,di,si:d.subs.indexOf(s)})));
+    const sharedDomains=DOMAINS.filter(d=>d.id!=='technical');
+    const nComp=AI_NEW_DOMAINS.length+aiModified.length+sharedDomains.reduce((n,d)=>n+d.subs.length,0);
+    const nDom=1+sharedDomains.length;
+    compSectionHtml=`<div class="home-head"><h2>The competencies</h2><p>${nComp} competencies in ${nDom} domains, each with calibration questions, evidence and growth tasks at every level.</p></div>
+    <div class="domains"><div class="dom-card">
+      <h3>AI Engineering <span>${AI_NEW_DOMAINS.length+aiModified.length}</span></h3>
+      <div class="dom-list">${AI_NEW_DOMAINS.map((d,i)=>`<button class="dom-item is-ai" data-goainewsi="${i}">✦ ${esc(d.label)}</button>`).join('')}${aiModified.map(({s,di,si})=>`<button class="dom-item" data-godi="${di}" data-gosi="${si}">${esc(s.label)}</button>`).join('')}</div>
+    </div>${sharedDomains.map((d,di)=>{const realDi=DOMAINS.indexOf(d);return`<div class="dom-card"><h3>${esc(d.label)} <span>${d.subs.length}</span></h3><div class="dom-list">${d.subs.map((s,si)=>`<button class="dom-item" data-godi="${realDi}" data-gosi="${si}">${esc(s.label)}</button>`).join('')}</div></div>`;}).join('')}</div>`;
+  } else {
+    const nComp=DOMAINS.reduce((n,d)=>n+d.subs.length,0);
+    compSectionHtml=`<div class="home-head"><h2>The competencies</h2><p>${nComp} competencies in ${DOMAINS.length} domains, each with a rubric, calibration questions, evidence and growth tasks at every level.</p></div>
     <div class="domains">${DOMAINS.map((d,di)=>`<div class="dom-card">
       <h3>${esc(d.label)} <span>${d.subs.length}</span></h3>
       <div class="dom-list">${d.subs.map((s,si)=>`<button class="dom-item${AI_THEME[s.id]?' is-ai':''}" data-godi="${di}" data-gosi="${si}">${AI_THEME[s.id]?'✦ ':''}${esc(s.label)}</button>`).join('')}</div>
-    </div>`).join('')}</div>
+    </div>`).join('')}</div>`;
+  }
+  const homeLevels=S.area==='qa'?QA_LEVELS:LEVELS;
+  const homeLvBtn=S.area==='qa'
+    ?(l,i)=>`<button class="rung" data-goqalv="${l.id}" style="--i:${i}"><span class="rung-top"><span class="rung-code">${l.code}</span></span><span class="rung-title">${esc(l.title)}</span></button>`
+    :(l,i)=>`<button class="rung" data-golv="${l.id}" style="--i:${i}"><span class="rung-top"><span class="rung-code">${l.code}</span><span class="rung-scope">${esc(l.scope)}</span></span><span class="rung-title">${esc(l.title)}</span><span class="rung-sum">${esc((LEVEL_SUMMARY[l.id]||[''])[0])}</span></button>`;
+  let h=`<div class="home">
+  <section class="home-sec">
+    <div class="home-head"><h2>The levels</h2><p>Each level widens the scope of impact. Pick one to see what is expected.</p></div>
+    <div class="ladder">${homeLevels.map(homeLvBtn).join('')}</div>
+  </section>
+
+  <section class="home-sec">
+    ${compSectionHtml}
   </section>
 
   <section class="home-sec">
@@ -4120,9 +4144,12 @@ $('home-promo-btn')?.addEventListener('click',()=>{S.plv=['p6','p7'].includes(S.
 $('home-hire-btn')?.addEventListener('click',()=>{S.hlv=S.lv;S.view='hire';render();$('content').scrollTop=0;});
 
 $('content')?.addEventListener('click',e=>{
-  const b=e.target.closest('[data-go],[data-golv],[data-godi]');if(!b)return;
+  const b=e.target.closest('[data-go],[data-golv],[data-godi],[data-goqasi],[data-goainewsi],[data-goqalv]');if(!b)return;
   if(b.dataset.golv){S.lv=b.dataset.golv;S.view='matrix';S.compare=false;}
-  else if(b.dataset.godi){S.di=+b.dataset.godi;S.si=+b.dataset.gosi;S.view='matrix';S.compare=false;}
+  else if(b.dataset.goqalv){S.qalv=b.dataset.goqalv;S.view='matrix';S.compare=false;}
+  else if(b.dataset.goqasi!==undefined){S.qasi=+b.dataset.goqasi;S.view='matrix';S.compare=false;}
+  else if(b.dataset.goainewsi!==undefined){AI.newSi=+b.dataset.goainewsi;AI.di=0;AI.si=0;S.view='matrix';S.compare=false;}
+  else if(b.dataset.godi!==undefined){S.di=+b.dataset.godi;S.si=+b.dataset.gosi;S.view='matrix';S.compare=false;}
   else{const g=b.dataset.go;S.view=g;if(g==='find')S.flv=S.lv;if(g==='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;if(g==='hire')S.hlv=S.lv;}
   try{render();}catch(e){$('content').innerHTML='<div style="padding:24px;font-family:monospace;color:#b4392c"><b>Render error (view='+S.view+'):</b> '+e.message+'<br><pre style="white-space:pre-wrap;font-size:12px">'+e.stack+'</pre></div>';}
   $('content').scrollTop=0;
