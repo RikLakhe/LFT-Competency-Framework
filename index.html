@@ -627,9 +627,9 @@ body:not(.home-view) .home-hero{display:none;}
 .career-hdr{display:grid;gap:8px}
 .career-hdr h2{margin:0;font-size:24px}
 .career-hdr .lead{margin:0;color:var(--fg-2);font-size:14.5px}
-.career-area-chip{display:inline-flex;align-items:center;gap:8px;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--fg);width:fit-content}
-.career-area-chip:hover{border-color:var(--accent)}
-.career-area-change{color:var(--accent);font-size:11.5px}
+.career-area-chip{display:inline-flex;align-items:center;gap:10px;background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:99px;padding:5px 14px 5px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--fg);width:fit-content;transition:background .15s}
+.career-area-chip:hover{background:var(--surface)}
+.career-area-change{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.02em}
 .path-step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .path-step.is-current{border-color:var(--accent);border-left:4px solid var(--accent)}
 .path-step.is-collapsed>*:not(.path-hdr){display:none}
@@ -2049,26 +2049,36 @@ const QA_PERSONAS={
     name:'The Eager Learner',
     summary:'At the start of their QA journey. Operates under close guidance, focusing on diligent execution of assigned tasks, learning team norms, and building confidence in the fundamentals of software testing. Their primary value lies in reliable delivery of well-defined work and a strong growth mindset.',
     keyShift:'From learning to doing — reliably executing assigned work within clearly defined boundaries.',
+    howTo:['Complete every assigned test case before end of sprint without being prompted','File all bug reports with clear steps to reproduce, correct severity, and environment details','Flag blockers to your lead the same day you spot them — do not wait until standup','Ask a clarifying question before starting any test task you do not fully understand'],
+    ready:['You finish all sprint test tasks independently without prompting','Your bug reports are acted on without rework requested','You have raised a blocker proactively before it affected the sprint','You can walk through the test approach for any task you were assigned end-to-end'],
   },
   se:{
     name:'The Reliable Contributor',
     summary:'Works independently on complete features with minimal supervision. Moved from executing tests to designing them. Can narrow down bug root causes through log and network analysis. Beginning to write new automation. Productive, self-sufficient member of the feature team who starts to share knowledge with those below.',
     keyShift:'From task ownership to full feature ownership — independent, thorough, and actively contributing.',
+    howTo:['Own the full test cycle for a feature — from test design through sign-off, without your lead reshaping it','Identify root causes through log and network trace analysis, not just reproduction steps','Write at least one piece of automation per sprint and get it reviewed and merged','Share your knowledge — write one test summary or post-mortem per sprint that others can learn from'],
+    ready:['You own a complete feature\'s quality without your lead changing your approach','You can narrow a bug to a specific layer through log or network trace analysis','At least one automation script you wrote is running in the CI pipeline','Teammates reference your bug reports or test summaries as reliable documentation'],
   },
   sse:{
     name:'The Quality Champion',
     summary:'Seasoned practitioner who has moved from feature-level work to epic and component-level ownership. Strong technical depth for complex testing challenges. Can extend and improve the automation framework. Team\'s go-to resource for structured analytical thinking. Formally mentors others and actively shapes team-level quality culture.',
     keyShift:'From individual contributor to team multiplier — setting standards, extending frameworks, and mentoring peers.',
+    howTo:['Take ownership of a full component or epic — own the quality strategy, not just individual test cases','Extend the automation framework with at least one reusable capability the team actively uses','Formally mentor one junior QA engineer — set goals, give written feedback, and track their growth','Define a quality standard for your team and measure whether it is being followed'],
+    ready:['You own the test strategy for an entire component, not just feature-level coverage','Your automation contribution is actively used by the team, not just merged and forgotten','A junior QA engineer improved measurably under your mentorship — you can describe exactly what changed','You introduced a quality practice the team now follows by default'],
   },
   le:{
     name:'The Strategic Driver',
     summary:'Shifted from technical ownership to project-level quality leadership. Owns the complete quality outcome for an entire project, defines the testing methodology and toolchain, and is the primary QA voice for project leadership and key stakeholders. Impact measured through quality outcomes at the project level, whether leading a team or operating as the sole QA owner.',
     keyShift:'From technical ownership to team leadership — aligning quality strategy with project and business goals.',
+    howTo:['Own the complete quality outcome for an entire project from kickoff to release — not just the testing phase','Define the testing methodology, toolchain, and quality bar for the project before development starts','Be the primary QA voice in conversations with project leadership and stakeholders — do not route through a manager','Build and maintain a quality risk register; update it each sprint with new risks and resolved ones'],
+    ready:['You can name every quality risk on the project and who owns resolution for each one','Stakeholders come to you directly for quality decisions without routing through a manager','A testing approach you defined became the project or team standard','You have run a quality retrospective and the team adopted your recommendations'],
   },
   pqe:{
     name:'The Visionary',
     summary:'The Principal Engineer operates at the intersection of engineering strategy and organisational leadership. They architect foundational frameworks from scratch, pioneer new testing paradigms, and influence executive leadership. Their impact is measured in the elevation of engineering culture and quality capability across the whole organisation.',
     keyShift:'From project and team leadership to organisational strategy — defining how the engineering teams thinks about and practices quality.',
+    howTo:['Architect a foundational test framework from scratch and drive adoption across multiple teams — measure uptake, not just delivery','Pioneer one new testing paradigm or methodology and document its impact','Sponsor one engineer\'s growth to LE explicitly — name them, set milestones, track progress','Shape engineering leadership\'s decisions on quality strategy by presenting data and recommendations proactively'],
+    ready:['Two or more teams are measurably better because of a quality framework you introduced','Engineering leadership cites your input when making strategic testing decisions','You can speak to the quality posture across three or more active projects, not just the one you are on','A testing standard you created is now part of how LFT QA operates by default'],
   },
 };
 function QL(what,why,how,calibration,evidence,growth){return {what,why,how,calibration:calibration||[],evidence:evidence||[],growth:growth||[]};}
@@ -3907,6 +3917,14 @@ function renderCareer(){
           <div class="path-section-lbl">At a glance — ${esc(l.code)}</div>
           <p style="margin:0;font-size:13.5px;color:var(--fg-2);line-height:1.6">${esc(persona.summary||'')}</p>
         </div>
+        ${persona.howTo&&persona.howTo.length?`<div class="path-section">
+          <div class="path-section-lbl">${isMgr?`What to look for — evidence your report is growing toward ${next?esc(next.code):'the next level'}`:`How to get to ${next?esc(next.code):'this level'}`}</div>
+          <ul class="path-howto">${persona.howTo.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+        </div>`:''}
+        ${persona.ready&&persona.ready.length?`<div class="path-section">
+          <div class="path-section-lbl">${isMgr?`Assess: have you observed this in your report?`:`You're ready for ${next?esc(next.code)+' when':'promotion when'}`}</div>
+          <ul class="path-ready">${persona.ready.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+        </div>`:''}
         <div class="path-section"><button class="cta" data-act="find-qa">Find growth tasks for ${esc(l.code)} →</button></div>
       </div>`;
     });
