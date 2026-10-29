@@ -3934,19 +3934,20 @@ function render(){
   // update hero stats by area
   (()=>{
     let nLv,lvCtx,nDom,nComp,nTask;
+    const sharedGrowth=(shared)=>shared.flatMap(d=>d.subs).reduce((n,s)=>n+Object.values(GROWTH[s.id]||{}).reduce((m,a)=>m+a.length,0),0);
     if(S.area==='qa'){
       const shared=DOMAINS.filter(d=>d.id!=='technical');
       nLv=QA_LEVELS.length;lvCtx='P2 to P6';
       nDom=1+shared.length;
       nComp=QA_DOMAINS.length+shared.reduce((n,d)=>n+d.subs.length,0);
-      nTask=Object.values(QA_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+      nTask=Object.values(QA_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0)+sharedGrowth(shared);
     } else if(S.area==='ai'){
       const shared=DOMAINS.filter(d=>d.id!=='technical');
       const aiMod=Object.keys(AI_ADDITIONS).length;
       nLv=LEVELS.length;lvCtx='P2 to P7';
       nDom=1+shared.length;
       nComp=AI_NEW_DOMAINS.length+aiMod+shared.reduce((n,d)=>n+d.subs.length,0);
-      nTask=Object.values(AI_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+      nTask=Object.values(AI_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0)+sharedGrowth(shared);
     } else {
       nLv=LEVELS.length;lvCtx='P2 to P7';
       nDom=DOMAINS.length;
