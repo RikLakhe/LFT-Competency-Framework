@@ -830,7 +830,7 @@ body:not(.home-view) .home-hero{display:none;}
         <div>
           <svg class="stat-icon" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M12 20V4M18 20v-8"/></svg>
           <dt id="stat-levels">—</dt><dd>levels</dd>
-          <span class="stat-ctx">P2 to P7</span>
+          <span class="stat-ctx" id="stat-ctx-levels">P2 to P7</span>
         </div>
         <div>
           <svg class="stat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
@@ -3931,6 +3931,34 @@ function render(){
   const hn=$('home-hero');if(hn)hn.hidden=S.view!=='home';
   // keep hero area chip in sync
   (()=>{const chip=$('hero-area-chip');if(!chip)return;const a=AREAS.find(x=>x.id===S.area)||AREAS[0];chip.hidden=false;chip.innerHTML=`<span class="hero-area-chip-label"><span class="hero-area-chip-icon">${a.icon}</span>${esc(a.label)}</span><button class="hero-area-chip-change" id="hero-chip-change-btn">Change area</button>`;})();
+  // update hero stats by area
+  (()=>{
+    let nLv,lvCtx,nDom,nComp,nTask;
+    if(S.area==='qa'){
+      const shared=DOMAINS.filter(d=>d.id!=='technical');
+      nLv=QA_LEVELS.length;lvCtx='P2 to P6';
+      nDom=1+shared.length;
+      nComp=QA_DOMAINS.length+shared.reduce((n,d)=>n+d.subs.length,0);
+      nTask=Object.values(QA_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+    } else if(S.area==='ai'){
+      const shared=DOMAINS.filter(d=>d.id!=='technical');
+      const aiMod=Object.keys(AI_ADDITIONS).length;
+      nLv=LEVELS.length;lvCtx='P2 to P7';
+      nDom=1+shared.length;
+      nComp=AI_NEW_DOMAINS.length+aiMod+shared.reduce((n,d)=>n+d.subs.length,0);
+      nTask=Object.values(AI_GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+    } else {
+      nLv=LEVELS.length;lvCtx='P2 to P7';
+      nDom=DOMAINS.length;
+      nComp=DOMAINS.reduce((n,d)=>n+d.subs.length,0);
+      nTask=Object.values(GROWTH).reduce((n,g)=>n+Object.values(g).reduce((m,a)=>m+a.length,0),0);
+    }
+    const sl=$('stat-levels');if(sl)sl.textContent=nLv;
+    const sc=$('stat-ctx-levels');if(sc)sc.textContent=lvCtx;
+    const sd=$('stat-domains');if(sd)sd.textContent=nDom;
+    const scomp=$('stat-comps');if(scomp)scomp.textContent=nComp;
+    const sk=$('stat-tasks');if(sk)sk.textContent=nTask.toLocaleString('en-GB');
+  })();
   renderSidebar();renderLevelStrip();renderContent();
   if(tool){
     const el=$('content');
@@ -4108,7 +4136,7 @@ function renderHome(){
   }
   const homeLevels=S.area==='qa'?QA_LEVELS:LEVELS;
   const homeLvBtn=S.area==='qa'
-    ?(l,i)=>`<button class="rung" data-goqalv="${l.id}" style="--i:${i}"><span class="rung-top"><span class="rung-code">${l.code}</span></span><span class="rung-title">${esc(l.title)}</span></button>`
+    ?(l,i)=>{const p=QA_PERSONAS[l.id]||{};return`<button class="rung" data-goqalv="${l.id}" style="--i:${i}"><span class="rung-top"><span class="rung-code">${l.code}</span><span class="rung-scope">${esc(p.name||'')}</span></span><span class="rung-title">${esc(l.title)}</span><span class="rung-sum">${esc(p.keyShift||'')}</span></button>`}
     :(l,i)=>`<button class="rung" data-golv="${l.id}" style="--i:${i}"><span class="rung-top"><span class="rung-code">${l.code}</span><span class="rung-scope">${esc(l.scope)}</span></span><span class="rung-title">${esc(l.title)}</span><span class="rung-sum">${esc((LEVEL_SUMMARY[l.id]||[''])[0])}</span></button>`;
   let h=`<div class="home">
   <section class="home-sec">
