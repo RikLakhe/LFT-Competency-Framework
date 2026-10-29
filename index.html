@@ -3349,7 +3349,7 @@ function renderAIMatrix(){
       if(cell.how&&cell.how.length)h+=`<div class="section"><div class="sh">How <span class="sh-hint">What Meets looks like</span></div><ul>${cell.how.map(h_=>`<li>${esc(h_)}</li>`).join('')}</ul></div>`;
       if(cell.calibration&&cell.calibration.length)h+=`<div class="section"><div class="sh">Calibration Prompts</div><ol>${cell.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`;
       if(cell.evidence&&cell.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`;
-      const _aiNT=(AI_GROWTH[comp.id]||{})[AI.lv]||[];const _aiNx2=nextCode(AI.lv);if(_aiNT.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_aiNT.length} tasks toward ${_aiNx2} · keep 1–3 active</span></span></summary><div class="gt-grid">${_aiNT.map((t,i)=>taskCard(t,i,AI.lv)).join('')}</div></details>`;}
+      const _aiNT=(AI_GROWTH[comp.id]||{})[AI.lv]||[];const _aiNx2=nextCode(AI.lv);if(_aiNT.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_aiNT.length} tasks toward ${_aiNx2} · keep 1–3 active</span></span><button class="link-btn" data-act="find-ai">Find tasks across competencies →</button></summary><div class="gt-grid">${_aiNT.map((t,i)=>taskCard(t,i,AI.lv)).join('')}</div></details>`;}
       h+=`</div>`;
     } else {
       h+=`<div class="na-card">Not assessed at this level.</div>`;
@@ -3375,7 +3375,7 @@ function renderAIMatrix(){
         if(addition.how&&addition.how.length)h+=`<div class="section"><div class="sh">How</div><ul>${addition.how.map(h_=>`<li>${esc(h_)}</li>`).join('')}</ul></div>`;
         if(addition.calibration&&addition.calibration.length)h+=`<div class="section"><div class="sh">Calibration Prompts</div><ol>${addition.calibration.map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>`;
         if(addition.evidence&&addition.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${addition.evidence.map(e_=>`<li>${esc(e_)}</li>`).join('')}</ul></div>`;
-        const _aiAT=(AI_GROWTH[sub.id]||{})[AI.lv]||[];if(_aiAT.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_aiAT.length} tasks toward ${nextCode(AI.lv)} · keep 1–3 active</span></span></summary><div class="gt-grid">${_aiAT.map((t,i)=>taskCard(t,i,AI.lv)).join('')}</div></details>`;}
+        const _aiAT=(AI_GROWTH[sub.id]||{})[AI.lv]||[];if(_aiAT.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_aiAT.length} tasks toward ${nextCode(AI.lv)} · keep 1–3 active</span></span><button class="link-btn" data-act="find-ai">Find tasks across competencies →</button></summary><div class="gt-grid">${_aiAT.map((t,i)=>taskCard(t,i,AI.lv)).join('')}</div></details>`;}
       } else {
         h+=`<div class="section" style="border-left:3px solid var(--ai)"><div class="sh" style="color:var(--ai)">✦ AI addition</div><p class="etext">${esc(addition)}</p></div>`;
       }
@@ -3625,20 +3625,22 @@ function growthSection(sub,lvId){
 }
 
 function finderResults(){
-  const subs=S.fsubs.length?S.fsubs:DOMAINS.flatMap(d=>d.subs.map(s=>s.id));
   const out=[];
-  DOMAINS.forEach(d=>d.subs.forEach(s=>{
-    if(!subs.includes(s.id))return;
-    const tasks=GROWTH[s.id][S.flv].map((t,i)=>({t,i})).filter(o=>passes(o.t));
-    if(tasks.length)out.push({d,s,tasks});
-  }));
+  if(S.area!=='qa'&&S.area!=='ai'){
+    const subs=S.fsubs.length?S.fsubs:DOMAINS.flatMap(d=>d.subs.map(s=>s.id));
+    DOMAINS.forEach(d=>d.subs.forEach(s=>{
+      if(!subs.includes(s.id))return;
+      const tasks=GROWTH[s.id][S.flv].map((t,i)=>({t,i})).filter(o=>passes(o.t));
+      if(tasks.length)out.push({d,s,tasks});
+    }));
+  }
   if(S.area==='qa'){QA_DOMAINS.forEach(comp=>{const tasks=(QA_GROWTH[comp.id]||{})[S.qalv]||[];const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));if(filtered.length)out.push({d:{label:'QA Engineering'},s:{id:comp.id,label:comp.label},tasks:filtered});});}
   if(S.area==='ai'){const allAI=[...AI_NEW_DOMAINS,...DOMAINS.flatMap(d=>d.subs.filter(s=>AI_ADDITIONS[s.id]))];allAI.forEach(comp=>{const tasks=(AI_GROWTH[comp.id]||{})[S.flv]||[];const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));if(filtered.length)out.push({d:{label:'AI Engineering'},s:{id:comp.id,label:comp.label},tasks:filtered});});}
   return out;
 }
 
 function finderText(res){
-  const lv=LEVELS.find(l=>l.id===S.flv);
+  const lv=S.area==='qa'?(QA_LEVELS.find(l=>l.id===S.qalv)||QA_LEVELS[0]):(LEVELS.find(l=>l.id===S.flv)||LEVELS[0]);
   const lines=[`Growth tasks: ${lv.code} → ${growthGoal(S.flv)}`];
   if(S.ff.length)lines.push('Filters: '+S.ff.map(f=>FILTERS.find(x=>x.id===f).label).join(', '));
   lines.push('');
@@ -3684,7 +3686,7 @@ function renderQAMatrix(){
       if(cell.evidence&&cell.evidence.length)h+=`<div class="section full"><div class="sh">Evidence <span class="sh-hint">Illustrative — one or two strong examples are enough</span></div><ul>${cell.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`;
       const _qaTasks=(QA_GROWTH[comp.id]||{})[S.qalv]||[];
       const _qaNx=QA_LEVELS[QA_LEVELS.findIndex(l=>l.id===S.qalv)+1];
-      if(_qaTasks.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_qaTasks.length} tasks toward ${_qaNx?_qaNx.code:'top'} · keep 1–3 active</span></span></summary><div class="gt-grid">${_qaTasks.map((t,i)=>taskCard(t,i,S.qalv)).join('')}</div></details>`;}
+      if(_qaTasks.length){h+=`<details class="section full growth" open><summary class="growth-head"><span class="sh">Growth tasks <span class="sh-hint">${_qaTasks.length} tasks toward ${_qaNx?_qaNx.code:'top'} · keep 1–3 active</span></span><button class="link-btn" data-act="find-qa">Find tasks across competencies →</button></summary><div class="gt-grid">${_qaTasks.map((t,i)=>taskCard(t,i,S.qalv)).join('')}</div></details>`;}
       h+=`</div>`;
     } else {
       h+=`<div class="na-card">Not assessed at this level.</div>`;
@@ -3696,30 +3698,46 @@ function renderQAMatrix(){
 
 function renderFinder(){
   const el=$('content');
-  const lv=LEVELS.find(l=>l.id===S.flv);
+  let _fLevels,_fLvId,_fLvLabel;
+  if(S.area==='qa'){
+    _fLevels=QA_LEVELS;_fLvId=S.qalv;
+    _fLvLabel=`${QA_LEVELS.find(l=>l.id===S.qalv)?.code||'P2'} → ${QA_LEVELS[QA_LEVELS.findIndex(l=>l.id===S.qalv)+1]?.code||'top'}`;
+  } else {
+    _fLevels=LEVELS;_fLvId=S.flv;
+    _fLvLabel=growthGoal(S.flv);
+  }
   let h=`<div class="finder"><div><h2>Find growth tasks</h2><p class="lead">Pick the engineer's current level and their one to three weakest competencies. Use the filters to match their situation, then copy the tasks into your 1:1 notes.</p></div>`;
-  h+=`<div class="fstep"><h3>1 · Current level</h3><div class="chips">${LEVELS.map(l=>`<button class="chip" data-flv="${l.id}" aria-pressed="${l.id===S.flv}">${l.code} · ${esc(l.title)}</button>`).join('')}</div></div>`;
+  h+=`<div class="fstep"><h3>1 · Current level</h3><div class="chips">${_fLevels.map(l=>`<button class="chip" ${S.area==='qa'?`data-fqalv="${l.id}"`:`data-flv="${l.id}"`} aria-pressed="${l.id===_fLvId}">${l.code} · ${esc(l.title)}</button>`).join('')}</div></div>`;
   const full=S.fsubs.length>=3;
   h+=`<div class="fstep"><h3>2 · Focus competencies <span style="text-transform:none;letter-spacing:0;font-weight:400">(${S.fsubs.length}/3 picked${S.fsubs.length?'':'; showing all'})</span></h3>`;
-  DOMAINS.forEach(d=>{
-    const groupOrder=[];const groupMap={};
-    d.subs.forEach(s=>{const g=GROUPS[s.id]||d.label;if(!groupMap[g]){groupMap[g]=[];groupOrder.push(g);}groupMap[g].push(s);});
-    h+=`<div class="cgroup"><span class="gl">${esc(d.label)}</span>`;
-    groupOrder.forEach(g=>{
-      if(groupOrder.length>1)h+=`<span class="gl" style="font-size:10px;opacity:.65;margin-top:4px">${esc(g)}</span>`;
-      h+=`<div class="chips">${groupMap[g].map(s=>{const on=S.fsubs.includes(s.id);return `<button class="chip" data-fsub="${s.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(s.label)}</button>`;}).join('')}</div>`;
+  if(S.area!=='qa'&&S.area!=='ai'){
+    DOMAINS.forEach(d=>{
+      const groupOrder=[];const groupMap={};
+      d.subs.forEach(s=>{const g=GROUPS[s.id]||d.label;if(!groupMap[g]){groupMap[g]=[];groupOrder.push(g);}groupMap[g].push(s);});
+      h+=`<div class="cgroup"><span class="gl">${esc(d.label)}</span>`;
+      groupOrder.forEach(g=>{
+        if(groupOrder.length>1)h+=`<span class="gl" style="font-size:10px;opacity:.65;margin-top:4px">${esc(g)}</span>`;
+        h+=`<div class="chips">${groupMap[g].map(s=>{const on=S.fsubs.includes(s.id);return `<button class="chip" data-fsub="${s.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(s.label)}</button>`;}).join('')}</div>`;
+      });
+      h+=`</div>`;
     });
-    h+=`</div>`;
-  });
+  }
+  if(S.area==='qa'){
+    h+=`<div class="chips">${QA_DOMAINS.map(c=>{const on=S.fsubs.includes(c.id);return`<button class="chip" data-fsub="${c.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(c.label)}</button>`;}).join('')}</div>`;
+  }
+  if(S.area==='ai'){
+    const aiAll=[...AI_NEW_DOMAINS,...DOMAINS.flatMap(d=>d.subs.filter(s=>AI_ADDITIONS[s.id]))];
+    h+=`<div class="chips">${aiAll.map(c=>{const on=S.fsubs.includes(c.id);return`<button class="chip" data-fsub="${c.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(c.label)}</button>`;}).join('')}</div>`;
+  }
   if(S.fsubs.length)h+=`<div><button class="link-btn" data-act="clear-subs">Clear selection</button></div>`;
   h+=`</div>`;
   h+=`<div class="fstep"><h3>3 · Filters</h3><div class="chips">${FILTERS.map(f=>`<button class="chip" data-ff="${f.id}" aria-pressed="${S.ff.includes(f.id)}">${f.label}</button>`).join('')}</div></div>`;
   const res=finderResults();
   const n=res.reduce((a,r)=>a+r.tasks.length,0);
-  h+=`<div class="fres-head"><h3>${n} task${n===1?'':'s'} · ${lv.code} → ${growthGoal(S.flv)}</h3>${n?'<button class="btn" data-act="copy-tasks">Copy tasks</button>':''}</div>`;
+  h+=`<div class="fres-head"><h3>${n} task${n===1?'':'s'} · ${_fLvLabel}</h3>${n?'<button class="btn" data-act="copy-tasks">Copy tasks</button>':''}</div>`;
   if(!n)h+=`<div class="na-card">No tasks match these filters. Try removing a filter.</div>`;
   res.forEach(r=>{
-    h+=`<div class="fcomp"><h4>${esc(r.s.label)} <span class="pi-meta" style="font-size:12px;color:var(--fg-3);font-weight:400">${esc(r.d.label)}</span> <button class="link-btn" data-open="${r.s.id}">Open rubric</button></h4><div class="gt-grid">${r.tasks.map(o=>taskCard(o.t,o.i,S.flv)).join('')}</div></div>`;
+    h+=`<div class="fcomp"><h4>${esc(r.s.label)} <span class="pi-meta" style="font-size:12px;color:var(--fg-3);font-weight:400">${esc(r.d.label)}</span> <button class="link-btn" data-open="${r.s.id}">Open rubric</button></h4><div class="gt-grid">${r.tasks.map(o=>taskCard(o.t,o.i,(S.area==='qa'?S.qalv:S.flv))).join('')}</div></div>`;
   });
   h+=`</div>`;
   el.innerHTML=h;
@@ -4013,7 +4031,7 @@ document.querySelector('.secbar .brand')?.addEventListener('keydown',e=>{if(e.ke
 $('guide-btn')?.addEventListener('click',()=>{S.view=S.view==='guide'?'matrix':'guide';render();});
 $('promo-btn')?.addEventListener('click',()=>{if(S.view!=='promo')S.plv=['p6','p7'].includes(S.lv)?'p5':S.lv;S.view=S.view==='promo'?'matrix':'promo';render();$('content').scrollTop=0;});
 $('hire-btn')?.addEventListener('click',()=>{if(S.view!=='hire')S.hlv=S.lv;S.view=S.view==='hire'?'matrix':'hire';render();$('content').scrollTop=0;});
-$('find-btn')?.addEventListener('click',()=>{if(S.view!=='find')S.flv=S.lv;S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
+$('find-btn')?.addEventListener('click',()=>{if(S.view!=='find'){if(S.area!=='qa')S.flv=S.lv;}S.view=S.view==='find'?'matrix':'find';render();$('content').scrollTop=0;});
 $('home-hero')?.addEventListener('click',e=>{
   if(e.target.closest('#hero-chip-change-btn'))openAreaModal();
 });
@@ -4106,6 +4124,10 @@ $('content')?.addEventListener('click',e=>{
   if(act==='copy-promo-q'){const tg=LEVELS[LEVELS.findIndex(l=>l.id===S.plv)+1];const L=[`Questions for ${tg.code} ${tg.title}`,''];DOMAINS.forEach(d=>{const Q=(PROMO_Q[tg.id]||{})[d.id];if(!Q)return;L.push(d.label);Q.q.forEach((q,i)=>L.push(`${i+1}. ${q}`));L.push('Meets sounds like: '+Q.listen,'');});copyText(L.join('\n'),'Questions copied');return;}
   if(act==='clear-subs'){S.fsubs=[];renderFinder();return;}
   if(act==='find-from'){S.flv=S.lv;S.fsubs=[t.dataset.sub];S.view='find';render();$('content').scrollTop=0;return;}
+  if(act==='find-qa'){S.view='find';render();$('content').scrollTop=0;return;}
+  if(act==='find-ai'){S.view='find';render();$('content').scrollTop=0;return;}
+  const fqalv=t.dataset.fqalv;
+  if(fqalv){S.qalv=fqalv;renderFinder();return;}
   if(act==='copy-tasks'){
     const txt=finderText(finderResults());
     const fallback=()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Tasks copied');}catch(_){toast('Copy failed');}ta.remove();};
