@@ -3636,8 +3636,28 @@ function finderResults(){
       if(tasks.length)out.push({d,s,tasks});
     }));
   }
-  if(S.area==='qa'){QA_DOMAINS.forEach(comp=>{const tasks=(QA_GROWTH[comp.id]||{})[S.qalv]||[];const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));if(filtered.length)out.push({d:{label:'QA Engineering'},s:{id:comp.id,label:comp.label},tasks:filtered});});}
-  if(S.area==='ai'){const allAI=[...AI_NEW_DOMAINS,...DOMAINS.flatMap(d=>d.subs.filter(s=>AI_ADDITIONS[s.id]))];allAI.forEach(comp=>{const tasks=(AI_GROWTH[comp.id]||{})[S.flv]||[];const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));if(filtered.length)out.push({d:{label:'AI Engineering'},s:{id:comp.id,label:comp.label},tasks:filtered});});}
+  if(S.area==='qa'){
+    const qaEngLv=(QA_LEVELS.find(l=>l.id===S.qalv)?.code||'P2').toLowerCase();
+    const qaAll=[...QA_DOMAINS.map(c=>({c,d:{label:'QA Engineering'}})),...DOMAINS.filter(d=>d.id!=='technical').flatMap(d=>d.subs.map(s=>({c:s,d})))];
+    const qaSubs=S.fsubs.length?S.fsubs:qaAll.map(x=>x.c.id);
+    qaAll.forEach(({c,d})=>{
+      if(!qaSubs.includes(c.id))return;
+      const tasks=[...((QA_GROWTH[c.id]||{})[S.qalv]||[]),...((GROWTH[c.id]||{})[qaEngLv]||[])];
+      const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));
+      if(filtered.length)out.push({d,s:{id:c.id,label:c.label},tasks:filtered});
+    });
+  }
+  if(S.area==='ai'){
+    const aiSpec=[...AI_NEW_DOMAINS,...DOMAINS.flatMap(d=>d.subs.filter(s=>AI_ADDITIONS[s.id]))];
+    const aiAll=[...aiSpec.map(c=>({c,d:{label:'AI Engineering'}})),...DOMAINS.filter(d=>d.id!=='technical').flatMap(d=>d.subs.map(s=>({c:s,d})))];
+    const aiSubs=S.fsubs.length?S.fsubs:aiAll.map(x=>x.c.id);
+    aiAll.forEach(({c,d})=>{
+      if(!aiSubs.includes(c.id))return;
+      const tasks=[...((AI_GROWTH[c.id]||{})[S.flv]||[]),...((GROWTH[c.id]||{})[S.flv]||[])];
+      const filtered=tasks.map((t,i)=>({t,i})).filter(o=>passes(o.t));
+      if(filtered.length)out.push({d,s:{id:c.id,label:c.label},tasks:filtered});
+    });
+  }
   return out;
 }
 
@@ -3712,6 +3732,8 @@ function renderFinder(){
   h+=`<div class="fstep"><h3>1 · Current level</h3><div class="chips">${_fLevels.map(l=>`<button class="chip" ${S.area==='qa'?`data-fqalv="${l.id}"`:`data-flv="${l.id}"`} aria-pressed="${l.id===_fLvId}">${l.code} · ${esc(l.title)}</button>`).join('')}</div></div>`;
   const full=S.fsubs.length>=3;
   h+=`<div class="fstep"><h3>2 · Focus competencies <span style="text-transform:none;letter-spacing:0;font-weight:400">(${S.fsubs.length}/3 picked${S.fsubs.length?'':'; showing all'})</span></h3>`;
+  const _sharedDomains=DOMAINS.filter(d=>d.id!=='technical');
+  const _chipRow=(subs)=>subs.map(s=>{const on=S.fsubs.includes(s.id);return`<button class="chip" data-fsub="${s.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(s.label)}</button>`;}).join('');
   if(S.area!=='qa'&&S.area!=='ai'){
     DOMAINS.forEach(d=>{
       const groupOrder=[];const groupMap={};
@@ -3725,11 +3747,13 @@ function renderFinder(){
     });
   }
   if(S.area==='qa'){
-    h+=`<div class="chips">${QA_DOMAINS.map(c=>{const on=S.fsubs.includes(c.id);return`<button class="chip" data-fsub="${c.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(c.label)}</button>`;}).join('')}</div>`;
+    h+=`<div class="cgroup"><span class="gl">QA Engineering</span><div class="chips">${_chipRow(QA_DOMAINS)}</div></div>`;
+    _sharedDomains.forEach(d=>{h+=`<div class="cgroup"><span class="gl">${esc(d.label)}</span><div class="chips">${_chipRow(d.subs)}</div></div>`;});
   }
   if(S.area==='ai'){
     const aiAll=[...AI_NEW_DOMAINS,...DOMAINS.flatMap(d=>d.subs.filter(s=>AI_ADDITIONS[s.id]))];
-    h+=`<div class="chips">${aiAll.map(c=>{const on=S.fsubs.includes(c.id);return`<button class="chip" data-fsub="${c.id}" aria-pressed="${on}" ${!on&&full?'disabled':''}>${esc(c.label)}</button>`;}).join('')}</div>`;
+    h+=`<div class="cgroup"><span class="gl">AI Engineering</span><div class="chips">${_chipRow(aiAll)}</div></div>`;
+    _sharedDomains.forEach(d=>{h+=`<div class="cgroup"><span class="gl">${esc(d.label)}</span><div class="chips">${_chipRow(d.subs)}</div></div>`;});
   }
   if(S.fsubs.length)h+=`<div><button class="link-btn" data-act="clear-subs">Clear selection</button></div>`;
   h+=`</div>`;
@@ -3739,7 +3763,8 @@ function renderFinder(){
   h+=`<div class="fres-head"><h3>${n} task${n===1?'':'s'} · ${_fLvLabel}</h3>${n?'<button class="btn" data-act="copy-tasks">Copy tasks</button>':''}</div>`;
   if(!n)h+=`<div class="na-card">No tasks match these filters. Try removing a filter.</div>`;
   res.forEach(r=>{
-    h+=`<div class="fcomp"><h4>${esc(r.s.label)} <span class="pi-meta" style="font-size:12px;color:var(--fg-3);font-weight:400">${esc(r.d.label)}</span> <button class="link-btn" data-open="${r.s.id}">Open rubric</button></h4><div class="gt-grid">${r.tasks.map(o=>taskCard(o.t,o.i,(S.area==='qa'?S.qalv:S.flv))).join('')}</div></div>`;
+    const _cardLv=S.area==='qa'?(QA_LEVELS.find(l=>l.id===S.qalv)?.code||'P2').toLowerCase():S.flv;
+    h+=`<div class="fcomp"><h4>${esc(r.s.label)} <span class="pi-meta" style="font-size:12px;color:var(--fg-3);font-weight:400">${esc(r.d.label)}</span> <button class="link-btn" data-open="${r.s.id}">Open rubric</button></h4><div class="gt-grid">${r.tasks.map(o=>taskCard(o.t,o.i,_cardLv)).join('')}</div></div>`;
   });
   h+=`</div>`;
   el.innerHTML=h;
